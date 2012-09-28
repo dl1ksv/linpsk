@@ -1,0 +1,22 @@
+pcm.LinPSK_card {
+        type hw
+#	Replace the following line by the name of your card
+        card M5455
+		}
+ctl.LinPSK_card {
+        type hw
+#	Replace the following line by the name of your card
+        card M5455
+        }
+pcm.LinPSK_Play {
+        type plug
+        slave {
+        pcm "LinPSK_card"
+        }
+}
+pcm.LinPSK_Record {
+        type plug
+        slave {
+        pcm "LinPSK_card"
+        }
+}

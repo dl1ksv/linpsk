@@ -1,0 +1,12 @@
+To build linpsk, untar the tar archiv and switch to the linpsk directory.
+
+run:
+qmake -o Makefile linpsk.pro
+make
+
+The executable linpsk is build in the bin subdirectory. Move the binary into prefered location , probably /usr/local/bin
+
+LinPSK now uses the alsa sound system.
+The names of the used alsa devices are LinPSK_Record and LinPSK_Play.
+To map these names to your soundcard edit the file asoundrc in the linpsk directory appropriately and append it to .asoundrc in your homedirectory.
+If no .asoundrc exists copy the edited asoundrc to .asoundrc in your homedirectory instead of appending.
