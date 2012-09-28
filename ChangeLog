@@ -1,0 +1,102 @@
+LinPsk ChangeLog
+
+1.1
+
+Fixed wrong code for 'LF' in rttymodulator.cpp, Thanks to kf9a
+'Home key' mapped to 'cr'
+Possibility introduced to send 'CR' 'LF' on enter key. Selectable by setup.
+Reintroduced squelch for rtty .
+
+1.0
+
+Reading and writing data from /to soundcard now happens in an extra threads.
+Switch from qt3 to qt4. This implies major modifications of gui code.
+LinPsk now supports Loging via LinLog
+New menu for taking qso data for loging. ( Right mouse click in the active rx window )
+MFSK16 is now operational. Thanks to Chen, W7AY, who gave me the essential hints.
+
+0.9 
+
+Switching from portaudio to native alsa support
+Modified Afc for BPSK31 decoder
+Integrating patches 
+
+0.8.1
+
+Improved RTTY decoder
+
+Setting for slashed 0 now will be saved
+
+Fixed some memory leakages
+
+Removed dependancy on qwindowsstyle.h, so LinPsk now should compile on Slackware without problems.
+
+Some minor bugfixes
+
+0.8.0.4
+
+Experimental RTTY decoder ( rtty2 ).
+
+Now 8 bit wav files in Demo mode will be supported.
+
+In RTTY shifts up to 999 Hz are possible now.
+
+RTTY is now able to transmit in LSB. 
+
+USB to Serial Converter for RX/TX switching now really works
+  
+Hopefully fixed crash on quit
+
+Using UTC in QSOData
+
+0.8.0.3
+
+New features
+
+Supporting USB to Serial Converter for RX/TX switching
+
+( Due to missing hardware untested )
+
+Looks in the /dev directory for devices that contain the string usbserial.
+
+added to General Settings
+
+Delete macro
+Rename macro
+
+
+Save QSOData now implemented
+Data are saved in ADIF format. You can set the name of this file in General settings. The file will be located in the users home directory.
+
+Command c now copies text from the clipboard into the tx buffer, if the TX window is the active window. 
+
+The proportion between colour spectrum and spectrum can be modified.
+
+
+Fixes
+
+Hopefully fixed the reported freeze when switching from TX to RX.
+
+Fixed that portaudio changes the output volume when level < 10.
+
+Now squelch changes colour when the level goes above selected squelch level ( like LinPsk does).
+
+Some minor bugs fixed. Now using qt 3.3.2 , which improves the layout of some buttons.
+
+Switched to fftw 3.0.1
+
+ 
+0.8.0.2
+
+Characters, that were deleted , won't be transmitted together with the delete anymore.
+
+Fixed bug in setting input and output volume
+
+Windows position now will be saved when exiting the application by Quit.
+
+Trying to fix crash, when closing DarwinPsk by the little red button
+
+
+0.8.0.1
+
+Fixing the "spinning disc of death"
