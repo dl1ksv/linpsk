@@ -21,15 +21,14 @@
 #include <QMainWindow>
 #include <QList>
 #include "constants.h"
+#include "ui_linpsk.h"
+#include <complex>
 
 class QActionGroup;
 class QToolBar;
 class QMenu;
 class QCloseEvent;
 
-class CRxDisplay;
-class CTxDisplay;
-class ControlPanel;
 class QLabel;
 class CModulator;
 class CTxBuffer;
@@ -38,7 +37,7 @@ class Macros;
 class Parameter;
 
 
-class LinPSK : public QMainWindow
+class LinPSK : public QMainWindow, private Ui::LinPSK
 {
     Q_OBJECT
 
@@ -46,31 +45,20 @@ public:
     LinPSK( QWidget* parent = 0,Qt::WFlags fl = 0);
     ~LinPSK();
 
-    CRxDisplay* RxDisplay;
-    CTxDisplay* TxDisplay;
-    ControlPanel* Control;
-    QMenuBar *menubar;
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QMenu *changeRxParams;
-    QMenu *helpMenu;
 
 public slots:
-    virtual void fileOpen();
     virtual void Exit();
-///    virtual void helpIndex();
-///    virtual void helpContents();
-    virtual void helpAbout();
-    virtual void helpAboutQt();
-    virtual void addRxWindow();
-    virtual void generalSettings();
-    virtual void chooseColor();
 
 protected:
-    void resizeEvent(QResizeEvent *);
 
 protected slots:
   virtual void languageChange();
+  void fileOpen();
+  void helpAboutQt();
+  void addRxWindow();
+  void generalSettings();
+  void chooseColor();
+  void helpAbout();
   /** Show Time */
   void setclock();
   /** Set IMD */
@@ -81,8 +69,6 @@ protected slots:
   void startTx();
   /** Calculate the TX Data **/
   void process_txdata();
-  /** Font Settings **/
-  void FontSetup();
   /** Switching from TX to RX after TX- Bufefr ist empty **/
   void stopTx();
   /** apply the settings **/
@@ -91,8 +77,6 @@ protected slots:
   void setChannelParams();
   /** Changing Rx Mode ( Moulation type ) **/
   void setRxMode();
-  /** Save Settings **/
-  void saveSettings();
   /** Executing Macros **/
   void executeMacro(int);
   /** Add Macro **/
@@ -103,17 +87,17 @@ protected slots:
   void deleteMacro();
   /** Rename Macro **/
   void renameMacro();
-  /** Recording **/
-  void recording(bool);
-  /** About Info **/
-  void HelpAbout();
-  
+  /** Font Settings **/
+  void FontSetup();
+  /** Save Settings **/
+  void saveSettings();
   /** Closing this window **/
   void closeEvent( QCloseEvent *);
 
+private slots:
+  void on_RxDisplay_newActiveChannel();
 private:
 
-    void calculateSizeofComponents();
     void read_config();
     void save_config();
     bool inAction;

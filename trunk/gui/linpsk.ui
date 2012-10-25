@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LinPSK</class>
+ <widget class="QMainWindow" name="LinPSK">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>810</width>
+    <height>683</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../src/application.qrc">
+    <normaloff>:/images/linpsk.png</normaloff>:/images/linpsk.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="CTxDisplay" name="TxDisplay">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>10</width>
+        <height>10</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="ControlPanel" name="Control">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>2</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>210</height>
+       </size>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>10</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="CRxDisplay" name="RxDisplay">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>2</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>190</height>
+       </size>
+      </property>
+      <property name="sizeIncrement">
+       <size>
+        <width>10</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>810</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Demo_File"/>
+    <addaction name="actionAdd_Rx_Window"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionGeneral_Settings"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_macro"/>
+    <addaction name="actionEdit_macro"/>
+    <addaction name="actionDelete_macro"/>
+    <addaction name="actionRename_macro"/>
+    <addaction name="separator"/>
+    <addaction name="actionFont_settings"/>
+    <addaction name="actionColor_settings"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_settings"/>
+   </widget>
+   <widget class="QMenu" name="menuRxParams">
+    <property name="title">
+     <string>RxParams</string>
+    </property>
+    <addaction name="actionChange_Rx_mode"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_Linpsk"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuRxParams"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAbout_Linpsk">
+   <property name="text">
+    <string>About Linpsk</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionOpen_Demo_File">
+   <property name="text">
+    <string>Open Demo File</string>
+   </property>
+  </action>
+  <action name="actionAdd_Rx_Window">
+   <property name="text">
+    <string>Add Rx Window</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionGeneral_Settings">
+   <property name="text">
+    <string>General Settings</string>
+   </property>
+  </action>
+  <action name="actionAdd_macro">
+   <property name="text">
+    <string>Add macro</string>
+   </property>
+  </action>
+  <action name="actionEdit_macro">
+   <property name="text">
+    <string>Edit macro</string>
+   </property>
+  </action>
+  <action name="actionDelete_macro">
+   <property name="text">
+    <string>Delete macro</string>
+   </property>
+  </action>
+  <action name="actionRename_macro">
+   <property name="text">
+    <string>Rename macro</string>
+   </property>
+  </action>
+  <action name="actionFont_settings">
+   <property name="text">
+    <string>Font settings</string>
+   </property>
+  </action>
+  <action name="actionColor_settings">
+   <property name="text">
+    <string>Color settings</string>
+   </property>
+  </action>
+  <action name="actionSave_settings">
+   <property name="text">
+    <string>Save settings</string>
+   </property>
+  </action>
+  <action name="actionChange_Rx_mode">
+   <property name="text">
+    <string>Change Rx mode</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CRxDisplay</class>
+   <extends>QFrame</extends>
+   <header>crxdisplay.h</header>
+   <container>1</container>
+   <slots>
+    <signal>startPlotting(double*,bool)</signal>
+    <signal>new_IMD(float)</signal>
+    <signal>newActiveChannel()</signal>
+    <signal>record(bool)</signal>
+    <signal>setQsoData(QsoData,QString)</signal>
+    <slot>setFrequency(double)</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>CTxDisplay</class>
+   <extends>QFrame</extends>
+   <header>ctxdisplay.h</header>
+   <container>1</container>
+   <slots>
+    <signal>startRx()</signal>
+    <signal>startTx()</signal>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>ControlPanel</class>
+   <extends>QFrame</extends>
+   <header>controlpanel.h</header>
+   <container>1</container>
+   <slots>
+    <signal>FrequencyChanged(double)</signal>
+    <signal>callMacro(int)</signal>
+    <slot>startPlot(double*,bool)</slot>
+    <slot>setQsoData(QsoData,QString)</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../src/application.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionOpen_Demo_File</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>fileOpen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAdd_Rx_Window</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>addRxWindow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>Exit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionGeneral_Settings</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>generalSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAdd_macro</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>addMacro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionEdit_macro</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>editMacro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDelete_macro</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>deleteMacro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRename_macro</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>renameMacro()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFont_settings</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>FontSetup()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionColor_settings</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>chooseColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_settings</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>saveSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionChange_Rx_mode</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>setRxMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAbout_Linpsk</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>helpAbout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAbout_Qt</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>helpAboutQt()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RxDisplay</sender>
+   <signal>startPlotting(double*,bool)</signal>
+   <receiver>Control</receiver>
+   <slot>startPlot(double*,bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>532</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RxDisplay</sender>
+   <signal>new_IMD(float)</signal>
+   <receiver>LinPSK</receiver>
+   <slot>setIMD(float)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Control</sender>
+   <signal>callMacro(int)</signal>
+   <receiver>LinPSK</receiver>
+   <slot>executeMacro(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>532</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RxDisplay</sender>
+   <signal>newActiveChannel()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>setChannelParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RxDisplay</sender>
+   <signal>setQsoData(QsoData,QString)</signal>
+   <receiver>Control</receiver>
+   <slot>setQsoData(QsoData,QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>532</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TxDisplay</sender>
+   <signal>startRx()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>startRx()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TxDisplay</sender>
+   <signal>startTx()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>startTx()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>fileOpen()</slot>
+  <slot>addRxWindow()</slot>
+  <slot>Exit()</slot>
+  <slot>generalSettings()</slot>
+  <slot>addMacro()</slot>
+  <slot>editMacro()</slot>
+  <slot>deleteMacro()</slot>
+  <slot>renameMacro()</slot>
+  <slot>FontSetup()</slot>
+  <slot>chooseColor()</slot>
+  <slot>saveSettings()</slot>
+  <slot>setRxMode()</slot>
+  <slot>helpAbout()</slot>
+  <slot>helpAboutQt()</slot>
+  <slot>setIMD(float)</slot>
+  <slot>executeMacro(int)</slot>
+  <slot>setChannelParams()</slot>
+  <slot>recording(bool)</slot>
+  <slot>startRx()</slot>
+  <slot>startTx()</slot>
+ </slots>
+</ui>

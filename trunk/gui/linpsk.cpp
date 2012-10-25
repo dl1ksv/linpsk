@@ -49,7 +49,6 @@
 #include "deletemacro.h"
 #include "renamemacro.h"
 #include "color.h"
-#include "crecording.h"
 
 
 #include <QtGui>
@@ -58,7 +57,7 @@
 #ifdef HAVE_CONFIG
 #include "config.h"
 #else
-#define VERSION "1.1"
+#define VERSION "1.2"
 #endif
 
 
@@ -71,11 +70,9 @@ extern Parameter settings;
  *
  */
 LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
-    : QMainWindow ( parent, fl )
+  : QMainWindow ( parent, fl ), Ui::LinPSK()
 {
-  RxDisplay = 0;
-  TxDisplay = 0;
-  Control = 0;
+  setupUi(this);
   Sound = 0;
   Modulator = 0;
   inAction=false;
@@ -98,32 +95,28 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
 
   if ( WindowColors.size() == 0 )
     WindowColors << color[0] ;
-  setCentralWidget ( new QWidget ( this ) );
-  centralWidget()->setMinimumSize ( settings.MinimumWindowWidth, settings.MinimumWindowHeight );
   setWindowTitle ( QString ( ProgramName ) + QString ( VERSION ) );
   setWindowIcon ( QIcon ( ":/images/linpsk.png" ) );
 // Create Statusbar
-  QStatusBar *StatusBar = this->statusBar();
-  StatusBar->setSizeGripEnabled ( true );
+  statusbar->setSizeGripEnabled ( true );
 
 
 //Messages
-  msg = new QLabel ( StatusBar );
-  StatusBar->addPermanentWidget ( msg, 2 );
+  msg = new QLabel ( );
+  statusbar->addPermanentWidget ( msg, 2 );
   msg->setText ( tr ( "Ready" ) );
 
 // IMD
-  IMD = new QLabel ( StatusBar );
-  StatusBar -> addPermanentWidget ( IMD, 1 );
-
+  IMD = new QLabel ( statusbar );
+  statusbar -> addPermanentWidget ( IMD, 1 );
 
 // Time
-  zeit = new QLabel ( StatusBar );
-  StatusBar->addPermanentWidget ( zeit, 1 );
+  zeit = new QLabel ( statusbar );
+  statusbar->addPermanentWidget ( zeit, 1 );
 
 // date
-  datum = new QLabel ( StatusBar );
-  StatusBar ->addPermanentWidget ( datum, 1 );
+  datum = new QLabel ( statusbar );
+  statusbar ->addPermanentWidget ( datum, 1 );
   setclock();
 
 // Let the time pass
@@ -131,111 +124,28 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   connect ( clock, SIGNAL ( timeout() ), SLOT ( setclock() ) );
   clock->start ( 60000 );
 
-  RxDisplay = new CRxDisplay ( centralWidget() );
-  TxDisplay = new CTxDisplay ( centralWidget() );
-
-  Control = new ControlPanel ( Macro, centralWidget() );
-  RxDisplay->RxFreq->setAfcDisplayMode ( settings.ActChannel->AfcProperties() );
-  RxDisplay->RxFreq->setAfcMode ( settings.ActChannel->getAfcMode() );
+  RxDisplay->setAfcProperties(settings.ActChannel->AfcProperties());
+  RxDisplay->setAfc(settings.ActChannel->getAfcMode());
   RxDisplay->setColorList ( &WindowColors );
-  connect ( RxDisplay, SIGNAL ( copyCallSign ( QString ) ), Control->QSO, SLOT ( copyCallSign ( QString ) ) );
-  connect ( RxDisplay, SIGNAL ( copyQTH ( QString ) ), Control->QSO, SLOT ( copyQTH ( QString ) ) );
-  connect ( RxDisplay, SIGNAL ( copyName ( QString ) ), Control->QSO, SLOT ( copyName ( QString ) ) );
-  connect ( RxDisplay, SIGNAL ( copyLocator ( QString ) ), Control->QSO, SLOT ( copyLocator ( QString ) ) );
-  connect ( RxDisplay, SIGNAL ( copyRST ( QString ) ), Control->QSO, SLOT ( copyRST ( QString ) ) );
 
   settings.QslData = settings.ActChannel->getQsoData();
-  Control->Display->setPhasePointer ( settings.ActChannel->getPhasePointer() );
+  Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
 
-  Control->Display->setColorList ( &WindowColors );
-  //Control->MacroBox->updateMacroWindow ( Macro );
-  // menubar
-  menubar = menuBar();
-// File Menu
-  fileMenu =  menubar->addMenu ( tr ( "File" ) );
-  // Settings Menu
-
-  editMenu =  menubar->addMenu ( tr ( "Settings" ) );
-
-  menubar->addSeparator();
-//=======
-  changeRxParams =  menubar->addMenu ( tr ( "RxParams" ) );
-  helpMenu =  menubar->addMenu ( tr ( "Help" ) );
-  QAction *A;
-  // File Menu
-  // ================= File Actions ========
-  A = fileMenu->addAction ( tr ( "Open Demo File" ) );
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( fileOpen() ) );
-  A = fileMenu->addAction ( tr ( "add RxWindow" ) );
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( addRxWindow() ) );
-
-  fileMenu->addSeparator();
-  fileMenu->addSeparator();
-
-  A = fileMenu->addAction ( tr ( "Exit" ) );
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( Exit() ) );
-
-// Settings Menu
-  // ================= Settings Actions=================
-  A = editMenu->addAction ( tr ( "General_Settings" ) );
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( generalSettings() ) );
-  editMenu->addSeparator();
-  A = editMenu->addAction ( tr ( "Add Macros" ) );
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( addMacro() ) );
-  A = editMenu->addAction ( tr ( "Edit Macros" ) );
-  connect ( A , SIGNAL ( triggered() ), this, SLOT ( editMacro() ) );
-  A = editMenu->addAction ( tr ( "Delete Macros" ) );
-  connect ( A  , SIGNAL ( triggered() ), this, SLOT ( deleteMacro() ) );
-  A = editMenu->addAction ( tr ( "Rename Macros" ) );
-  connect ( A  , SIGNAL ( triggered() ), this, SLOT ( renameMacro() ) );
-//===============================================================================
-  A = editMenu->addSeparator();
-
-  A = editMenu->addAction ( tr ( "Font Settings" ) );
-  connect ( A   , SIGNAL ( triggered() ), this, SLOT ( FontSetup() ) );
-  A = editMenu->addAction ( tr ( "ColorSettings" ) );
-  connect ( A , SIGNAL ( triggered() ), this, SLOT ( chooseColor() ) );
-  editMenu->addSeparator();
-
-  A = editMenu->addAction ( tr ( "Save Settings" ) );
-  connect ( A  , SIGNAL ( triggered() ), this, SLOT ( saveSettings() ) );
-  // Menu Rx Settings
-  //================Actions for RX Window ===========
-  A = changeRxParams->addAction ( tr ( "Change Rx Mode" ) );
-  connect ( A , SIGNAL ( triggered() ), this, SLOT ( setRxMode() ) );
-//Help Menu
-  // ================= Help Actions =========
-///  A = helpMenu->addAction ( tr ( "helpContentsAction" ) );
-///  connect ( A, SIGNAL ( triggered() ), this, SLOT ( helpIndex() ) );
-///  A = helpMenu->addAction ( tr ( "helpIndexAction" ) );
-///  connect ( A, SIGNAL ( triggered() ), this, SLOT ( helpContents() ) );
-  A = helpMenu->addAction ( tr ( "About LinPsk" ) );
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( helpAbout() ) );
-  A = helpMenu->addAction (tr("About Qt"));
-  connect ( A, SIGNAL ( triggered() ), this, SLOT ( helpAboutQt() ) );
-
+  Control->setColorList ( &WindowColors );
+  Control->insertMacros( Macro );
   languageChange();
 
-  // signals and slots connections
-
-//================================= Rx Parames ===================
-//================================================================
-  connect ( TxDisplay, SIGNAL ( startRx() ), this, SLOT ( startRx() ) );
-  connect ( TxDisplay, SIGNAL ( startTx() ), this, SLOT ( startTx() ) );
+// signals and slots connections
+//========== Macro Processing ======================================
   connect ( Macro, SIGNAL ( StartRx() ), this, SLOT ( startRx() ) );
   connect ( Macro, SIGNAL ( StartTx() ), this, SLOT ( startTx() ) );
 
-  connect ( RxDisplay, SIGNAL ( startPlotting ( double *, bool ) ), Control->Display, SLOT ( startPlot ( double *, bool ) ) );
-  connect ( Control->Display, SIGNAL ( FrequencyChanged ( double ) ), RxDisplay->RxFreq, SLOT ( setFrequency ( double ) ) );
-  connect ( RxDisplay, SIGNAL ( new_IMD ( float ) ), this, SLOT ( setIMD ( float ) ) );
-  connect ( Control->MacroBox, SIGNAL ( callMacro ( int ) ), this, SLOT ( executeMacro ( int ) ) );
-  connect ( RxDisplay, SIGNAL ( newActiveChannel() ), this, SLOT ( setChannelParams() ) );
-  connect ( RxDisplay->Recording->Record, SIGNAL ( toggled ( bool ) ), this, SLOT ( recording ( bool ) ) );
 //===================================================================
 
   TxBuffer = new CTxBuffer();
-  TxDisplay->TxWindow->setTxBuffer ( TxBuffer );
+
   apply_settings();
+  TxDisplay->TxWindow->setTxBuffer ( TxBuffer );
 
 }
 
@@ -323,12 +233,6 @@ void LinPSK::Exit()
   }
 }
 
-///void LinPSK::helpIndex()
-///{}
-
-///void LinPSK::helpContents()
-///{}
-
 void LinPSK::helpAbout()
 {
 QMessageBox::about(this, QString(tr("About LinPsk")), QString(tr("<h3>About LinPsk</h3><p><a href=\"http://linpsk.sf.net/\">LinPsk</a> is a PSK31 program for Linux by Volker Schroer, DL1KSV. It supports some other digital modes and is developed  under GPL <br/>( Read the file COPYING contained in the distribution for more information )</p>")));
@@ -344,7 +248,8 @@ void LinPSK::addRxWindow()
   if ( Channel->exec() != 0 )
   {
     AfcMode modus;
-    modus = RxDisplay->RxFreq->getAfcMode();
+//    modus = RxDisplay->RxFreq->getAfcMode();
+    modus = RxDisplay->getAfcMode();
     settings.ActChannel->setAfcMode ( modus );
     Mode rxmode = ( Mode ) Channel->selectedMode();
     if ( WindowColors.size() <= settings.RxChannels )
@@ -354,58 +259,10 @@ void LinPSK::addRxWindow()
 
     settings.ActChannel->setWindowColor ( WindowColors.at ( settings.RxChannels ) );
     settings.RxChannels++;
-    RxDisplay->RxFreq->setAfcDisplayMode ( settings.ActChannel->AfcProperties() );
+    RxDisplay->setAfcProperties( settings.ActChannel->AfcProperties() );
   }
 
 }
-
-
-
-void LinPSK::calculateSizeofComponents()
-{
-  /** Anteile in percent of mainwindow **/
-  /** RXDisplay **/
-#define RXPART 36
-  /** TXDisplay **/
-#define TXPART 20
-  /** Controlpanel **/
-#ifndef LINPSK_FOR_MAC
-#define CONTROLPART 37
-#else
-#define CONTROLPART 40
-#endif
-  
-  int width, height;
-  int xpos, ypos;
-  int windowsheight;
-
-  width = this->width();
-  height = this->height();
-
-  xpos = 0;
-  ypos = 0;;
-  windowsheight = height * RXPART / 100;
-  if ( RxDisplay != 0 )
-    RxDisplay->setGeometry ( xpos, ypos, width, windowsheight );
-
-  ypos = ypos + windowsheight;
-  windowsheight = height * TXPART / 100;
-  if ( TxDisplay != 0 )
-    TxDisplay->setGeometry ( xpos, ypos, width, windowsheight );
-  ypos = ypos + windowsheight;
-
-  windowsheight = height * CONTROLPART / 100;
-  if ( Control != 0 )
-    Control->setGeometry ( xpos, ypos, width, windowsheight );
-}
-
-
-
-void LinPSK::resizeEvent ( QResizeEvent * )
-{
-  calculateSizeofComponents();
-}
-
 
 void LinPSK::setclock()
 {
@@ -435,7 +292,7 @@ void LinPSK::startRx()
   if(inAction)
     return;
   inAction=true;
-  if ( Modulator != 0 )
+  if ( Modulator != 0 && !settings.DemoMode)
   {
     TxBuffer->insert ( TXOFF_CODE );
     if ( Sound > 0 )  // Switch Trx to rx
@@ -474,7 +331,7 @@ void LinPSK::startRx()
   }
   else
     TxDisplay->TxFunctions->setStatus ( UNDEF );
-  Control->Display->show();
+  Control->display();
   settings.Status = TxDisplay->TxFunctions->getstatus();
 TxDisplay->TxWindow->setFocus();
 inAction=false;
@@ -547,7 +404,7 @@ void LinPSK::startTx()
     return;
   }
 
-  if ( Sound->open_Device_write ( &errorstring ) < 0 )
+  if ( !Sound->open_Device_write ( &errorstring ) )
   {
     QMessageBox::information ( 0, ProgramName, errorstring );
     stopTx();
@@ -559,7 +416,7 @@ void LinPSK::startTx()
   msg->setText ( tr ( "Transmitting " ) + Info );
   TxDisplay->TxWindow->setFocus();
   settings.Status = TxDisplay->TxFunctions->getstatus();
-  Control->Display->hide();
+  Control->undisplay();
 
   Txcount = BUF_SIZE;
 //  process_txdata(); // Generate first Sample
@@ -654,8 +511,8 @@ void LinPSK::apply_settings()
 }
 void LinPSK::setChannelParams()
 {
-  Control->Display->setPhasePointer ( settings.ActChannel->getPhasePointer() );
-  Control->QSO->newChannel();
+  Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
+  Control->newChannel();
   if ( settings.ActChannel != 0 )
   {
     QString Info;
@@ -680,7 +537,7 @@ void LinPSK::setChannelParams()
       default:
         Info = "undefined";
     }
-    RxDisplay->RxFreq->setAfcDisplayMode ( settings.ActChannel->AfcProperties() );
+    RxDisplay->setAfcProperties( settings.ActChannel->AfcProperties() );
     msg->setText ( tr ( "Receiving " ) + Info );
   }
 }
@@ -689,6 +546,8 @@ void LinPSK::setRxMode()
   QString Info;
   ModeMenu Menu ;
   ExtraParameter *Param;
+  ExtraParameter parameter;
+
   Param = ( ExtraParameter * ) settings.ActChannel->getParameter ( Extra );
   if ( Param != 0 )
     Menu.setParameter ( *Param );
@@ -696,10 +555,11 @@ void LinPSK::setRxMode()
   {
     Mode rxmode = ( Mode ) Menu.selectedMode();
     settings.ActChannel->setMode ( rxmode );
-    RxDisplay->RxFreq->setAfcDisplayMode ( settings.ActChannel->AfcProperties() );
-    RxDisplay->RxFreq->setAfcMode ( settings.ActChannel->getAfcMode() );
-    Control->Display->setPhasePointer ( settings.ActChannel->getPhasePointer() );
-    settings.ActChannel->setParameter ( Extra, &Menu.getParameter() );
+    RxDisplay->setAfcProperties( settings.ActChannel->AfcProperties() );
+    RxDisplay->setAfc ( settings.ActChannel->getAfcMode() );
+    Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
+    parameter= Menu.getParameter();
+    settings.ActChannel->setParameter ( Extra, &parameter );
   }
   if ( settings.ActChannel != 0 )
     switch ( settings.ActChannel->getModulationType() )
@@ -796,7 +656,13 @@ void LinPSK::save_config()
     }
     config.endArray();
   }
-
+  // SoundDevices
+   config .beginGroup("SoundDevices");
+   config.setValue("InputDeviceName",settings.InputDeviceName);
+   config.setValue("sampleRate",settings.sampleRate);
+   config.setValue("OutputDeviceName",settings.OutputDeviceName);
+   config.setValue("ComplexFormat",settings.complexFormat);
+   config.endGroup();
 }
 
 void LinPSK::executeMacro ( int MacroNumber )
@@ -813,7 +679,7 @@ void LinPSK::addMacro()
   {
     Macro->insert ( NewMacro->macroName(),
                     NewMacro->macroDefinition(), NewMacro->accelerator(), NewMacro->position() );
-    Control->MacroBox->updateMacroWindow ( Macro );
+    Control->insertMacros( Macro );
   }
 }
 void LinPSK::editMacro()
@@ -823,8 +689,7 @@ void LinPSK::editMacro()
     EditMacro *Edit = new EditMacro ( Macro );
 
     if ( Edit->exec() != 0 )
-//   Control->MacroBox->updateMacroWindow ( Macro );
-      Control->MacroBox->setMacroWindow ( Macro );
+      Control->insertMacros( Macro );
   }
 }
 void LinPSK::deleteMacro()
@@ -834,7 +699,7 @@ void LinPSK::deleteMacro()
     DeleteMacro *Del = new DeleteMacro ( Macro );
 
     if ( Del->exec() != 0 )
-      Control->MacroBox->setMacroWindow ( Macro );
+      Control->insertMacros( Macro );
   }
 }
 void LinPSK::renameMacro()
@@ -844,7 +709,7 @@ void LinPSK::renameMacro()
     RenameMacro *Ren = new RenameMacro ( Macro );
 
     if ( Ren->exec() != 0 )
-      Control->MacroBox->setMacroWindow ( Macro );
+      Control->insertMacros( Macro );
   }
 }
 
@@ -935,7 +800,13 @@ void LinPSK::read_config()
     resize ( WidthtoSet, HeighttoSet );
   if ( ( X >= 0 ) && ( Y >= 0 ) )
     move ( X, Y );
-
+ // SoundDevices
+  config .beginGroup("SoundDevices");
+  settings.InputDeviceName=config.value("InputDeviceName","LinPSK_Record").toString();
+  settings.sampleRate=config.value("sampleRate",11025).toInt();
+  settings.OutputDeviceName=config.value("OutputDeviceName","LinPSK_Play").toString();
+  settings.complexFormat=config.value("ComplexFormat").toBool();
+  config.endGroup();
 }
 void LinPSK::selectPTTDevice()
 {
@@ -958,16 +829,7 @@ void LinPSK::selectPTTDevice()
   else
     settings.SerialDevice = "None"; //Their seems to be a wrong Value in the ConfigFile
 }
-void LinPSK::recording ( bool on )
-{
-  settings.ActChannel->record ( on );
-}
-void LinPSK::HelpAbout()
-{
-  QMessageBox::about ( this, tr ( "About..." ),
-                       ProgramName + QString ( VERSION ) + "\n written by Volker Schroer, DL1KSV\n" );
-//  setActiveWindow();
-}
+
 
 void LinPSK::saveSettings()
 {
@@ -981,6 +843,7 @@ void LinPSK::closeEvent ( QCloseEvent *e )
   {
     if ( RxDisplay != 0 )
       RxDisplay->stop_process_loop();
+    RxDisplay->stopRecording();
     e->accept();
     save_config();
   }
@@ -993,3 +856,8 @@ void LinPSK::closeEvent ( QCloseEvent *e )
   return;
 }
 
+
+void LinPSK::on_RxDisplay_newActiveChannel()
+{
+
+}
