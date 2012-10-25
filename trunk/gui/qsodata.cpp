@@ -23,6 +23,7 @@
 #include "parameter.h"
 #include "crxchannel.h"
 #include "processlogdata.h"
+#include "constants.h"
 
 #include <QDateTime>
 #include <QFile>
@@ -331,7 +332,7 @@ QSOData::coordinates QSOData::loc2coordinates ( const QChar *l )
   c.breite *= M_PI / 180.;
   return c;
 }
-
+/**
 void QSOData::copyCallSign ( QString s )
 {
   RemoteCallsign->setText ( s );
@@ -357,6 +358,35 @@ void QSOData::copyRST ( QString s )
   HisRST->setText ( s );
   HisRSTchanged();
 }
+**/
+void QSOData::setQsoData(QsoData value,QString s)
+{
+
+  switch (value)
+  {
+    case CallSign :
+      RemoteCallsign->setText ( s );
+      Callsignchanged();
+      break;
+    case QTH :
+      Qth->setText ( s );
+      QTHchanged();
+      break;
+    case Name:
+      OpName->setText ( s );
+      Namechanged();
+      break;
+    case Locator:
+      Loc->setText ( s.left(6).toUpper());
+      Locatorchanged();
+      break;
+    case RST:
+      HisRST->setText ( s );
+      HisRSTchanged();
+      break;
+  }
+ }
+
 void QSOData::newChannel()
 {
   Distance->setText ( "" );

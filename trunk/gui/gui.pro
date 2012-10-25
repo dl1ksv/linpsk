@@ -5,7 +5,12 @@ editmacro.ui \
 generalsettings.ui \
 modemenu.ui \
 qsodata.ui \
-renamemacro.ui
+renamemacro.ui \
+    controlpanel.ui \
+    linpsk.ui \
+    crxdisplay.ui \
+    spectrumdisplay.ui \
+    ctxdisplay.ui
 
 CONFIG += build_all \
  staticlib \
@@ -20,7 +25,12 @@ SOURCES += generalsettings.cpp \
  modemenu.cpp \
  qsodata.cpp \
  renamemacro.cpp \
- editmacro.cpp
+ editmacro.cpp \
+    controlpanel.cpp \
+    linpsk.cpp \
+    crxdisplay.cpp \
+    spectrumdisplay.cpp \
+    ctxdisplay.cpp
 
 HEADERS += generalsettings.h \
  addmacro.h \
@@ -29,7 +39,12 @@ HEADERS += generalsettings.h \
  modemenu.h \
  qsodata.h \
  renamemacro.h \
- editmacro.h
+ editmacro.h \
+    controlpanel.h \
+    linpsk.h \
+    crxdisplay.h \
+    spectrumdisplay.h \
+    ctxdisplay.h
 
 
 TEMPLATE = lib
@@ -45,4 +60,7 @@ CONFIG -= release
 QT += network
 
 INCLUDEPATH += ../src
+
+RESOURCES += \
+    ../src/application.qrc
 

@@ -30,53 +30,53 @@ extern Parameter settings;
 GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
 		: QDialog ( parent, fl ), Ui::GeneralSettings()
 {
-	setupUi ( this );
-	QString DirectoryName;
-	QDir dir;
-
-	LocalSettings = settings;
-	FileFormat = new QButtonGroup ( FileFormatLayout );
-	FileFormat->setExclusive ( true );
-	FileFormat->addButton ( Wav, 0 );
-	FileFormat->addButton ( Text, 1 );
-
-	if ( LocalSettings.DemoTypeNumber == 0 )
-		Wav->setChecked ( true );
-	else
-		Text->setChecked ( true );
-	Callsign->setText ( LocalSettings.callsign );
-	myLocator->setText ( LocalSettings.myLocator );
-	UTC->setValue ( LocalSettings.timeoffset );
+  setupUi ( this );
+  QString DirectoryName;
+  QDir dir;
+  QString s;
+  int index;
+  LocalSettings = settings;
+  FileFormat = new QButtonGroup ( FileFormatLayout );
+  FileFormat->setExclusive ( true );
+  FileFormat->addButton ( Wav, 0 );
+  FileFormat->addButton ( Text, 1 );
+  if ( LocalSettings.DemoTypeNumber == 0 )
+    Wav->setChecked ( true );
+  else
+    Text->setChecked ( true );
+  Callsign->setText ( LocalSettings.callsign );
+  myLocator->setText ( LocalSettings.myLocator );
+  UTC->setValue ( LocalSettings.timeoffset );
   SlashedZero->setAutoExclusive(false);
-	SlashedZero->setChecked ( LocalSettings.slashed0 );
+  SlashedZero->setChecked ( LocalSettings.slashed0 );
   autoCrLf->setAutoExclusive(false);
   autoCrLf->setChecked(LocalSettings.autoCrLf);
-	QRegExp rx ( "^[A-R][A-R][0-9][0-9][A-X][A-X]$" );
-	QValidator *validator = new QRegExpValidator ( rx, this );
-	myLocator->setValidator ( validator );
-	myLocator->setText ( LocalSettings.myLocator );
-	Demomode->setChecked ( LocalSettings.DemoMode );
-	connect ( Demomode, SIGNAL ( clicked ( bool ) ), this, SLOT ( selectDemomode ( bool ) ) );
-	connect ( AvailableDevices, SIGNAL ( clicked ( const QModelIndex & ) ), this, SLOT ( setPTTDevice ( const QModelIndex & ) ) );
+  QRegExp rx ( "^[A-R][A-R][0-9][0-9][A-X][A-X]$" );
+  QValidator *validator = new QRegExpValidator ( rx, this );
+  myLocator->setValidator ( validator );
+  myLocator->setText ( LocalSettings.myLocator );
+  Demomode->setChecked ( LocalSettings.DemoMode );
+  connect ( Demomode, SIGNAL ( clicked ( bool ) ), this, SLOT ( selectDemomode ( bool ) ) );
+  connect ( AvailableDevices, SIGNAL ( clicked ( const QModelIndex & ) ), this, SLOT ( setPTTDevice ( const QModelIndex & ) ) );
 
-	if ( Demomode->isChecked() )
-		FileFormatLayout->show();
-	else
-		FileFormatLayout->hide();
+  if ( Demomode->isChecked() )
+    selectDemomode(true);
+  else
+    selectDemomode(false);
 
 //PTT
-	SelectedDevice->setText ( LocalSettings.SerialDevice );
+  SelectedDevice->setText ( LocalSettings.SerialDevice );
 // First look in the /dev Directory
-	DirectoryName = "/dev/";
+  DirectoryName = "/dev/";
 
-	dir.setPath ( DirectoryName );
-	QStringList filenames;
-	filenames << "ttyS*";
-	QStringList Files = dir.entryList ( filenames, QDir::System | QDir::CaseSensitive, QDir::Name );
+  dir.setPath ( DirectoryName );
+  QStringList filenames;
+  filenames << "ttyS*";
+  QStringList Files = dir.entryList ( filenames, QDir::System | QDir::CaseSensitive, QDir::Name );
 
-	for ( int kk = 0; kk < Files.size(); kk++ )
-		Files.replace ( kk, DirectoryName + Files.at ( kk ) );
-	ReadOnlyStringListModel *m = new ReadOnlyStringListModel ( this );
+  for ( int kk = 0; kk < Files.size(); kk++ )
+    Files.replace ( kk, DirectoryName + Files.at ( kk ) );
+  ReadOnlyStringListModel *m = new ReadOnlyStringListModel ( this );
 	m->setStringList ( Files );
 	AvailableDevices->setModel ( m );
 	AvailableDevices->show();
@@ -89,7 +89,14 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
 	for(QStringList::iterator Name=Files.begin();Name !=Files.end(); Name++)
 	 AvailableDevices->insertItem(Directory + *Name);
 	**/
-//Logging
+// Sound Devices
+  soundInputDeviceName->setText(LocalSettings.InputDeviceName);
+  index=sampleRate->findText(s.setNum(settings.sampleRate));
+  if (index >0)
+    sampleRate->setCurrentIndex(index);
+  soundOutputDeviceName->setText(LocalSettings.OutputDeviceName);
+  realComplex->setChecked(LocalSettings.complexFormat);
+ //Logging
 	Directory->setText ( LocalSettings.Directory );
 	QsoFile->setText ( LocalSettings.QSOFileName );
 	fileLog->setChecked ( LocalSettings.fileLog );
@@ -121,7 +128,12 @@ Parameter GeneralSettings::getSettings()
 		LocalSettings.inputFilename = "";
 	}
 	else
+    {
 		LocalSettings.DemoMode = false;
+        LocalSettings.InputDeviceName=soundInputDeviceName->text();
+        LocalSettings.OutputDeviceName=soundOutputDeviceName->text();
+        LocalSettings.complexFormat=realComplex->isChecked();
+    }
 
 	LocalSettings.timeoffset = UTC->value();
 	if ( SlashedZero->isChecked() )
@@ -153,9 +165,15 @@ LocalSettings.dateFormat=dateFormat->currentText();
 void GeneralSettings::selectDemomode ( bool mode )
 {
 	if ( mode )
-		FileFormatLayout->show();
+    {
+      FileFormatLayout->show();
+      SoundDeviceBox->hide();
+    }
 	else
-		FileFormatLayout->hide();
+    {
+      FileFormatLayout->hide();
+      SoundDeviceBox->show();
+    }
 }
 
 void GeneralSettings::setPTTDevice ( const QModelIndex &index )
@@ -177,4 +195,11 @@ void GeneralSettings::selectLinLogLogging ( bool b )
 	Port->setDisabled ( !b );
 	Host->setDisabled ( !b );
 }
-
+void GeneralSettings::setSampleRate(QString s)
+{
+  LocalSettings.sampleRate=s.toInt();
+}
+void GeneralSettings::setComplexFormat(bool b)
+{
+  LocalSettings.complexFormat=b;
+}

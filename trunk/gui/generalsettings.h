@@ -47,6 +47,8 @@ void selectDemomode(bool);
 void setPTTDevice(const QModelIndex &);
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
+void setSampleRate(QString s);
+void setComplexFormat(bool);
 };
 
 #endif

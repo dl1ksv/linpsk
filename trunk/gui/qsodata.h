@@ -23,6 +23,7 @@
 
 #include <QGroupBox>
 #include "ui_qsodata.h"
+#include "constants.h"
 
 class QChar;
 class ProcessLogData;
@@ -57,11 +58,7 @@ void refreshDateTime();
 void save();
 void calculateDistance(QString);
 
-void copyCallSign(QString);
-void copyQTH(QString);
-void copyName(QString);
-void copyLocator(QString);
-void copyRST(QString);
+void setQsoData(QsoData,QString);
 void newChannel();
 protected:
 
