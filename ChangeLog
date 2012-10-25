@@ -1,5 +1,10 @@
 LinPsk ChangeLog
 
+1.2 alpha
+
+Modified gui. Introducing different sample rates. At the moment others than
+11025 Hz not working.
+
 1.1
 
 Fixed wrong code for 'LF' in rttymodulator.cpp, Thanks to kf9a
