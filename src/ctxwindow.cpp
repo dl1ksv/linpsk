@@ -50,8 +50,6 @@ CTxWindow::CTxWindow ( QWidget* parent )
 
   Zeile2 = new QLineEdit ( this );
   Zeile2->setFrame ( false );
-//    Zeile2->setFrameShadow( QLineEdit::Plain );
-//    Zeile2->setLineWidth( 0 );
 
 
   Zeile3 = new QLineEdit ( this );
@@ -69,11 +67,7 @@ CTxWindow::CTxWindow ( QWidget* parent )
   connect ( Zeile1, SIGNAL ( returnPressed() ), this, SLOT ( gotoNextLine() ) );
   connect ( Zeile2, SIGNAL ( returnPressed() ), this, SLOT ( gotoNextLine() ) );
   connect ( Zeile3, SIGNAL ( returnPressed() ), this, SLOT ( gotoNextLine() ) );
-  /**
-      connect( Zeile1, SIGNAL( textChanged(const QString &)) , this, SLOT(transmitText(const QString &)));
-      connect( Zeile2, SIGNAL( textChanged(const QString &)) , this, SLOT(transmitText(const QString &)));
-      connect( Zeile3, SIGNAL( textChanged(const QString &)) , this, SLOT(transmitText(const QString &)));
-  **/
+
   setEnabled ( true );
 }
 

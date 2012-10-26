@@ -17,9 +17,9 @@
 #ifndef CRXCHANNEL_H
 #define CRXCHANNEL_H
 
+#include <complex>
 #include "constants.h"
 #include <QObject>
-#include <complex>
 
 #include "cdemodulator.h"
 /**Class to administrate the different RX Channels
@@ -47,6 +47,7 @@ virtual ~CRxChannel();
   int get2RxFrequency();
   Mode getModulationType();
   int getID();
+  CRxWindow *getWindow();
   bool getSquelchState();
   int getSquelchValue();
   void setThreshold(int);
@@ -58,13 +59,13 @@ virtual ~CRxChannel();
   CRxWindow *RxWindow;
   float getIMD();
   virtual void *getBuffer();
+  std::complex<float>* getPhasePointer();
 public slots:
   void setRxFrequency(double);
   void hide();
   void show();
   class CRxChannel *getChannel(int);
   void setAfcMode(AfcMode);
-  std::complex<float>* getPhasePointer();
   void setSquelch(bool);
   void updateRx(char);
   void clearRxWindow();

@@ -33,11 +33,6 @@ void CDemodulator::setRxFrequency(double freq)
 {
  if ( (freq > 200 ) && (freq < 3000 ) ) 
   RxFrequency = freq;
- else
-  {
-   printf("Invalid Frequency %f\n",freq);
-   return;
-  }
 }
 
 double CDemodulator::getRxFrequency(void)

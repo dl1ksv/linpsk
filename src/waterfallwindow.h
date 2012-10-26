@@ -1,9 +1,9 @@
 /***************************************************************************
-                          |FILENAME|  -  description
+                          waterfallwindow.h -  description
                              -------------------
-    begin                : |DATE|
-    copyright            : (C) |YEAR| by |AUTHOR|
-    email                : |EMAIL|
+    begin                : Sat Aug 26 2012
+    copyright            : (C) 2012 by Volker Schroer
+    email                : DL1KSV@gmx.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -12,43 +12,35 @@
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
- *   The PSK part is based on WinPSK 1.0 by Moe Wheatley, AE4JY            *
  ***************************************************************************/
 
-#ifndef CTRIGGER_H
-#define CTRIGGER_H
+#ifndef WATERFALLWINDOW_H
+#define WATERFALLWINDOW_H
 
+#include <QFrame>
 
-#include <QGroupBox>
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
-class QLineEdit;
-class QRadioButton;
-
-class CTrigger : public QGroupBox
+class QPixmap;
+class WaterfallWindow : public QFrame
 {
-    Q_OBJECT
-
+  Q_OBJECT
 public:
-    CTrigger(const QString, QWidget* parent = 0  );
-    ~CTrigger();
-
-    QLineEdit* TriggerText;
-    QRadioButton* Activate;
-
-public slots:
-
+  explicit WaterfallWindow(QWidget *parent = 0);
+  void plotWaterfall(int *fftdata);
+  void mousePressEvent ( QMouseEvent *e );
 
 protected:
-    void resizeEvent( QResizeEvent * );
+  void resizeEvent( QResizeEvent * );
+  void paintEvent(QPaintEvent *);
+  void wheelEvent ( QWheelEvent * e );
 
-
-protected slots:
-    virtual void languageChange();
 private:
-    void calculateSizeofComponents();
-
+  QPixmap *pwaterfall;
+  
+signals:
+ void frequencyChanged(double);
+ void frequencyChanged(int);
+public slots:
+  
 };
 
-#endif // CTRIGGER_H
+#endif // WATERFALLWINDOW_H

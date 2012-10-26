@@ -98,8 +98,8 @@ int mySlider::getThreshold()
  *  Constructs a CSquelch which is a child of 'parent', with the
  *  name 'name'.'
  */
-CSquelch::CSquelch ( const QString name, QWidget* parent )
-    : QGroupBox ( name, parent )
+CSquelch::CSquelch (QWidget* parent )
+    : QGroupBox ( parent )
 {
   setAlignment ( int ( Qt::AlignHCenter ) );
 
@@ -161,7 +161,6 @@ void CSquelch::calculateSizeofComponents()
   Activate->setGeometry ( xpos, ypos, innerwidth, innerheight );
   resize ( width, height );
 }
-
 
 void CSquelch::setSquelchLevel ( int level )
 {

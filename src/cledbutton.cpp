@@ -33,8 +33,6 @@ void CLedButton::paintEvent(QPaintEvent *e)
 QPushButton::paintEvent(e);
 QPainter paint(this);
 
-
-//drawButton(&paint);
 switch (status)
 	{
 	case ON:

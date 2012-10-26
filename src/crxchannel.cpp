@@ -320,3 +320,7 @@ AfcMode CRxChannel::AfcProperties()
 {
   return Demodulator->AfcProperties();
 }
+CRxWindow *CRxChannel::getWindow()
+{
+ return RxWindow;
+}

@@ -17,13 +17,14 @@
 #ifndef CDEMODULATOR_H
 #define CDEMODULATOR_H
 
-#include <qobject.h>
 #include <complex>
-#include <cstdio>
+#include <qobject.h>
+//#include <cstdio>
 #include "constants.h"
 /**Base class for all possible types of demodulators
   *@author Volker Schroer
   */
+
 class CDemodulator : public QObject
  {
  Q_OBJECT
@@ -39,7 +40,7 @@ public:
  virtual double get2RxFrequency(void);
  /** Initialises something */
  virtual bool Init(double,int) = 0;
- virtual std::complex<float> *getPhasePointer();
+ virtual std::complex<float> * getPhasePointer();
  virtual int getSquelchValue() = 0;
  virtual AfcMode getAfcMode();
  virtual AfcMode AfcProperties() = 0;

@@ -79,12 +79,7 @@ class CRxWindow : public QScrollArea
     int DisplayLineHeight;
   signals:
     void Triggered();
-    void copyCallSign ( QString );
-    void copyQTH ( QString );
-    void copyName ( QString );
-    void copyLocator ( QString );
-    void copyRST ( QString );
-
+    void setQsoData(QsoData,QString);
 };
 
 #endif // CRXWINDOW_H

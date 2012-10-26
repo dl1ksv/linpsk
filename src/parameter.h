@@ -71,12 +71,16 @@ bool DemoMode;                      // DemoMode ?
 int timeoffset;                     // offset to UTC
 
 /** DeviceSection */
+QString InputDeviceName;
+QString OutputDeviceName;
 
+int sampleRate;
+bool complexFormat;
 
 bool slashed0; 				// True if to print 0 slashed
 bool autoCrLf;              // True if sending cr lf on enter
 
-unsigned int  RxChannels;
+int  RxChannels;
 CRxChannel * ChannelChain;
 CRxChannel * ActChannel;
 QsoInfo *QslData;
