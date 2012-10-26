@@ -60,7 +60,6 @@ private:
     AfcMode modus;
 signals:
  void FrequencyChanged(double);
-// void toggleAFC(bool);
 
 };
 

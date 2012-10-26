@@ -47,7 +47,7 @@ class CSquelch : public QGroupBox
     Q_OBJECT
 
 public:
-    CSquelch(const QString, QWidget* parent = 0);
+    CSquelch(QWidget* parent = 0);
     ~CSquelch();
     void setSquelchLevel(int);
     int getThreshold();

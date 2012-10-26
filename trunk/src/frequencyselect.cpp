@@ -53,7 +53,7 @@ AfcWide->setAutoExclusive(false);
     }
     Frequency = new QSpinBox( this );
     Frequency->setMaximum( 2500 );
-    Frequency->setMinimum( 300 );
+    Frequency->setMinimum( 100 );
     frequency = 1000;
     Frequency->setValue( (int) frequency );
     languageChange();

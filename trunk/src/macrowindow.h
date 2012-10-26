@@ -17,27 +17,29 @@
 #ifndef MACROWINDOW_H
 #define MACROWINDOW_H
 
-#include <QScrollArea>
-
+#include <QFrame>
 
 class Macros;
 class QGroupBox;
 class QButtonGroup;
+class QScrollArea;
+
 /**This class implements simple text and file macros.
 The macros are startet by a pushbutton and the pushbuttons are arranged in a scrollview.
   *@author Volker Schroer
   */
 
 
-class MacroWindow : public QScrollArea  {
+class MacroWindow : public QFrame  {
    Q_OBJECT
 public: 
-	MacroWindow(Macros *M,QWidget *parent=0);
+    MacroWindow(QWidget *parent=0);
 	~MacroWindow();
 void setMacroWindow ( Macros *M);
 private:  
 QButtonGroup* DisplayBox;
 QGroupBox* Area;
+QScrollArea *scrollArea;
 int NumberOfMacros;
 protected:
 void fontChange(const QFont &);

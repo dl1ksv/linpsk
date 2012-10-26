@@ -1,5 +1,4 @@
-SOURCES += linpsk.cpp \
-           main.cpp \
+SOURCES += main.cpp \
  macros.cpp \
  macrowindow.cpp \
  bpskdemodulator.cpp \
@@ -7,17 +6,12 @@ SOURCES += linpsk.cpp \
  cdemodulator.cpp \
  cledbutton.cpp \
  cmodulator.cpp \
- controlpanel.cpp \
  cpskdemodulator.cpp \
- crecording.cpp \
  crxchannel.cpp \
- crxdisplay.cpp \
  crxwindow.cpp \
  csound.cpp \
  csquelch.cpp \
- ctrigger.cpp \
  ctxbuffer.cpp \
- ctxdisplay.cpp \
  ctxwindow.cpp \
  deinterleaver.cpp \
  feccoder.cpp \
@@ -38,28 +32,24 @@ SOURCES += linpsk.cpp \
  textinput.cpp \
  viterbi.cpp \
  waveinput.cpp \
- spectrumdisplay.cpp \
  readonlystringlistmodel.cpp \
- processlogdata.cpp
-HEADERS += linpsk.h \
- bpskdemodulator.h \
+ processlogdata.cpp \
+    tabwidget.cpp \
+    spectrumwindow.cpp \
+    waterfallwindow.cpp
+HEADERS += bpskdemodulator.h \
  bpskmodulator.h \
  cdemodulator.h \
  cledbutton.h \
  cmodulator.h \
  color.h \
  constants.h \
- controlpanel.h \
  cpskdemodulator.h \
- crecording.h \
  crxchannel.h \
- crxdisplay.h \
  crxwindow.h \
  csound.h \
  csquelch.h \
- ctrigger.h \
  ctxbuffer.h \
- ctxdisplay.h \
  ctxwindow.h \
  deinterleaver.h \
  feccoder.h \
@@ -83,10 +73,12 @@ HEADERS += linpsk.h \
  textinput.h \
  viterbi.h \
  waveinput.h \
- spectrumdisplay.h \
  readonlystringlistmodel.h \
  fskmodulator.h \
- processlogdata.h
+ processlogdata.h \
+    tabwidget.h \
+    spectrumwindow.h \
+    waterfallwindow.h
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \

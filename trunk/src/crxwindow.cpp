@@ -30,7 +30,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
     : QScrollArea ( parent )
 {
   QFontMetrics fm ( font() );
-  rowHeight = fm.height();
+  rowHeight = fm.height()+1;
   DisplayBox = new QWidget ( this );
   DisplayBox->setFixedSize ( 642, RXWINDOWBUFFER*rowHeight );
   DisplayBox->setContextMenuPolicy ( Qt::CustomContextMenu );
@@ -49,7 +49,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
   Row = 0;
   Column = 0;
   AutoScroll = true;
-  DisplayLineHeight = rowHeight - 2;
+  DisplayLineHeight = rowHeight - 1;
   for ( int i = 0;i < RXWINDOWBUFFER;i++ )
   {
 
@@ -172,15 +172,15 @@ void CRxWindow::NeueZeile()
   Row++;
   if ( Row >= RXWINDOWBUFFER )
   {
-    if ( save && stream != 0 )
-      for ( int i = 0;i < 10; i++ )
-        *stream << ScrollBuffer[i]->text() << "\n";
+   if ( save && stream != 0 )
+     for ( int i = 0;i < 10; i++ )
+       *stream << ScrollBuffer[i]->text() << "\n";
     removeLines ( 10 );
     Row -= 10;
   }
   if ( ! AutoScroll )
     return;
-//  ensureVisible ( 0, Row*rowHeight, 20, 15 );
+
   ensureWidgetVisible ( ( QWidget* ) ScrollBuffer[Row] );
 }
 void CRxWindow::setColor ( QColor color )
@@ -271,21 +271,21 @@ void CRxWindow::contextMenu ( QPoint p )
 }
 void CRxWindow::copyCallSign()
 {
-  emit copyCallSign ( selectedString );
+  emit setQsoData(CallSign,  selectedString );
 }
 void CRxWindow::copyQTH()
 {
-  emit copyQTH ( selectedString );
+  emit setQsoData( QTH, selectedString );
 }
 void CRxWindow::copyName()
 {
-  emit copyName ( selectedString );
+  emit setQsoData( Name, selectedString );
 }
 void CRxWindow::copyLocator()
 {
-  emit copyLocator ( selectedString );
+  emit setQsoData( Locator, selectedString );
 }
 void CRxWindow::copyRST()
 {
-  emit copyRST ( selectedString );
+  emit setQsoData( RST, selectedString );
 }

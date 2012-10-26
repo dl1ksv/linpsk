@@ -47,7 +47,12 @@ ActChannel = 0;   // Pointer to the active Channel
 ChannelChain = 0; // Pointer to the Start of the Rx - ChannelChain
 ApplicationFont =0;
 autoCrLf=true;
+dateFormat="dd.MM.yyyy";
 
+InputDeviceName="LinPSK_Record";
+OutputDeviceName="LinPSK_Play";
+sampleRate=11025;
+complexFormat=false;
 }
 Parameter::~Parameter()
 {
