@@ -1,0 +1,136 @@
+/***************************************************************************
+                          spectrumdisplay.cpp  -  description
+                             -------------------
+    begin                : Fr March 19 2004
+    copyright            : (C) 2004 by Volker Schroer
+    email                : dl1ksv@gmx.de
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ ***************************************************************************/
+
+
+#include <QRadioButton>
+#include <QSpinBox>
+#include <QPainter>
+#include <QPixmap>
+#include <QSplitter>
+#include "spectrumdisplay.h"
+#include "crxchannel.h"
+#include "parameter.h"
+#include "color.h"
+extern Parameter settings;
+
+SpectrumDisplay::SpectrumDisplay ( QWidget* parent ) : QFrame ( parent ), Ui::SpectrumDisplay()
+{
+  setupUi(this);
+  languageChange();
+  inputdata = 0;
+  for(int i=0; i< fftsize;i++)
+    smoothedfft[i]=0.;
+  displayWidth=spectrumWindow->width()-2*spectrumWindow->frameWidth();
+  connect(spectrumWindow,SIGNAL(frequencyChanged(double)),this ,SIGNAL(FrequencyChanged(double)));
+  connect(waterfallWindow,SIGNAL(frequencyChanged(double)),this ,SIGNAL(FrequencyChanged(double)));
+}
+
+/*
+ *  Destroys the object and frees any allocated resources
+ */
+SpectrumDisplay::~SpectrumDisplay()
+{
+	// no need to delete child widgets, Qt does it all for us
+}
+
+/*
+ *  Sets the strings of the subwidgets using the current
+ *  language.
+ */
+void SpectrumDisplay::resizeEvent ( QResizeEvent * )
+{
+  if ( inputdata == 0 )
+    return;          // No data available
+  displayWidth=spectrumWindow->width()-2*spectrumWindow->frameWidth();
+  if(fftsize < displayWidth)
+  {
+    qDebug("+++ SpectrumDisplay: Spectrum array %d lower than displaywidth %d",fftsize,displayWidth);
+    return;
+  }
+  translate();
+  calcFFT();
+  spectrumWindow->plotSpectrum(false,fftdata, MinFreq->value(),MaxFreq->value());
+  waterfallWindow->plotWaterfall(fftdata);
+}
+
+void SpectrumDisplay::calcFFT()
+{
+  if ( inputdata == 0 )
+     return;          // No data available
+  for ( int i = 0;i < displayWidth;i++ )
+   if( Smooth->isChecked())
+    {
+      float x=( log10 ( inputdata[xtranslate[i]] + 100. ) - 2. );
+      float gain=(1. - exp(-(0.2 * x)));
+      smoothedfft[i]=smoothedfft[i]*(1.-gain) + gain *x;
+      fftdata[i] = ( int ) (20.*smoothedfft[i]);
+    }
+    else
+      //18.4 scales to a range from 0 - 100, as max(inputdata ) =  fft_length/4 ^ 2
+       fftdata[i] = ( int ) ( 18.4 * ( log10 ( inputdata[xtranslate[i]] + 100. ) - 2. ) );
+    // For Color scale should be 18.4 *2.55
+    }
+
+void SpectrumDisplay::translate ( void )
+{
+    int i, to, minfreq, maxfreq,tmp;
+	minfreq = MinFreq->value();
+	maxfreq = MaxFreq->value();
+    to = int ( maxfreq * fftsize *4/ settings.sampleRate );
+    for ( i = 0;i < displayWidth;i++ )
+    {
+      tmp= ( ( ( maxfreq - minfreq ) * i * to / displayWidth ) + minfreq * to ) / maxfreq;
+      if( tmp < fftsize)
+        xtranslate[i] = tmp;
+      else
+      {
+        qDebug("+++ SpectrumDisplay: translation array size %d lower than requested size %d",fftsize,tmp);
+        return;
+      }
+    }
+}
+
+void SpectrumDisplay::startPlot ( double *x, bool overload )
+{
+	inputdata = x;
+    int tmp=spectrumWindow->width()-2*spectrumWindow->frameWidth();
+    if( tmp != displayWidth)
+    {
+      displayWidth=tmp;
+      translate();
+    }
+	calcFFT();
+    spectrumWindow->plotSpectrum(overload,fftdata, MinFreq->value(),MaxFreq->value());
+    waterfallWindow->plotWaterfall(fftdata);
+}
+
+void SpectrumDisplay::setnewFrequency ( int position )
+{
+
+	double freq;
+    freq = ( position * ( MaxFreq->value() - MinFreq->value() ) ) / displayWidth + MinFreq->value();
+	settings.ActChannel->setRxFrequency ( freq );
+	emit FrequencyChanged ( freq );
+}
+
+void SpectrumDisplay::setPhasePointer ( std::complex<float> *p )
+{
+   spectrumWindow->setPhasePointer(p);
+}
+void SpectrumDisplay::setColorList(QList<QColor> *c)
+{
+  spectrumWindow->setColorList(c);
+}
