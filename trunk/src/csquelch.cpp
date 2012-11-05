@@ -53,33 +53,26 @@ void mySlider::paintEvent ( QPaintEvent * )
 
   QStylePainter p;
 
-  int scale;
+  int pos=sliderPosition();
+  setSliderPosition(SquelchLevel);
   p.begin ( this );
 // Get Parameters of the Slider
   initStyleOption ( &option );
   option.type = QStyleOption::SO_Slider;
   option.subControls = QStyle::SC_SliderGroove;
-  const QColor c0 = option.palette.color ( QPalette::Window );
-  QRect groove = option.rect;
-  if ( SquelchLevel > 0 )
-  {
-    // Draw the two parts of the slider groove, if we have a signal
-    int height = option.rect.height();
-    scale = ( height * ( 100 - SquelchLevel ) ) / 100;
-    // Set Color depending on signal strength
-
-    if ( SquelchLevel < option.sliderValue )  // Too low
-      option.palette.setColor ( QPalette::Window, Yellow );
-    else
-      option.palette.setColor ( QPalette::Window, Cyan );
+  if ( SquelchLevel < pos )
+    option.palette.setColor( QPalette::Normal,QPalette::Highlight,Qt::yellow);
+  else
+    option.palette.setColor( QPalette::Normal,QPalette::Highlight,Qt::cyan);
     p.drawComplexControl ( QStyle::CC_Slider, option );
-    option.rect.setHeight ( scale );
-  }
-  option.palette.setColor ( QPalette::Window, c0 );
-  p.drawComplexControl ( QStyle::CC_Slider, option );
-  option.rect = groove;
+    p.end();
+  setSliderPosition(pos);
+  p.begin(this);
+   initStyleOption ( &option );
   option.subControls = QStyle::SC_SliderHandle;
+  option.palette.setColor ( QPalette::Button, Qt::red );
   p.drawComplexControl ( QStyle::CC_Slider, option );
+  p.end();
 
 }
 
