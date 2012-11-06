@@ -64,6 +64,8 @@ private:
  int fftdata[fftsize];    // Not all elements are used, it differs
  int xtranslate[fftsize]; // depending on the display width
  float smoothedfft[fftsize];
+ int oldMinfreq;
+ int oldMaxfreq;
 
 signals:
 void FrequencyChanged(double);
