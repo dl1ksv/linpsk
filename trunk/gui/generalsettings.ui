@@ -417,6 +417,9 @@
         </item>
         <item>
          <widget class="QComboBox" name="sampleRate">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="insertPolicy">
            <enum>QComboBox::NoInsert</enum>
           </property>
@@ -460,6 +463,9 @@
       </item>
       <item row="1" column="2">
        <widget class="QRadioButton" name="realComplex">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Complex Samples</string>
         </property>
