@@ -50,14 +50,13 @@ mySlider::~mySlider()
 
 void mySlider::paintEvent ( QPaintEvent * )
 {
-
   QStylePainter p;
-
-  int pos=sliderPosition();
-  setSliderPosition(SquelchLevel);
+  int pos;
   p.begin ( this );
 // Get Parameters of the Slider
   initStyleOption ( &option );
+  pos=option.sliderPosition;
+  option.sliderPosition=SquelchLevel;
   option.type = QStyleOption::SO_Slider;
   option.subControls = QStyle::SC_SliderGroove;
   if ( SquelchLevel < pos )
@@ -65,10 +64,7 @@ void mySlider::paintEvent ( QPaintEvent * )
   else
     option.palette.setColor( QPalette::Normal,QPalette::Highlight,Qt::cyan);
     p.drawComplexControl ( QStyle::CC_Slider, option );
-    p.end();
-  setSliderPosition(pos);
-  p.begin(this);
-   initStyleOption ( &option );
+  option.sliderPosition=pos;
   option.subControls = QStyle::SC_SliderHandle;
   option.palette.setColor ( QPalette::Button, Qt::red );
   p.drawComplexControl ( QStyle::CC_Slider, option );
