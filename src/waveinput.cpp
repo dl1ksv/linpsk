@@ -253,8 +253,11 @@ while (j<anzahl)
       Bytesread +=2;
      }		
    else		
-   // lseek(fd,offset,SEEK_SET);
-    printf("Error reading data chunk\n"); 
+   {
+    printf("Error reading data chunk\nRetry from the beginning");
+    lseek(fd,offset,SEEK_SET);
+    Length=Bytesread;
+    }
    }
   else
   {
@@ -270,8 +273,11 @@ while (j<anzahl)
     Bytesread++;
     }
    else		
-   // lseek(fd,offset,SEEK_SET);
-    printf("Error reading data chunk\n");        
+   {
+    printf("Error reading data chunk\nRetry from the beginning");
+    lseek(fd,offset,SEEK_SET);
+    Length=Bytesread;
+    }
   }
  if (Bytesread >= Length )
  {
