@@ -810,24 +810,19 @@ void LinPSK::read_config()
 }
 void LinPSK::selectPTTDevice()
 {
-
-//if (settings.serial >0 )
-//  close(settings.serial);
   settings.serial = -1;
   if ( settings.SerialDevice != "None" )
-//{
-// QMessageBox::information(0,"LinPsk","Trying to open Device " + settings.SerialDevice);
+  {
+    int flags = TIOCM_RTS | TIOCM_DTR;
     settings.serial = open ( settings.SerialDevice.toAscii().data(), O_EXCL | O_WRONLY );
-// if (settings.serial > 0 )
-//  QMessageBox::information(0,"LinPsk","Opening successfull");
-// else
-//  QMessageBox::information(0,"LinPsk","Opening unsuccessfull");
-//}
-  int flags = TIOCM_RTS | TIOCM_DTR;
-  if ( settings.serial > 0 )
-    ioctl ( settings.serial, TIOCMBIC, &flags );
-  else
-    settings.SerialDevice = "None"; //Their seems to be a wrong Value in the ConfigFile
+    if ( settings.serial > 0 )
+      ioctl ( settings.serial, TIOCMBIC, &flags );
+    else
+    {
+      QMessageBox::critical ( 0, "LinPsk", "Unable to open Device " + settings.SerialDevice+"\nCheck permission of device" );
+      settings.SerialDevice = "None"; //Their seems to be a wrong Value in the ConfigFile
+    }
+   }
 }
 
 
