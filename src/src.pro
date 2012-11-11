@@ -1,3 +1,15 @@
+CONFIG(debug, debug|release) {
+    QMAKE_CXXFLAGS_DEBUG += -g3 \
+    -fpermissive \
+    -O0
+CONFIG +=  debug
+} else {
+    DEFINES += QT_NO_DEBUG
+    DEFINES += QT_NO_DEBUG_OUTPUT
+    QMAKE_CXXFLAGS_DEBUG +=-fpermissive \
+    -O2
+}
+
 SOURCES += main.cpp \
  macros.cpp \
  macrowindow.cpp \
@@ -88,16 +100,6 @@ TARGET = ../bin/linpsk
 RESOURCES = application.qrc
 DESTDIR = .
 
-
-
-QMAKE_CXXFLAGS_DEBUG += -g3 \
--fpermissive \
--O0
-QMAKE_CXXFLAGS_RELEASE += -f permissive \ 
--O2
-
-
-
 QT += network
 
 INCLUDEPATH += ../gui
@@ -119,6 +121,4 @@ DISTFILES += ../README ../COPYING \
 INSTALLS += target
 
 target.path = /usr/local/bin
-
-CONFIG -= release
 

@@ -1,16 +1,23 @@
+CONFIG(debug, debug|release) {
+    QMAKE_CXXFLAGS_DEBUG += -g3 \
+    -fpermissive \
+    -O0
+CONFIG +=  debug
+} else {
+    DEFINES += QT_NO_DEBUG
+    DEFINES += QT_NO_DEBUG_OUTPUT
+    QMAKE_CXXFLAGS_DEBUG +=-fpermissive \
+    -O2
+}
+
 CONFIG += warn_on \
           qt \
           thread  \
- ordered \
- debug
+ ordered
 DESTDIR = .
 
 SUBDIRS += gui \
   src
-
-
-
-CONFIG -= release
 
 QT += network
 

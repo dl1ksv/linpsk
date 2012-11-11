@@ -1,3 +1,15 @@
+CONFIG(debug, debug|release) {
+    QMAKE_CXXFLAGS_DEBUG += -g3 \
+    -fpermissive \
+    -O0
+CONFIG +=  debug
+} else {
+    DEFINES += QT_NO_DEBUG
+    DEFINES += QT_NO_DEBUG_OUTPUT
+    QMAKE_CXXFLAGS_DEBUG +=-fpermissive \
+    -O2
+}
+
 FORMS += addmacro.ui \
 addrxwindow.ui \
 deletemacro.ui \
@@ -48,14 +60,6 @@ HEADERS += generalsettings.h \
 
 
 TEMPLATE = lib
-
-QMAKE_CXXFLAGS_DEBUG += -g3 \
--O0
-QMAKE_CXXFLAGS_RELEASE += -O2
-
-
-CONFIG -= release
-
 
 QT += network
 
