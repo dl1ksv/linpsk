@@ -26,6 +26,8 @@
 #include <QStyleOptionSlider>
 #include <QStylePainter>
 #include <QStyle>
+#include <QCleanlooksStyle>
+
 
 #define Cyan  color[127]
 #define Yellow color[192]
@@ -33,6 +35,8 @@
 mySlider::mySlider ( QWidget *parent ) :
     QSlider ( Qt::Vertical, parent )
 {
+  setStyle(new QCleanlooksStyle); // Has each style handles the drawing different,
+                                  // I fix the slder style
   setTickInterval ( 10 );
   setTickPosition ( QSlider::NoTicks );
   setMinimum ( 0 );
@@ -63,7 +67,7 @@ void mySlider::paintEvent ( QPaintEvent * )
     option.palette.setColor( QPalette::Normal,QPalette::Highlight,Qt::yellow);
   else
     option.palette.setColor( QPalette::Normal,QPalette::Highlight,Qt::cyan);
-    p.drawComplexControl ( QStyle::CC_Slider, option );
+  p.drawComplexControl ( QStyle::CC_Slider, option );
   option.sliderPosition=pos;
   option.subControls = QStyle::SC_SliderHandle;
   option.palette.setColor ( QPalette::Button, Qt::red );
