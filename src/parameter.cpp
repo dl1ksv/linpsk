@@ -25,7 +25,7 @@ Status = UNDEF;
 // Defaultsettings
 
 MinimumWindowWidth=640;
-MinimumWindowHeight=555;
+MinimumWindowHeight=480;
 
 
 callsign="";
