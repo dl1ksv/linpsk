@@ -105,7 +105,6 @@ void MFSKDemodulator::afc ( int freq,double energy )
 void MFSKDemodulator::recvbit ( int bit )
 {
 	int c;
-	char zeichen;
 	datashreg = ( datashreg << 1 );
 	c = !! bit;
 	datashreg = datashreg | c;
@@ -116,8 +115,6 @@ void MFSKDemodulator::recvbit ( int bit )
 	{
 		/* the "1" belongs to the next symbol */
 		c = Decoder->decode ( datashreg >> 1 );
-
-		zeichen = c;
 		if ( c != -1 )
 			emit newSymbol ( ( char ) c );
 		/* we already received this */

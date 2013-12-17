@@ -88,15 +88,16 @@ void SpectrumWindow::paintLineal ( QPainter* p, int xmax, int ymax,int minfreq,i
     {
         p->drawLine ( 0, i, xmax, i );
     }
-
+  baseline=y;
 }
-void SpectrumWindow::plotSpectrum(bool overload,int *fftdata,int minfreq,int maxfreq)
+void SpectrumWindow::plotSpectrum(bool overload,float *fftdata,int minfreq,int maxfreq)
 {
-  double scale;
+  float scale;
   int y1,y2,z;
   int ymax = pdisplay->height();
   int xmax = pdisplay-> width();
-  scale = ymax / 100.;
+ // scale = ymax / 100.;
+  scale=baseline/8.03;
   pdisplay->fill();
   QPainter p(pdisplay);
   p.setBrush ( Qt::white );
@@ -127,8 +128,8 @@ void SpectrumWindow::plotSpectrum(bool overload,int *fftdata,int minfreq,int max
     for ( int i = 1;i < xmax;i++ )
     {
 
-        y1 = ymax - ( int ) ( scale * fftdata[i-1] ) - 15;
-        y2 = ymax - ( int ) ( scale * fftdata[i] ) - 15;
+        y1 = baseline - ( int ) ( scale * fftdata[i-1] );
+        y2 = baseline - ( int ) ( scale * fftdata[i] );
 
         p.drawLine ( i - 1, y1, i, y2 );
     }

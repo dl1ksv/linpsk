@@ -40,10 +40,8 @@
 #include "csound.h"
 #include "generalsettings.h"
 #include "modemenu.h"
-#include "macrowindow.h"
 #include "addmacro.h"
 #include "deletemacro.h"
-#include "macros.h"
 #include "qsodata.h"
 #include "editmacro.h"
 #include "deletemacro.h"
@@ -72,15 +70,14 @@ extern Parameter settings;
 LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   : QMainWindow ( parent, fl ), Ui::LinPSK()
 {
-  setupUi(this);
   Sound = 0;
   Modulator = 0;
   inAction=false;
   SaveParameters = new Parameter();
 
-  Macro = new Macros(); // Macros will be used in read_config
+  setupUi(this);
   read_config();
-
+  Control->enableSaveData();
   if ( settings.ApplicationFont == 0 )
   {
     settings.ApplicationFont = new QFont ( qApp->font().family() );
@@ -98,6 +95,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   setWindowTitle ( QString ( ProgramName ) + QString ( VERSION ) );
   setWindowIcon ( QIcon ( ":/images/linpsk.png" ) );
 // Create Statusbar
+  statusBar()->setFixedHeight(18);
   statusbar->setSizeGripEnabled ( true );
 
 
@@ -132,13 +130,16 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
 
   Control->setColorList ( &WindowColors );
-  Control->insertMacros( Macro );
   languageChange();
 
 // signals and slots connections
 //========== Macro Processing ======================================
-  connect ( Macro, SIGNAL ( StartRx() ), this, SLOT ( startRx() ) );
-  connect ( Macro, SIGNAL ( StartTx() ), this, SLOT ( startTx() ) );
+  tokenList << "@CALLSIGN@" << "@DATE@" << "@Replace by filename@" << "@RX@" << "@THEIRCALL@" << "@THEIRNAME@" << "@TIMELOCAL@" << "@TIMEUTC@" << "@TX@" << "@RSTGIVEN@" << "@RSTRCVD@";
+  Control->insertMacros( &macroList );
+//  connect(Control,SIGNAL(executeMacro(int)),this,SLOT(executeMacro(int)));
+
+  connect ( this, SIGNAL ( StartRx() ), this, SLOT ( startRx() ) );
+  connect ( this, SIGNAL ( StartTx() ), this, SLOT ( startTx() ) );
 
 //===================================================================
 
@@ -295,9 +296,12 @@ void LinPSK::startRx()
   if ( Modulator != 0 && !settings.DemoMode)
   {
     TxBuffer->insert ( TXOFF_CODE );
-    if ( Sound > 0 )  // Switch Trx to rx
-      while ( Sound->isRunning() ) // Wait for buffer to be cleared
-        qApp->processEvents ( QEventLoop::AllEvents, 100 );
+    if ( Sound != NULL )  // Switch Trx to rx
+      {
+        msg->setText ( tr ( "Switching to receive" ) );
+        while ( Sound->isRunning() ) // Wait for buffer to be cleared
+          qApp->processEvents ( QEventLoop::AllEvents, 100 );
+      }
   }
   if ( RxDisplay->start_process_loop() )
   {
@@ -383,7 +387,7 @@ void LinPSK::startTx()
       Info = "BPSK";
       break;
   }
-  if ( Sound <= 0 ) // Only create Sound Device once for output
+  if ( Sound <= NULL ) // Only create Sound Device once for output
   {
     if ( settings.DemoMode )
     {
@@ -397,7 +401,7 @@ void LinPSK::startTx()
       Sound = new CSound ( settings.serial );
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_txdata() ) );
   }
-  if ( Sound <= 0 )
+  if ( Sound <= NULL )
   {
     QMessageBox::critical ( 0, " Programm Error! LinPsk", "Could not create Sound Device for Output" );
     TxDisplay->TxFunctions->setStatus ( ON );
@@ -593,7 +597,7 @@ void LinPSK::setRxMode()
 
 void LinPSK::save_config()
 {
-  int i;
+  int i,size;
   QSettings config ( "DL1KSV", "LinPSK" );
   /** Windows Parameter **/
   config.beginGroup ( "WindowsParameter" );
@@ -605,6 +609,8 @@ void LinPSK::save_config()
   config.setValue ( "WindowHeight", height() );
   config.setValue ( "FontName", qApp->font().family() );
   config.setValue ( "FontSize",  qApp->font().pointSize() );
+  config.setValue ("ControlSplitter",Control->controlSplitterState());
+  config.setValue ("SpectrumSplitter",Control->spectrumSplitterState());
   config.endGroup();
   /** DemoMode **/
   config.setValue ( "DemoMode", settings.DemoMode );
@@ -642,20 +648,22 @@ void LinPSK::save_config()
     }
     config.endArray();
   }
-// Macros
-  if ( ( Macro->count() > 0 ) )
-  {
-    config.beginWriteArray ( "Macros" );
-    for ( i = 0; i < Macro->count();i++ )
-    {
-      config.setArrayIndex ( i );
-      config.setValue ( "Name", Macro->getMacroName ( i ) );
-      QString s = Macro->getDefinition ( i );
-      config.setValue ( "Definition", s );
-      config.setValue ( "Accelerator", Macro->getAccelerator ( i ) );
-    }
-    config.endArray();
-  }
+  // Macros
+   size=macroList.size();
+   if ( size > 0 )
+   {
+     config.beginWriteArray ( "Macros" );
+     for ( i = 0; i < size;i++ )
+     {
+       config.setArrayIndex ( i );
+       config.setValue ( "Name", macroList.at( i ).name );
+       config.setValue ( "Definition", macroList.at(i).text );
+       config.setValue ( "Accelerator", macroList.at (i ).accelerator );
+       config.setValue ("Language",macroList.at( i ).languageType);
+     }
+     config.endArray();
+   }
+
   // SoundDevices
    config .beginGroup("SoundDevices");
    config.setValue("InputDeviceName",settings.InputDeviceName);
@@ -665,52 +673,181 @@ void LinPSK::save_config()
    config.endGroup();
 }
 
-void LinPSK::executeMacro ( int MacroNumber )
+void LinPSK::executeMacro ( int id )
 {
-  Macro->executeMacro ( MacroNumber, TxBuffer );
+//  qDebug("Execute macro %d",id);
+  QString macro = macroList.at(id).text;
+  QString Token;
+  QFile *MacroFile;
+  int i,anzahl;
+  bool switchtoRx=false;
+  anzahl = macro.count ( '@' ) / 2;
+  if ( anzahl > 0 )
+  {
+    int indexbis, indexvon = 0;
+    for (  i = 0; i < anzahl; i++ )
+    {
+      indexbis = macro.indexOf ( '@', indexvon );
+      indexvon = indexbis;
+      indexbis = macro.indexOf ( '@', indexvon + 1 );
+      Token = macro.mid ( indexvon, indexbis - indexvon + 1 );
+      if ( Token == tokenList.at(0) )         // callsign
+      {
+        macro.replace ( indexvon, tokenList.at(0).length(), settings.callsign );
+
+      }
+      else
+        if ( Token == tokenList.at(1) )         // Date
+        {
+          QDate t = QDate::currentDate();
+          macro.replace ( indexvon, tokenList.at(1).length(), t.toString ( QString ( "d.MM.yyyy" ) ) );
+
+        }
+        else
+          if ( Token == tokenList.at(3) )         // RX
+          {
+            macro.remove ( indexvon, 4 );
+            switchtoRx=true;
+          }
+          else
+            if ( Token == tokenList.at(4) )        // Remote callsign
+            {
+             macro.replace ( indexvon, tokenList.at(4).length(), settings.QslData->RemoteCallsign );
+
+            }
+            else
+              if ( Token == tokenList.at(5) )        // Remote op's name
+                {
+                  macro.replace ( indexvon, tokenList.at(5).length(), settings.QslData->OpName );
+
+                }
+                else
+                  if ( Token == tokenList.at(6) )        // Time Local
+                  {
+                    QDateTime t;
+                    t = QDateTime::currentDateTime();
+
+                    macro.replace ( indexvon, tokenList.at(6).length(), t.toString ( "h:mm" ) );
+
+                  }
+                  else
+                    if ( Token == tokenList.at(7) )        // Time UTC
+                    {
+                      QDateTime t;
+                      t = QDateTime::currentDateTime();
+                      t = t.addSecs ( settings.timeoffset * 3600 );
+                      macro.replace ( indexvon, tokenList.at(7).length(), t.toString ( "h:mm" ) );
+                    }
+                    else
+                      if ( Token == tokenList.at(8) )        // TX
+                      {
+                          if ( settings.Status == UNDEF )
+                        {
+                          QMessageBox::warning ( 0, "Warning", "Please listen before transmitting",
+                                                 QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+                          return;
+                        }
+                        macro.remove ( indexvon, 4 );
+                        if(settings.Status == OFF)
+                          emit StartTx();
+                        else //We are alredy transmitting
+                          if (!TxBuffer->isEmpty())
+                            return;
+                      }
+                      else
+                        if ( Token == tokenList.at(9) )        // RST given
+                        {
+                          macro.replace ( indexvon, tokenList.at(9).length(),settings.QslData->MyRST );
+
+                        }
+                        else
+                          if ( Token == tokenList.at(10) )        // RST received
+                          {
+                           macro.replace ( indexvon, tokenList.at(10).length(),settings.QslData->HisRST );
+
+                          }
+                          else  // Must be File
+                          {
+                            macro.remove ( indexvon, Token.length() );
+                            if ( indexvon > 0 )
+                            {
+                              TxBuffer->insert ( macro, indexvon );
+                              macro.remove ( 0, indexvon );
+                              indexvon = 0;
+                            }
+                            Token = Token.mid ( 1, Token.length() - 2 );
+                            if(Token.startsWith(QChar('/'))) // Distinguish between relative and absolute path
+                                MacroFile =new QFile( Token );
+                            else
+                               MacroFile =new QFile( settings.Directory + QString ( "/" ) + Token );
+                            if ( MacroFile->open ( QIODevice::ReadOnly ) )
+                            {
+                              QTextStream line ( MacroFile );
+                              while ( !line.atEnd() )
+                              {
+                                QString Txstring = line.readLine();
+                                if(settings.autoCrLf) // AutoCrLF ??
+                                  Txstring += '\r';
+                                Txstring += "\n";
+                                TxBuffer->insert ( Txstring, Txstring.length() );
+                                TxDisplay->insert(Txstring);
+                              }
+                              MacroFile->close();
+                              delete MacroFile;
+                            }
+                            else
+                              QMessageBox::warning ( 0, "Warning", "File " + Token + " not found ",
+                                                     QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+
+                        }
+      }
+    }
+    anzahl=macro.length();
+    TxBuffer->insert(macro,anzahl);
+    TxDisplay->setFocus();
+    TxDisplay->insert(macro);
+    if(switchtoRx & (settings.Status == ON))
+      {
+        msg->setText ( tr ( "Switching to receive" ) );
+        emit  StartRx();
+      }
+
 }
 
 void LinPSK::addMacro()
 {
 
-  AddMacro *NewMacro = new AddMacro ( Macro );
-// NewMacro->setKeywords ( Macro );
-  if ( NewMacro->exec() != 0 )
-  {
-    Macro->insert ( NewMacro->macroName(),
-                    NewMacro->macroDefinition(), NewMacro->accelerator(), NewMacro->position() );
-    Control->insertMacros( Macro );
-  }
+  AddMacro *nM = new AddMacro ( &macroList,tokenList);
+  if (nM->exec() != 0 )
+    Control->insertMacros( &macroList );
+  delete nM;
 }
 void LinPSK::editMacro()
 {
-  if ( Macro->count() > 0 )
-  {
-    EditMacro *Edit = new EditMacro ( Macro );
 
-    if ( Edit->exec() != 0 )
-      Control->insertMacros( Macro );
-  }
+  EditMacro * eM = new EditMacro(&macroList,tokenList);
+  if(eM->exec() != 0)
+    Control->insertMacros( &macroList );
+  delete eM;
 }
 void LinPSK::deleteMacro()
 {
-  if ( Macro->count() > 0 )
+  DeleteMacro * dL = new DeleteMacro(&macroList);
+  if ( dL->exec() !=0)
   {
-    DeleteMacro *Del = new DeleteMacro ( Macro );
-
-    if ( Del->exec() != 0 )
-      Control->insertMacros( Macro );
+   Control->insertMacros( &macroList );
   }
+  delete dL;
 }
 void LinPSK::renameMacro()
 {
-  if ( Macro->count() > 0 )
-  {
-    RenameMacro *Ren = new RenameMacro ( Macro );
+  RenameMacro *rM = new RenameMacro(&macroList);
+  if(rM->exec() != 0)
+   {
+     Control->updateMacroWindow(rM->getMacroNumber());
+   }
+  delete rM;
 
-    if ( Ren->exec() != 0 )
-      Control->insertMacros( Macro );
-  }
 }
 
 void LinPSK::read_config()
@@ -738,7 +875,7 @@ void LinPSK::read_config()
     if ( size < 10 )
       size = 10;
     settings.ApplicationFont->setPointSize ( size );
-
+    Control->restoreSplitterStates(config.value("ControlSplitter").toByteArray(),config.value("SpectrumSplitter").toByteArray());
   }
   config.endGroup();
   /** DemoMode **/
@@ -779,26 +916,27 @@ void LinPSK::read_config()
     }
     config.endArray();
   }
-// Macros
-  size = config.beginReadArray ( "Macros" );
-  if ( size > 0 )
-  {
-    QString name, def, acc;
-
-    for ( i = 0; i < size;i++ )
+  // Macros
+    size = config.beginReadArray ( "Macros" );
+    if ( size > 0 )
     {
-      config.setArrayIndex ( i );
-      name = config.value ( "Name" ).toString();
-      def = config.value ( "Definition" ).toString();
-      acc = config.value ( "Accelerator" ).toString();
-      Macro->insert ( name, def, acc, i + 1 );
+      Macro macro;
+      for ( i = 0; i < size;i++ )
+      {
+        config.setArrayIndex ( i );
+        macro.name = config.value ( "Name" ).toString();
+        macro.text = config.value ( "Definition" ).toString();
+        macro.accelerator = config.value ( "Accelerator" ).toString();
+        macro.languageType=config.value("Language",0).toInt();
+        macroList.append(macro);
+        }
     }
     config.endArray();
-  }
 
-  if ( ( HeighttoSet > 0 ) && ( WidthtoSet > 0 ) )
+
+ if ( ( HeighttoSet > 0 ) && ( WidthtoSet > 0 ) )
     resize ( WidthtoSet, HeighttoSet );
-  if ( ( X >= 0 ) && ( Y >= 0 ) )
+ if ( ( X >= 0 ) && ( Y >= 0 ) )
     move ( X, Y );
  // SoundDevices
   config .beginGroup("SoundDevices");

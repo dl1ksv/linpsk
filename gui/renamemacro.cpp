@@ -20,19 +20,24 @@
 
 
 #include "renamemacro.h"
-#include "macros.h"
 #include "readonlystringlistmodel.h"
 #include <QMessageBox>
 
-RenameMacro::RenameMacro(Macros *M,QWidget* parent, Qt::WFlags fl)
-: QDialog( parent, fl ), Ui::RenameMacro()
+RenameMacro::RenameMacro(QVector<Macro> *macroList,QWidget* parent, Qt::WFlags fl)
+  : QDialog( parent, fl ), ui(new Ui:: RenameMacro())
 {
-	setupUi(this);
-model=new ReadOnlyStringListModel();
-model->setStringList(M->getMacroList());
-AllMacros=M;
-MacroBox->setModel(model);
-connect(MacroBox,SIGNAL(clicked(const QModelIndex &)),this,SLOT(selectMacro(const QModelIndex &)));
+  ui->setupUi(this);
+  mL = macroList;
+  model=new ReadOnlyStringListModel();
+  QStringList macroName;
+  int numberofMacros=macroList->size();
+  if (numberofMacros > 0 )
+  for(int i=0; i < numberofMacros;i++)
+    macroName.append((*macroList).at(i).name);
+  model->setStringList(macroName);
+  ui->MacroBox->setModel(model);
+  connect(ui->MacroBox,SIGNAL(clicked(const QModelIndex &)),this,SLOT(selectMacro(const QModelIndex &)));
+  macroNumber=-1;
 }
 
 RenameMacro::~RenameMacro()
@@ -42,20 +47,25 @@ RenameMacro::~RenameMacro()
 
 void RenameMacro::accept()
 {
-if (NewName->text().length() ==0 )
+if (ui->NewName->text().length() ==0 )
  {
   QMessageBox::warning(this,
   "Error", "New Name of Macro is missing. \n Enter new Name of  Macro",QMessageBox::Ok,QMessageBox::NoButton,QMessageBox::NoButton);
     return;
  }
-else 
- AllMacros->setMacroName(NewName->text(),MacroNumber);
+  Macro macro;
+  macro=(*mL).at(macroNumber);
+  macro.name=ui->NewName->text();
+  mL->replace(macroNumber,macro);
   QDialog::accept();
 }
 
 void RenameMacro::selectMacro(const QModelIndex &index)
 {
-MacroNumber=index.row();
-OldName->setText(index.data().toString());
+  macroNumber=index.row();
+  ui->OldName->setText(index.data().toString());
 }
-
+int RenameMacro::getMacroNumber()
+{
+  return macroNumber;
+}

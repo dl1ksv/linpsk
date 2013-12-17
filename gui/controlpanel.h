@@ -24,7 +24,12 @@ public:
     void display();
     void undisplay();
     void newChannel();
-    void updateMacroWindow(Macros *);
+    void updateMacroWindow(int macroNumber);
+    void insertMacros(QVector<Macro> *macroList);
+    void enableSaveData();
+    void restoreSplitterStates(const QByteArray & controlState,const QByteArray & spectrumState);
+    QByteArray controlSplitterState() const;
+    QByteArray spectrumSplitterState() const;
     ~ControlPanel();
 
 
@@ -39,7 +44,7 @@ private:
 
 signals:
     void FrequencyChanged ( double );
-    void callMacro ( int );
+    void executeMacro ( int );
 };
 
 #endif // CONTROLPANEL_H

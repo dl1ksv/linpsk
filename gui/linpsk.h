@@ -78,7 +78,7 @@ protected slots:
   /** Changing Rx Mode ( Moulation type ) **/
   void setRxMode();
   /** Executing Macros **/
-  void executeMacro(int);
+  void executeMacro(int id);
   /** Add Macro **/
   void addMacro();
   /** Edit Macro **/
@@ -125,8 +125,15 @@ QLabel *zeit;
 QLabel *IMD;
 
 QLabel *clockadj;
-Macros *Macro;
 QList<QColor> WindowColors;
+/** Macros **/
+QVector<Macro> macroList;
+QStringList tokenList;
+
+signals:
+void StartRx();
+void StartTx();
+
 };
 
 #endif // LINPSK_H

@@ -16,7 +16,8 @@
 
 #include "csound.h"
 #include "parameter.h"
-#include <cstdlib>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 extern Parameter settings;
@@ -63,12 +64,23 @@ bool CSound::open_Device_read ( QString *errorstring )
   available = 0;
   readPointer = 0;
   free = 2 * BUF_SIZE;
-
-  err = snd_pcm_open ( &handle, "LinPSK_Record", SND_PCM_STREAM_CAPTURE, SND_PCM_ASYNC );
+  QString device("");
+  // Could InputDeviceName contain a card name ?
+  if(!settings.InputDeviceName.contains(':')) // Could be card name, so check /proc/asound/cards
+  {
+      int card_number=getDeviceNumber(settings.InputDeviceName);
+      if(card_number < 0)
+        device=settings.InputDeviceName;
+      else
+        device = QString("plughw:%1").arg(card_number);
+  }
+  else
+   device=settings.InputDeviceName;
+  err = snd_pcm_open ( &handle, device.toAscii(), SND_PCM_STREAM_CAPTURE, SND_PCM_ASYNC );
 
   if ( err < 0 )
   {
-    *errorstring = QString ( "Unable to open Device LinPSK_Record: " ) + QString ( snd_strerror ( err ) ) + QString ( "\nPlease read the README for configuration hints\n" );
+      *errorstring = QString ( "Unable to open Device: " )+ settings.InputDeviceName + QString(" ") + QString ( snd_strerror ( err ) ) + QString ( "\nPlease read the README for configuration hints\n" );
     return false;
   }
   snd_pcm_hw_params_malloc ( &hwparams );
@@ -177,11 +189,22 @@ bool CSound::open_Device_write ( QString *errorstring )
   snd_pcm_uframes_t period_size = 1024;
   unsigned int SampleRate = 11025;
   output = true;
-  qDebug ( "Open Device write" );
-  err = snd_pcm_open ( &handle, "LinPSK_Play", SND_PCM_STREAM_PLAYBACK, 0 );
+  QString device("");
+  // Could OutputDeviceName contain a card name ?
+  if(!settings.OutputDeviceName.contains(':')) // Could be card name, so check /proc/asound/cards
+  {
+      int card_number=getDeviceNumber(settings.OutputDeviceName);
+      if(card_number < 0)
+        device=settings.OutputDeviceName;
+      else
+        device = QString("plughw:%1").arg(card_number);
+  }
+  else
+   device=settings.OutputDeviceName;
+  err = snd_pcm_open ( &handle, device.toAscii(), SND_PCM_STREAM_PLAYBACK, 0 );
   if ( err < 0 )
   {
-    *errorstring = QString ( "Unable to open Device LinPSK_Play: " ) + QString ( snd_strerror ( err ) );
+      *errorstring = QString ( "Unable to open Device: " )+settings.OutputDeviceName+ QString(" ") + QString ( snd_strerror ( err ) );
     return false;
   }
 // Set blocking mode
@@ -298,7 +321,7 @@ int CSound::putSamples ( double *sample, int anzahl )
   else
   {
     anzahl=0;
-    qDebug ( "++++++free too low %d", free );
+//    qDebug ( "++++++free too low %d", free );
   }
   return anzahl;
 }
@@ -343,6 +366,8 @@ void CSound::PTT ( bool mode )
     }
     ii = ioctl ( serial, TIOCMBIC, &flags );
   }
+  if (ii < 0)
+    qDebug("Error using serial port");
   return;
 }
 
@@ -495,4 +520,21 @@ void CSound::play()
   qDebug ( "Now dropping" );
   snd_pcm_drop ( handle );
   qDebug ( "Play Thread terminated" );
+}
+int CSound::getDeviceNumber(QString device)
+{
+  std::string line;
+  std::ifstream cards( "/proc/asound/cards" );
+  int id;
+  id=-1;
+  if ( cards.is_open() )  {
+      while ( cards.good() )  {
+          getline (cards, line);
+          if ( line.find( device.toStdString() ) != std::string::npos )  {
+              std::istringstream( line ) >>id;
+              return id;
+          }
+      }
+  }
+  return id;
 }

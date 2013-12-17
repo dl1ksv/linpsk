@@ -30,7 +30,7 @@ class QWidget;
 /**
   *@author Volker Schroer
   */
-const int fftsize=1024; // Chck size to protect arrays
+const int fftsize=1024; // Check size to protect arrays
 
 class SpectrumDisplay : public QFrame , private Ui::SpectrumDisplay
 {
@@ -39,8 +39,9 @@ public:
   SpectrumDisplay( QWidget* parent = 0);
   ~SpectrumDisplay();
   void setPhasePointer(std::complex<float> *);
-
   void setColorList(QList<QColor> *c);
+  QByteArray spectrumSplitterState() const;
+  void restoreSplitterState(const QByteArray & spectrumState);
 
 public slots:
   void startPlot(double *,bool);
@@ -61,7 +62,7 @@ private:
   /** Results of FFT */
   void calcFFT();
 
- int fftdata[fftsize];    // Not all elements are used, it differs
+ float fftdata[fftsize];    // Not all elements are used, it differs
  int xtranslate[fftsize]; // depending on the display width
  float smoothedfft[fftsize];
  int oldMinfreq;

@@ -34,7 +34,6 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
   QString DirectoryName;
   QDir dir;
   QString s;
-  int index;
   LocalSettings = settings;
   FileFormat = new QButtonGroup ( FileFormatLayout );
   FileFormat->setExclusive ( true );
@@ -91,11 +90,7 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
 	**/
 // Sound Devices
   soundInputDeviceName->setText(LocalSettings.InputDeviceName);
-  index=sampleRate->findText(s.setNum(settings.sampleRate));
-  if (index >0)
-    sampleRate->setCurrentIndex(index);
   soundOutputDeviceName->setText(LocalSettings.OutputDeviceName);
-  realComplex->setChecked(LocalSettings.complexFormat);
  //Logging
 	Directory->setText ( LocalSettings.Directory );
 	QsoFile->setText ( LocalSettings.QSOFileName );
@@ -132,7 +127,6 @@ Parameter GeneralSettings::getSettings()
 		LocalSettings.DemoMode = false;
         LocalSettings.InputDeviceName=soundInputDeviceName->text();
         LocalSettings.OutputDeviceName=soundOutputDeviceName->text();
-        LocalSettings.complexFormat=realComplex->isChecked();
     }
 
 	LocalSettings.timeoffset = UTC->value();

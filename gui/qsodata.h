@@ -40,37 +40,40 @@ struct coordinates
 public:
   QSOData(QWidget* parent = 0);
   ~QSOData();
-  /*$PUBLIC_FUNCTIONS$*/
+  void enableSaveData();
 
 public slots:
   /*$PUBLIC_SLOTS$*/
-void Timechanged();
-void Datechanged();
-void MyRSTchanged();
-void HisRSTchanged();
-void Frequencychanged();
-void Locatorchanged();
-void QTHchanged();
-void Namechanged();
-void Callsignchanged();
-void clear();
-void refreshDateTime();
-void save();
-void calculateDistance(QString);
+  void Timechanged();
+  void Datechanged();
+  void MyRSTchanged();
+  void HisRSTchanged();
+  void frequencyChanged(int);
+  void Locatorchanged();
+  void QTHchanged();
+  void Namechanged();
+  void Callsignchanged();
+  void clear();
+  void refreshDateTime();
+  void save();
+  void calculateDistance(QString);
+  void dokChanged();
 
-void setQsoData(QsoData,QString);
-void newChannel();
+  void setQsoData(QsoData,QString);
+  void newChannel();
+
+
 protected:
+  coordinates loc2coordinates ( const QChar *l );
 
-coordinates loc2coordinates ( const QChar *l );
 protected slots:
-void sendRequest();
-void stopTrial();
-void copyAnswer();
+  void sendRequest();
+  void stopTrial();
+  void copyAnswer();
 private:
-ProcessLogData *logBookCommunication;
-bool connectionError;
-QValidator *validator;
+  ProcessLogData *logBookCommunication;
+  bool connectionError;
+  QValidator *validator;
 };
 
 #endif

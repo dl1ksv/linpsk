@@ -24,9 +24,20 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
-    <widget class="QComboBox" name="SelectMacro"/>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Select from list</string>
+     </property>
+    </widget>
    </item>
    <item row="0" column="2">
+    <widget class="QComboBox" name="SelectMacro">
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
     <widget class="QLabel" name="textLabel1_3">
      <property name="text">
       <string>Accelerator</string>
@@ -36,10 +47,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
+   <item row="0" column="4" colspan="2">
     <widget class="QLineEdit" name="Accelerator"/>
    </item>
-   <item row="0" column="4">
+   <item row="0" column="6">
     <widget class="QLabel" name="textLabel1">
      <property name="text">
       <string>Position</string>
@@ -49,10 +60,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="5">
+   <item row="0" column="7">
     <widget class="QSpinBox" name="Position"/>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="1" column="0">
     <widget class="QLabel" name="textLabel2">
      <property name="text">
       <string>Definition</string>
@@ -62,7 +73,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
+   <item row="1" column="3">
     <widget class="QLabel" name="textLabel1_2">
      <property name="text">
       <string>Keywords</string>
@@ -72,13 +83,68 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="4">
+   <item row="2" column="0" rowspan="2" colspan="3">
     <widget class="QTextEdit" name="Definition"/>
    </item>
-   <item row="2" column="4" colspan="2">
+   <item row="2" column="3" rowspan="2" colspan="2">
     <widget class="QListView" name="Keywords"/>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="5" colspan="3">
+    <widget class="QGroupBox" name="languageSelection">
+     <property name="title">
+      <string>Language selection</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QRadioButton" name="lang0">
+        <property name="text">
+         <string>both</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bG</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="lang1">
+        <property name="text">
+         <string>english</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bG</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="lang2">
+        <property name="text">
+         <string>german</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bG</string>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="6">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>77</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="0">
     <widget class="QPushButton" name="buttonOk">
      <property name="text">
       <string>&amp;OK</string>
@@ -94,7 +160,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
+   <item row="4" column="1" colspan="2">
     <widget class="QPushButton" name="buttonCancel">
      <property name="text">
       <string>&amp;Cancel</string>
@@ -162,4 +228,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="bG"/>
+ </buttongroups>
 </ui>

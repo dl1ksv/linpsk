@@ -54,6 +54,7 @@ class CSound : public Input
     QWaitCondition WakeUp;
     void record();
     void play();
+    int getDeviceNumber(QString device);
   protected:
     void run();
     int free, freePointer, available, readPointer,toBePlayed;

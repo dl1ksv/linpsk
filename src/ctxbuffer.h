@@ -33,6 +33,7 @@ int getTxChar();
 void insert(int);
 void insert(QString,int);
 void clear();
+bool isEmpty();
 
 private:
 int txbuffer[TXBUFFER_LENGTH];

@@ -64,8 +64,6 @@ CRxDisplay::CRxDisplay ( QWidget* parent )
   Squelch->setSquelchState ( RxChannel->getSquelchState() );
 
 // Creating Variables for the fft
-
-// plan=rfftw_create_plan(BUF_SIZE/2,FFTW_REAL_TO_COMPLEX,FFTW_ESTIMATE);
   plan = fftw_plan_r2r_1d ( BUF_SIZE / 2, outbuf, output, FFTW_R2HC , FFTW_PATIENT );
 }
 
@@ -100,7 +98,7 @@ bool CRxDisplay::start_process_loop()
     }
     else
       Sound = new CSound ( settings.serial );
-    if ( Sound <= 0 )
+    if ( Sound <= NULL )
       return false;
 
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_rxdata() ) );
@@ -203,8 +201,11 @@ void CRxDisplay::process_rxdata()
   int N = BUF_SIZE / 2;
   for ( int i = 0; i < N;i++ )
   {
-    if ( outbuf[i] > 0.77 )
-      overload = true;
+    if ( inbuf[i] > 0.9 )
+      {
+        overload = true;
+        qDebug("In: %f, filtered in: %f",inbuf[i],outbuf[i]);
+      }
 // Apply Hamming to Data
     outbuf[i] *= ( 0.54 - 0.46 * cos ( ( i * PI2 ) / N ) );
   }

@@ -30,7 +30,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
     : QScrollArea ( parent )
 {
   QFontMetrics fm ( font() );
-  rowHeight = fm.height()+1;
+  rowHeight = fm.height()+3;
   DisplayBox = new QWidget ( this );
   DisplayBox->setFixedSize ( 642, RXWINDOWBUFFER*rowHeight );
   DisplayBox->setContextMenuPolicy ( Qt::CustomContextMenu );
@@ -54,7 +54,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
   {
 
     ScrollBuffer[i] = new QLineEdit ( DisplayBox );
-    ScrollBuffer[i]->move ( 1, 1 + DisplayLineHeight*i );
+    ScrollBuffer[i]->move ( 1, 1+ DisplayLineHeight*i );
 
     ScrollBuffer[i]->setFrame ( false );
     ScrollBuffer[i]->setReadOnly ( true );
@@ -74,6 +74,8 @@ CRxWindow::CRxWindow ( QWidget* parent )
   connect ( A, SIGNAL ( triggered() ), this, SLOT ( copyLocator() ) );
   A = menu->addAction ( "Raport" );
   connect ( A, SIGNAL ( triggered() ), this, SLOT ( copyRST() ) );
+  A = menu->addAction ("Dok");
+  connect ( A, SIGNAL ( triggered() ), this, SLOT ( copyDok() ) );
 
   selectedString.clear();
 
@@ -259,6 +261,16 @@ void CRxWindow::contextMenu ( QPoint p )
   ScrollBuffer[selectedLine]->setCursorPosition ( selectedColumn );
   ScrollBuffer[selectedLine]->cursorWordForward ( true );
   selectedString = ScrollBuffer[selectedLine]->selectedText();
+  if(!selectedString.endsWith(QChar(' ')))
+  {
+    ScrollBuffer[selectedLine]->cursorWordForward ( true );
+    selectedString = ScrollBuffer[selectedLine]->selectedText();
+    if(!selectedString.endsWith(QChar(' ')))  // / + extension might belong to the text (callsign)
+    {
+      ScrollBuffer[selectedLine]->cursorWordForward ( true );
+      selectedString = ScrollBuffer[selectedLine]->selectedText();
+    }
+  }
   selectedString = selectedString.replace ( QChar ( c ), QLatin1String ( "0" ) ); // Replace Slashed zero by zero
   if ( selectedString == QString ( " " ) )
   {
@@ -288,4 +300,8 @@ void CRxWindow::copyLocator()
 void CRxWindow::copyRST()
 {
   emit setQsoData( RST, selectedString );
+}
+void CRxWindow::copyDok()
+{
+  emit setQsoData( DOK, selectedString );
 }

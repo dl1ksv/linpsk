@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,37 +22,33 @@
 
 #include <QDialog>
 #include <QString>
+#include <QModelIndex>
 
-#include "macros.h"
+#include "constants.h"
 
-#include "ui_addmacro.h"
+namespace Ui {
+  class AddMacro;
+}
 
-class Macros;
-class QModelIndex;
-class AddMacro : public QDialog, private Ui::AddMacro
+class AddMacro : public QDialog
 {
   Q_OBJECT
 
 public:
-  AddMacro(Macros *,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  AddMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0, Qt::WFlags fl = 0 );
   ~AddMacro();
-  /*$PUBLIC_FUNCTIONS$*/
-//void setKeywords( Macros *k );
-QString macroName();
-QString macroDefinition();
-int position();
-QString accelerator();
 
 public slots:
-  /*$PUBLIC_SLOTS$*/
 
 protected:
-  /*$PROTECTED_FUNCTIONS$*/
 
 protected slots:
-  /*$PROTECTED_SLOTS$*/
-  virtual void          accept();
-void insertKeyword(const QModelIndex &);
+  virtual void  accept();
+  void insertKeyword(QModelIndex);
+private:
+  Ui::AddMacro *ui;
+  QVector<Macro> *mL;
+
 };
 
 #endif

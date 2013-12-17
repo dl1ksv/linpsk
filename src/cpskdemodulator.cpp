@@ -144,7 +144,7 @@ fe2=0.0;
 // FastSquelch
 fastSquelch=false;
 // IMD
-IMD=0.0; // Means Unkonown
+IMD=0.0; // Means Unknown
  x_loop_1=0;
  y_loop_1=0;
 return true;
@@ -259,7 +259,7 @@ if ( UseAfc == Wide )
     DecodeSymbol( angle);
     if ( (unsigned int) m_DevAve  > Threshold)
     {
-    if (m_OffCount > 10)
+  //  if (m_OffCount > 10)
      calcIMD(Spectrum); // We got enough Idles to calc the IMD
     }
     else

@@ -56,7 +56,7 @@ class CRxWindow : public QScrollArea
     void copyName();
     void copyLocator();
     void copyRST();
-
+    void copyDok();
   private:
 
 

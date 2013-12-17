@@ -34,6 +34,8 @@ public:
 
     QPushButton* Clear;
     void setTxBuffer(CTxBuffer *);
+    void insertString(QString string);
+    void insert(unsigned char);
 
 public slots:
 
@@ -60,7 +62,7 @@ private:
     void keyPressEvent(QKeyEvent *);
     CTxBuffer * Buffer;
     void backspace();
-    void insert(unsigned char);
+
 
 private slots:
     virtual void clear();

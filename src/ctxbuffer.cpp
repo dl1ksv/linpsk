@@ -119,3 +119,7 @@ for (int i=0;i <length; i++)
     }   
   } 
 }
+bool CTxBuffer::isEmpty()
+{
+  return (filled== 0);
+}

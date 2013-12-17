@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,31 +21,37 @@
 #define DELETEMACRO_H
 
 #include <QDialog>
-#include "ui_deletemacro.h"
-class Macros;
+
+#include "constants.h"
+
+namespace Ui {
+  class DeleteMacro;
+}
 class ReadOnlyStringListModel;
-class DeleteMacro : public QDialog, private Ui::DeleteMacro
+class DeleteMacro : public QDialog
 {
   Q_OBJECT
 
 public:
-  DeleteMacro(Macros *M,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  DeleteMacro(QVector<Macro> *macroList,QWidget* parent = 0, Qt::WFlags fl = 0 );
   ~DeleteMacro();
-  /*$PUBLIC_FUNCTIONS$*/
 
 public slots:
   /*$PUBLIC_SLOTS$*/
 
 protected:
-Macros *AllMacros;
+
 ReadOnlyStringListModel *model;
 ReadOnlyStringListModel *deleteList;
 
 protected slots:
-  /*$PROTECTED_SLOTS$*/
   virtual void          accept();
-void removefromList();
-void addtoList();
+  void removefromList();
+  void addtoList();
+
+private:
+  Ui::DeleteMacro *ui;
+  QVector<Macro> *mL;
 };
 
 #endif

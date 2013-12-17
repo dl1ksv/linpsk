@@ -23,30 +23,35 @@
 
 #include <QDialog>
 #include "ui_renamemacro.h"
+#include "constants.h"
 
-class Macros;
+
+namespace Ui {
+  class RenameMacro;
+}
 class ReadOnlyStringListModel;
 
-class RenameMacro : public QDialog, private Ui::RenameMacro
+class RenameMacro : public QDialog
 {
   Q_OBJECT
 
 public:
-  RenameMacro(Macros *M,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  RenameMacro(QVector<Macro> *macroList,QWidget* parent = 0, Qt::WFlags fl = 0 );
   ~RenameMacro();
-  /*$PUBLIC_FUNCTIONS$*/
+  int getMacroNumber();
 
-public slots:
-  /*$PUBLIC_SLOTS$*/
 
 protected:
-ReadOnlyStringListModel *model;
-Macros *AllMacros;
-int MacroNumber;
+  ReadOnlyStringListModel *model;
+
+  int macroNumber;
 protected slots:
   /*$PROTECTED_SLOTS$*/
   virtual void          accept();
 void selectMacro(const QModelIndex &);
+private:
+  Ui::RenameMacro *ui;
+  QVector<Macro> *mL;
 };
 
 #endif
