@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>671</width>
-    <height>388</height>
+    <width>650</width>
+    <height>383</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -392,10 +392,17 @@
       <string>Sound Device</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="soundOutputDeviceName">
+        <property name="text">
+         <string>LinPSK_Play</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Input</string>
+         <string>Input card or device</string>
         </property>
        </widget>
       </item>
@@ -406,68 +413,10 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Samplerate</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="sampleRate">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::NoInsert</enum>
-          </property>
-          <item>
-           <property name="text">
-            <string notr="true">11025</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>22050</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>44100</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>96000</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Output</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="soundOutputDeviceName">
-        <property name="text">
-         <string>LinPSK_Play</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QRadioButton" name="realComplex">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Complex Samples</string>
+         <string>Output card or device</string>
         </property>
        </widget>
       </item>
@@ -604,22 +553,6 @@
     <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sampleRate</sender>
-   <signal>activated(QString)</signal>
-   <receiver>GeneralSettings</receiver>
-   <slot>setSampleRate(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>307</x>
-     <y>299</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>335</x>
-     <y>193</y>
     </hint>
    </hints>
   </connection>

@@ -30,6 +30,7 @@ class CTxDisplay : public QFrame, public Ui::CTxDisplay
 public:
     CTxDisplay( QWidget* parent = 0);
     ~CTxDisplay();
+    void insert(QString s);
 
   public slots:
     void abbruch();

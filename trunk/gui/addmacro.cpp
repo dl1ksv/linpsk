@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,71 +20,77 @@
 
 #include "addmacro.h"
 #include "readonlystringlistmodel.h"
+#include "ui_addmacro.h"
+
 #include <QMessageBox>
-AddMacro::AddMacro(Macros *k,QWidget* parent, Qt::WFlags fl)
-: QDialog( parent, fl ), Ui::AddMacro()
+#include <QButtonGroup>
+
+AddMacro::AddMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent, Qt::WFlags fl)
+: QDialog( parent, fl ),  ui(new Ui::AddMacro)
 {
-	setupUi(this);
-ReadOnlyStringListModel *model= new ReadOnlyStringListModel();
-model->setStringList(k->getKeyWordList());
-KeywordDisplay->setModel(model);
-connect(KeywordDisplay,SIGNAL(clicked(const QModelIndex &)),this,SLOT(insertKeyword(const QModelIndex &)));
-model= new ReadOnlyStringListModel();
-model->setStringList(k->getMacroList());
-MacroDisplay->setModel(model);
-Position->setMaximum(k->getMacroList().size()+1);
-Position->setValue(k->getMacroList().size()+1);
+  ui->setupUi(this);
+  ui->bG->setId(ui->lang0,0);
+  ui->bG->setId(ui->lang1,1);
+  ui->bG->setId(ui->lang2,2);
+  mL=macroList;
+  ReadOnlyStringListModel *model= new ReadOnlyStringListModel();
+  model->setStringList(tokenList);
+  ui->KeywordDisplay->setModel(model);
+  model= new ReadOnlyStringListModel();
+  QStringList macroName;
+  int numberofMacros=macroList->size();
+  if (numberofMacros > 0 )
+  for(int i=0; i < numberofMacros;i++)
+    macroName.append((*macroList).at(i).name);
+  model->setStringList(macroName);
+  ui->MacroDisplay->setModel(model);
+  ui->Position->setMaximum(numberofMacros);
+  ui->Position->setValue(numberofMacros);
 
 }
 
 AddMacro::~AddMacro()
 {
+  delete ui;
 }
 void AddMacro::accept()
 {
-if (MacroName->text().length()== 0)
+  int anzahl;
+  if (ui->MacroName->text().length()== 0)
   {
     QMessageBox::warning(this,"Incomplete Macro Definition","Name of Macro is missing \n Enter Name of Macro",
       QMessageBox::Ok,QMessageBox::NoButton,QMessageBox::NoButton);
-    return;  
+    return;
   }
-if (MacroDefinition->toPlainText().length()== 0)
+  if (ui->MacroDefinition->toPlainText().length()== 0)
   {
     QMessageBox::warning(this,"Incomplete Macro Definition","Macrodefinition is missing \n Enter  Macrodefinition",
       QMessageBox::Ok,QMessageBox::NoButton,QMessageBox::NoButton);
     return;
   }
-int anzahl=MacroDefinition->toPlainText().count(QLatin1Char('@'));
+  anzahl=ui->MacroDefinition->toPlainText().count(QLatin1Char('@'));
 
- if (( anzahl > 0) && ((anzahl/2)*2 != anzahl) )
-	{
+  if (( anzahl > 0) && ((anzahl/2)*2 != anzahl) )
+        {
     QMessageBox::warning(this,"Error in Macro Definition","Error in Macrodefinition. Incorrect number of @  \n Enter  Macrodefinition",
       QMessageBox::Ok,QMessageBox::NoButton,QMessageBox::NoButton);
     return;
   }
+  Macro macro;
+  macro.name=ui->MacroName->text();
+  macro.text=ui->MacroDefinition->toPlainText();
+  macro.accelerator=ui->Accelerator->text();
+  macro.languageType=ui-> bG->checkedId();
+//  mL->append(macro);
+  mL->insert(ui->Position->value(),macro);
+
   QDialog::accept();
 }
 
-void AddMacro::insertKeyword(const QModelIndex &index)
+void AddMacro::insertKeyword(QModelIndex index)
 {
  QString s=index.data().toString();
- MacroDefinition->insertPlainText(s);
- MacroDefinition->setFocus();
+ ui->MacroDefinition->insertPlainText(s);
+ ui->MacroDefinition->setFocus();
 }
 
-QString AddMacro::macroName()
-{
- return MacroName->text();
-}
-QString AddMacro::macroDefinition()
-{
- return MacroDefinition->toPlainText();
-}
-int AddMacro::position()
-{
- return Position->value();
-}
-QString AddMacro::accelerator()
-{
- return Accelerator->text();
-}

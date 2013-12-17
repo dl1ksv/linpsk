@@ -25,7 +25,7 @@ class WaterfallWindow : public QFrame
   Q_OBJECT
 public:
   explicit WaterfallWindow(QWidget *parent = 0);
-  void plotWaterfall(int *fftdata);
+  void plotWaterfall(float *fftdata);
   void mousePressEvent ( QMouseEvent *e );
 
 protected:

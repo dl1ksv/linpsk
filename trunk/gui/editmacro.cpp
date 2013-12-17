@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,55 +17,86 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "editmacro.h"
-#include "macros.h"
+#include "ui_editmacro.h"
+
 #include "readonlystringlistmodel.h"
+#include <QMessageBox>
 
-EditMacro::EditMacro(Macros *M,QWidget* parent, Qt::WFlags fl)
-: QDialog( parent, fl ), Ui::EditMacro()
+EditMacro::EditMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent, Qt::WFlags fl)
+  : QDialog( parent, fl ), ui(new Ui::EditMacro)
 {
-	setupUi(this);
-AllMacros=M;
-model=new ReadOnlyStringListModel();
-model->setStringList(M->getKeyWordList());
-Keywords->setModel(model);
-int anzahl=AllMacros->count();
+  ui->setupUi(this);
+  mL=macroList;
+  int anzahl=macroList->size();
+  model=new ReadOnlyStringListModel();
+  model->setStringList(tokenList);
+  ui->Keywords->setModel(model);
 
-Position->setMaximum(anzahl);
-SelectMacro->insertItem(0," ");
-connect(SelectMacro,SIGNAL(activated(int)),this,SLOT(setText(int)));
-connect(Keywords,SIGNAL(activated(const QModelIndex &)),this,SLOT(insertKeyword(const QModelIndex &)));
- for(int i=0; i < anzahl; i++)
-  SelectMacro->insertItem(i+1,AllMacros->getMacroName(i));
+  ui->Position->setMaximum(anzahl);
+  ui->SelectMacro->insertItem(0,"Choose macro");
+
+  for(int i=0; i < anzahl; i++)
+    ui->SelectMacro->insertItem(i+1,(*macroList).at(i).name);
+
+  ui->bG->setId(ui->lang0,0);
+  ui->bG->setId(ui->lang1,1);
+  ui->bG->setId(ui->lang2,2);
 }
 
 EditMacro::~EditMacro()
 {
+  delete ui;
 }
 
 void EditMacro::accept()
 {
-int AktPosition;
-AktPosition=SelectMacro->currentIndex()-1;
-AllMacros->setDefinition(Definition->toPlainText(),AktPosition);
-AllMacros->setAccelerator(Accelerator->text(),AktPosition);
+  int aktPosition,newPosition;
+  aktPosition=ui->SelectMacro->currentIndex()-1;
+  if (aktPosition < 0)
+    {
+      QMessageBox::warning(this,"Edit macro","No macro selected \n Select correct macro",
+        QMessageBox::Ok,QMessageBox::NoButton,QMessageBox::NoButton);
+      return;
+    }
+  Macro macro;
+  newPosition=ui->Position->value();
+  macro=(*mL).at(aktPosition);
+  macro.text=ui->Definition->toPlainText();
+  macro.accelerator=ui->Accelerator->text();
+  macro.languageType=ui->bG->checkedId();
+  if(aktPosition < newPosition) // Macro shoul be moved behind
+    {
+      mL->insert(newPosition,macro); //First insert then remove
+      mL->remove(aktPosition);
+    }
+  else if (aktPosition > newPosition) // Macro should be moved forward
+    {
+      mL->remove(aktPosition); // First remove, then insert
+      mL->insert(newPosition,macro);
+    }
+
   QDialog::accept();
 }
 
 void EditMacro::setText( int Number)
 {
+  int langType;
 if( Number > 0)
-    { 
+    {
       Number--;
-      Position->setValue(Number);
-      Definition->setText(AllMacros->getDefinition(Number));
-      Accelerator->setText(AllMacros->getAccelerator(Number));
-  } 
+      ui->Position->setValue(Number);
+      ui->Definition->setText((*mL).at(Number).text);
+      ui->Accelerator->setText((*mL).at(Number).accelerator);
+      langType=(*mL).at(Number).languageType;
+      if(langType <0 || langType > 2 ) //Chek range if config file was wrongly modified
+        langType=0;
+      ui->bG->button(langType)->setChecked(true);
+  }
 }
-void EditMacro::insertKeyword(const QModelIndex &index)
+void EditMacro::insertKeyword(QModelIndex index)
 {
  QString s=index.data().toString();
- Definition->insertPlainText(s);
- Definition->setFocus();
+ ui->Definition->insertPlainText(s);
+ ui->Definition->setFocus();
 }

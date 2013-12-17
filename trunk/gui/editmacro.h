@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,33 +21,39 @@
 #define EDITMACRO_H
 
 #include <QDialog>
-#include "ui_editmacro.h"
+#include <QModelIndex>
+#include <QStringList>
 
-class Macros;
+#include "constants.h"
+
+namespace Ui {
+  class EditMacro;
+}
 class ReadOnlyStringListModel;
 
-
-class EditMacro : public QDialog, private Ui::EditMacro
+class EditMacro : public QDialog
 {
   Q_OBJECT
 
 public:
-  EditMacro(Macros *M,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  EditMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0, Qt::WFlags fl = 0 );
   ~EditMacro();
 
 
 public slots:
-  /*$PUBLIC_SLOTS$*/
 
 protected:
-Macros *AllMacros;
+
 ReadOnlyStringListModel *model;
 
 protected slots:
-  /*$PROTECTED_SLOTS$*/
   virtual void accept();
 void setText( int Number);
-void insertKeyword(const QModelIndex &);
+void insertKeyword(QModelIndex);
+
+private:
+  Ui::EditMacro *ui;
+  QVector<Macro> *mL;
 };
 
 #endif

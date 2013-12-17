@@ -573,7 +573,7 @@ char PSKModulator::GetNextCWSymbol(void) {
 
 int PSKModulator::GetChar() {
   int ch;
-  static int last = 0;
+//  static int last = 0;
   switch (status) {
     case TX_OFF_STATE: //is receiving
       ch = TXOFF_CODE; //else turn off
@@ -626,7 +626,7 @@ int PSKModulator::GetChar() {
     case TX_END_STATE:
       break;
   }
-  last = ch;
+//  last = ch;
   return ( ch);
 }
 

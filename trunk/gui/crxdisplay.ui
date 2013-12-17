@@ -6,20 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>884</width>
-    <height>282</height>
+    <width>636</width>
+    <height>186</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string/>
   </property>
   <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+   <enum>QFrame::NoFrame</enum>
   </property>
   <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+   <enum>QFrame::Plain</enum>
+  </property>
+  <property name="lineWidth">
+   <number>0</number>
   </property>
   <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,1" columnminimumwidth="150,0,0">
+   <property name="margin">
+    <number>2</number>
+   </property>
+   <property name="spacing">
+    <number>2</number>
+   </property>
    <item row="0" column="2">
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <property name="spacing">
@@ -52,7 +61,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>15</height>
+           <height>13</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -73,7 +82,7 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="spacing">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
@@ -83,13 +92,25 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>40</height>
+         <height>30</height>
         </size>
        </property>
        <property name="title">
         <string/>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
         <item row="0" column="0">
          <widget class="QRadioButton" name="recordActivate">
           <property name="text">
@@ -115,6 +136,15 @@
         <set>Qt::AlignCenter</set>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
         <item>
          <widget class="QLineEdit" name="TriggerText">
           <property name="minimumSize">

@@ -32,7 +32,7 @@ WaterfallWindow::WaterfallWindow(QWidget *parent) :
   pwaterfall->fill(Qt::black);
 }
 
-void WaterfallWindow::plotWaterfall(int *fftdata)
+void WaterfallWindow::plotWaterfall(float *fftdata)
 {
   int xmax = pwaterfall->width();
   int y1;
@@ -40,9 +40,12 @@ void WaterfallWindow::plotWaterfall(int *fftdata)
   p.drawPixmap(0,2,pwaterfall->copy(0,0,pwaterfall->width(),pwaterfall->height()-2));
   for (int i=0;i<xmax;i++)
   {
-   y1=4*fftdata[i];
+   y1=31*fftdata[i]; // Scale is 256/8.1
    if ( y1 > 255)
+     {
+       qDebug("y1: %i, fft: %f",y1,fftdata[i]);
     y1 = 255;
+     }
    else if  ( y1 < 0 )
     y1= 0;
    p.setPen(color[y1]);

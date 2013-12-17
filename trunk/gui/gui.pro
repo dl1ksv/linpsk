@@ -22,7 +22,8 @@ renamemacro.ui \
     linpsk.ui \
     crxdisplay.ui \
     spectrumdisplay.ui \
-    ctxdisplay.ui
+    ctxdisplay.ui \
+    macrocontrol.ui
 
 CONFIG += build_all \
  staticlib \
@@ -42,7 +43,8 @@ SOURCES += generalsettings.cpp \
     linpsk.cpp \
     crxdisplay.cpp \
     spectrumdisplay.cpp \
-    ctxdisplay.cpp
+    ctxdisplay.cpp \
+    macrocontrol.cpp
 
 HEADERS += generalsettings.h \
  addmacro.h \
@@ -56,7 +58,8 @@ HEADERS += generalsettings.h \
     linpsk.h \
     crxdisplay.h \
     spectrumdisplay.h \
-    ctxdisplay.h
+    ctxdisplay.h \
+    macrocontrol.h
 
 
 TEMPLATE = lib

@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,70 +17,71 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "deletemacro.h"
-#include "macros.h"
-//#include <QStringListModel>
+#include "ui_deletemacro.h"
+
 #include "readonlystringlistmodel.h"
-DeleteMacro::DeleteMacro ( Macros *M, QWidget* parent, Qt::WFlags fl )
-		: QDialog ( parent, fl ), Ui::DeleteMacro()
+DeleteMacro::DeleteMacro (QVector<Macro> *macroList, QWidget* parent, Qt::WFlags fl )
+                : QDialog ( parent, fl ),  ui(new Ui::DeleteMacro)
 {
-	setupUi ( this );
-	AllMacros = M;
-//	model = new QStringListModel ( AllMacros->getMacroList() );
-	model = new ReadOnlyStringListModel ( AllMacros->getMacroList() );
-//	deleteList = new QStringListModel ( this );
-	deleteList = new ReadOnlyStringListModel ( this );
-	MacroBox->setModel ( model );
-	Macrostodelete->setModel ( deleteList );
-	connect ( Add, SIGNAL ( clicked ( bool ) ), this, SLOT ( addtoList() ) );
-	connect ( Remove, SIGNAL ( clicked ( bool ) ), this, SLOT ( removefromList() ) );
+  ui->setupUi ( this );
+  mL = macroList;
+  model = new ReadOnlyStringListModel ( );
+  QStringList macroName;
+  int numberofMacros=macroList->size();
+  if (numberofMacros > 0 )
+  for(int i=0; i < numberofMacros;i++)
+    macroName.append((*macroList).at(i).name);
+  model->setStringList(macroName);
+  deleteList = new ReadOnlyStringListModel ( this );
+  ui->MacroBox->setModel ( model );
+  ui->Macrostodelete->setModel ( deleteList );
 }
 
 DeleteMacro::~DeleteMacro()
 {
-	if ( model != 0 )
-		delete model;
-	delete deleteList;
+  qDebug("Delete Macro destructor");
+  if ( model != 0 )
+    delete model;
+  delete deleteList;
+  delete ui;
 }
 
 
 void DeleteMacro::accept()
 {
 
-	QStringList d = deleteList->stringList();
+  QStringList d = deleteList->stringList();
 
-	if ( !d.isEmpty() )
-	{
-		QString s;
-		for ( int i = 0; i < d.size(); i++ )
-		{
-			s = d.at ( i );
-			for ( int k = 0;k < AllMacros->count();k++ )
-			{
-				if ( AllMacros->getMacroName ( k ) == s )
-				{
-					AllMacros->deleteMacro ( k );
-					break;
-				}
-			}
-
-		}
-// Store list to macros ??
+  if ( !d.isEmpty() )
+  {
+    QString s;
+    for ( int i = 0; i < d.size(); i++ )
+    {
+        s = d.at ( i );
+        for ( int k = 0;k < mL->size();k++ )
+        {
+          if ( mL->at ( k ).name == s )
+          {
+            mL->remove ( k ,1);
+            break;
+          }
+        }
+    }
 	}
-	QDialog::accept();
+  QDialog::accept();
 }
 
 void DeleteMacro::addtoList()
 {
-	QStringList l = deleteList->stringList();
-	l << MacroBox->currentIndex().data().toString();
-	deleteList->setStringList ( l );
+  QStringList l = deleteList->stringList();
+  l << ui->MacroBox->currentIndex().data().toString();
+  deleteList->setStringList ( l );
 }
 
 void DeleteMacro::removefromList()
 {
-	deleteList->removeRows ( Macrostodelete->currentIndex().row(), 1 );
+  deleteList->removeRows ( ui->Macrostodelete->currentIndex().row(), 1 );
 }
 
 

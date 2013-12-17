@@ -52,18 +52,16 @@ QSOData::QSOData ( QWidget* parent )
     OpName->setText ( settings.QslData->OpName );
     Qth->setText ( settings.QslData->Qth );
     Loc->setText ( settings.QslData->Locator );
-    QsoFrequency->setText ( settings.QslData->QsoFrequency );
+    QsoFrequency->setCurrentIndex( settings.QslData->QsoFrequency );
     HisRST->setText ( settings.QslData->HisRST );
     MyRST->setText ( settings.QslData->MyRST );
+    dokName->setText(settings.QslData->dokName);
   }
-  if ( ! ( settings.fileLog || settings.LinLog ) )
-    Save->setDisabled ( true );
   logBookCommunication = new ProcessLogData();
   connectionError = false;
   connect ( Clear, SIGNAL ( clicked() ), this, SLOT ( clear() ) );
-  connect ( Refresh, SIGNAL ( clicked() ), this, SLOT ( refreshDateTime() ) );
   connect ( Qth, SIGNAL ( editingFinished () ), this, SLOT ( QTHchanged() ) );
-  connect ( QsoFrequency, SIGNAL ( editingFinished () ), this, SLOT ( Frequencychanged() ) );
+  connect ( QsoFrequency, SIGNAL ( activated (int) ), this, SLOT ( frequencyChanged(int) ) );
   connect ( MyRST, SIGNAL ( editingFinished () ), this, SLOT ( MyRSTchanged() ) );
   connect ( OpName, SIGNAL ( editingFinished () ), this, SLOT ( Namechanged() ) );
   connect ( Save, SIGNAL ( clicked() ), this, SLOT ( save() ) );
@@ -71,7 +69,7 @@ QSOData::QSOData ( QWidget* parent )
   connect ( HisRST, SIGNAL ( editingFinished () ), this, SLOT ( HisRSTchanged() ) );
   connect ( QsoDate, SIGNAL ( dateChanged ( const QDate & ) ), this, SLOT ( Datechanged() ) );
   connect ( QsoTime, SIGNAL ( timeChanged ( const QTime & ) ), this, SLOT ( Timechanged() ) );
-
+  connect ( dokName, SIGNAL ( editingFinished()),this ,SLOT(dokChanged()));
 
   connect ( RemoteCallsign, SIGNAL ( editingFinished ( ) ), this, SLOT ( sendRequest() ) );
   connect ( logBookCommunication, SIGNAL ( unabletoConnect() ), this , SLOT ( stopTrial() ) );
@@ -80,8 +78,13 @@ QSOData::QSOData ( QWidget* parent )
 
 QSOData::~QSOData()
 {}
-
-
+void QSOData::enableSaveData()
+{
+  if ( ! ( settings.fileLog || settings.LinLog ) )
+    Save->setDisabled ( true );
+  else
+    Save->setDisabled(false);
+}
 void QSOData::clear()
 {
   RemoteCallsign->setText ( "" );
@@ -92,7 +95,7 @@ void QSOData::clear()
   settings.QslData->Qth = Qth->text();
   Loc->setText ( "" );
   settings.QslData->Locator = Loc->text();
-  QsoFrequency->setText ( "" );
+//QsoFrequency->setText ( "" );
   settings.QslData->Locator = Loc->text();
   HisRST->setText ( "" );
   settings.QslData->HisRST = HisRST->text();
@@ -112,6 +115,10 @@ void QSOData::clear()
   mainPrefix->setText ( "" );
   settings.QslData->mainPrefix = mainPrefix->text();
   refreshDateTime();
+  dokName->clear();
+  eQsl->setChecked(false);
+  bureau->setChecked(false);
+
 }
 
 void QSOData::Callsignchanged()
@@ -147,9 +154,9 @@ void QSOData::Locatorchanged()
   }
 }
 
-void QSOData::Frequencychanged()
+void QSOData::frequencyChanged(int index)
 {
-  settings.QslData->QsoFrequency = QsoFrequency->text();
+  settings.QslData->QsoFrequency = index;
 }
 
 void QSOData::HisRSTchanged()
@@ -170,6 +177,10 @@ void QSOData::Datechanged()
 void QSOData::Timechanged()
 {
   settings.QslData->QsoTime = QsoTime->time();
+}
+void QSOData::dokChanged()
+{
+  settings.QslData->dokName = dokName->text();
 }
 void QSOData::refreshDateTime()
 {
@@ -196,7 +207,6 @@ void QSOData::save()
   Namechanged(); // Later ?, not saved at the moment
   QTHchanged();
   Locatorchanged();
-  Frequencychanged();
   HisRSTchanged();
   MyRSTchanged();
   Datechanged();
@@ -226,9 +236,9 @@ void QSOData::save()
     s = QString ( "<GRIDSQUARE:%1>%2\n" ).arg ( Loc->text().length() ).arg ( Loc->text() );
     saveString.append ( s );
   }
-  if ( QsoFrequency->text() != "" )
+  if ( QsoFrequency->currentText() != "" )
   {
-    s = QString ( "<BAND:%1>%2\n" ).arg ( QsoFrequency->text().length() ).arg ( QsoFrequency->text() );
+    s = QString ( "<BAND:%1>%2\n" ).arg ( QsoFrequency->currentText().length() ).arg ( QsoFrequency->currentText() );
     saveString.append ( s );
   }
   if ( QsoDate->text() == "" )
@@ -280,7 +290,8 @@ void QSOData::save()
     }
     saveString.append ( s );
   }
-  saveString.append ( "<eor>\n" );
+  if(dokName->text() !="")
+   saveString.append(QString("<APP_LinLog_DOK:%1>%2\n").arg(dokName->text().length()).arg(dokName->text()));
   if ( settings.fileLog )
   {
     QDir d;
@@ -299,6 +310,18 @@ void QSOData::save()
   }
   if ( settings.LinLog )
   {
+
+    saveString.append("<QSL_SENT:1>");
+    if(bureau->isChecked())
+       saveString.append("R\n");
+    else
+       saveString.append("N\n");
+    saveString.append("<EQSL_QSL_SENT:1>");
+    if(eQsl->isChecked())
+       saveString.append("R\n");
+     else
+       saveString.append("N\n");
+    saveString.append ( "<eor>\n" );
     if ( !logBookCommunication->isRunning() )
       logBookCommunication->start();
     qDebug ( "Written to Logbook\n%s", qPrintable ( saveString ) );
@@ -332,33 +355,7 @@ QSOData::coordinates QSOData::loc2coordinates ( const QChar *l )
   c.breite *= M_PI / 180.;
   return c;
 }
-/**
-void QSOData::copyCallSign ( QString s )
-{
-  RemoteCallsign->setText ( s );
-  Callsignchanged();
-}
-void QSOData::copyQTH ( QString s )
-{
-  Qth->setText ( s );
-  QTHchanged();
-}
-void QSOData::copyName ( QString s )
-{
-  OpName->setText ( s );
-  Namechanged();
-}
-void QSOData::copyLocator ( QString s )
-{
-  Loc->setText ( s.left(6).toUpper());
-  Locatorchanged();
-}
-void QSOData::copyRST ( QString s )
-{
-  HisRST->setText ( s );
-  HisRSTchanged();
-}
-**/
+
 void QSOData::setQsoData(QsoData value,QString s)
 {
 
@@ -384,6 +381,10 @@ void QSOData::setQsoData(QsoData value,QString s)
       HisRST->setText ( s );
       HisRSTchanged();
       break;
+    case DOK :
+      dokName->setText(s);
+      dokChanged();
+      break;
   }
  }
 
@@ -397,7 +398,7 @@ void QSOData::newChannel()
     Qth->setText ( settings.QslData->Qth );
     Loc->setText ( settings.QslData->Locator );
     Locatorchanged(); // Check Locator and set Color
-    QsoFrequency->setText ( settings.QslData->QsoFrequency );
+    QsoFrequency->setCurrentIndex ( settings.QslData->QsoFrequency );
     HisRST->setText ( settings.QslData->HisRST );
     MyRST->setText ( settings.QslData->MyRST );
     QsoDate->setDate ( settings.QslData->QsoDate );

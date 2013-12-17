@@ -68,21 +68,40 @@ void SpectrumDisplay::resizeEvent ( QResizeEvent * )
 
 void SpectrumDisplay::calcFFT()
 {
+  int i;
+  float x,gain;
   if ( inputdata == 0 )
      return;          // No data available
-  for ( int i = 0;i < displayWidth;i++ )
-   if( Smooth->isChecked())
+  if( Smooth->isChecked())
     {
-      float x=( log10 ( inputdata[xtranslate[i]] + 100. ) - 2. );
-      float gain=(1. - exp(-(0.2 * x)));
-      smoothedfft[i]=smoothedfft[i]*(1.-gain) + gain *x;
-      fftdata[i] = ( int ) (20.*smoothedfft[i]);
-    }
-    else
+      for ( i = 0;i < displayWidth;i++ )
+      {
+        if(inputdata[xtranslate[i]]> 0.02)
+           x=log10 ( inputdata[xtranslate[i]])+2;
+          else
+           x=0.;
+        gain=(1. - exp(-(0.2 * x)));
+        smoothedfft[i]=smoothedfft[i]*(1.-gain) + gain *x;
+        fftdata[i] = smoothedfft[i];
+      }
+     }
+   else
+    {
+      for ( i = 0;i < displayWidth;i++ )
+        {
       //18.4 scales to a range from 0 - 100, as max(inputdata ) =  fft_length/4 ^ 2
-       fftdata[i] = ( int ) ( 18.4 * ( log10 ( inputdata[xtranslate[i]] + 100. ) - 2. ) );
-    // For Color scale should be 18.4 *2.55
+//          fftdata[i] = ( int ) ( 20 * ( log10 ( inputdata[xtranslate[i]] + 1000. ) - 3. ) );
+          if(inputdata[xtranslate[i]]> 0.02)
+            fftdata[i]=log10 ( inputdata[xtranslate[i]])+2;
+          else
+            fftdata[i]=0.;
+          if(fftdata[i]>8.0)
+            qDebug("fftlog: %f, spec: %f",fftdata[i],inputdata[xtranslate[i]]);
+        }
     }
+  i=spectrumWindow->height();
+  i=0;
+}
 
 void SpectrumDisplay::translate ( void )
 {
@@ -133,4 +152,12 @@ void SpectrumDisplay::setPhasePointer ( std::complex<float> *p )
 void SpectrumDisplay::setColorList(QList<QColor> *c)
 {
   spectrumWindow->setColorList(c);
+}
+QByteArray SpectrumDisplay::spectrumSplitterState() const
+{
+   return spectrumSplitter->saveState();
+}
+void SpectrumDisplay::restoreSplitterState(const QByteArray & spectrumState)
+{
+  spectrumSplitter->restoreState(spectrumState);
 }

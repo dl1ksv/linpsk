@@ -38,9 +38,6 @@ CTxWindow::CTxWindow ( QWidget* parent )
 {
   setFrameShape ( QFrame::Panel );
   setFrameShadow ( QFrame::Sunken );
-//    setLineWidth( 2 );
-//    setMargin( 2 );
-//    setMidLineWidth( 1 );
 
   Clear = new QPushButton ( "TXClear", this );
 
@@ -126,7 +123,7 @@ void CTxWindow::calculateSizeofComponents()
   ypos = ypos + innerheight - 2;
   Zeile3->setGeometry ( xpos, ypos, width - 2*xpos, innerheight );
   ypos = ypos + innerheight + height * DISTANCE / 100;
-  innerwidth = 100;
+  innerwidth = 90;
   xpos = width - innerwidth - 2 * xpos;
   Clear->setGeometry ( xpos, ypos, innerwidth, innerheight );
 }
@@ -162,7 +159,7 @@ void CTxWindow::keyPressEvent ( QKeyEvent *e ) // Bearbeiten der Eingaben im
 // TX Window
 {
   unsigned char c;
-  static bool CapsLock = false;
+  bool CapsLock = false; // Fixme checking CapsLock state
   if ( Buffer->Filled() )
   {
     QApplication::beep();
@@ -261,6 +258,14 @@ void CTxWindow::insert ( unsigned char c )
     line = Zeile3;
   QString s = line->text() + QString ( QChar ( c ) );
   line->setText ( s );
+  if(c == '\n')
+    gotoNextLine();
+}
+
+void CTxWindow::insertString (QString string )
+{
+  for(int i=0;i < string.length();i++)
+    insert(string.at(i).toAscii());
 }
 void CTxWindow::setTxBuffer ( CTxBuffer *p )
 {

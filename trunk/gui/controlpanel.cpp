@@ -21,7 +21,7 @@ ControlPanel::ControlPanel( QWidget* parent)
 {
   setupUi(this);
   connect(Display,SIGNAL(FrequencyChanged(double)),this,SIGNAL(FrequencyChanged(double)));
-  connect(MacroBox,SIGNAL(callMacro(int)),this,SIGNAL(callMacro(int)));
+  connect(macroControl,SIGNAL(executeMacro(int)),this,SIGNAL(executeMacro(int)));
 }
 
 /*
@@ -40,10 +40,6 @@ ControlPanel::~ControlPanel()
  *  language.
  */
 
-void ControlPanel::insertMacros(Macros *M)
-{
-   MacroBox->setMacroWindow ( M );
-}
 
 void ControlPanel::setQsoData(QsoData value,QString s)
 {
@@ -75,9 +71,29 @@ void ControlPanel::newChannel()
 {
   QSO->newChannel();
 }
-void ControlPanel::updateMacroWindow(Macros *M)
+void ControlPanel::updateMacroWindow(int macroNumber)
 {
-  MacroBox->updateMacroWindow(M);
+  macroControl->updateMacroWindow(macroNumber);
 }
 
-
+void ControlPanel::insertMacros(QVector<Macro> *macroList)
+{
+  macroControl->insertMacros(macroList);
+}
+void ControlPanel::enableSaveData()
+{
+  QSO->enableSaveData();
+}
+void ControlPanel::restoreSplitterStates(const QByteArray & controlState,const QByteArray & spectrumState)
+{
+  controlSplitter->restoreState(controlState);
+  Display->restoreSplitterState(spectrumState);
+}
+QByteArray ControlPanel::controlSplitterState() const
+{
+  return controlSplitter->saveState();
+}
+QByteArray ControlPanel::spectrumSplitterState() const
+{
+  return Display->spectrumSplitterState();
+}

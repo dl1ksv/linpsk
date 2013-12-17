@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>676</width>
-    <height>531</height>
+    <width>673</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,83 +36,133 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="textLabel1">
-     <property name="minimumSize">
-      <size>
-       <width>90</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Macro Name</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::PlainText</enum>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="textLabel1">
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Macro Name</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="MacroName">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="0" column="2">
-    <widget class="QLineEdit" name="MacroName">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="0" column="2" rowspan="3">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Language selection</string>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>210</width>
-       <height>20</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3" colspan="2">
-    <widget class="QLabel" name="textLabel2">
-     <property name="minimumSize">
-      <size>
-       <width>145</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Position in Macro List</string>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <spacer name="horizontalSpacer_5">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>72</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="6">
-    <widget class="QSpinBox" name="Position">
-     <property name="minimumSize">
-      <size>
-       <width>45</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QRadioButton" name="lang0">
+        <property name="text">
+         <string>both</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bG</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="lang1">
+        <property name="text">
+         <string>english</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bG</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="lang2">
+        <property name="text">
+         <string>german</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">bG</string>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="textLabel2">
+       <property name="minimumSize">
+        <size>
+         <width>145</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Position in Macro List</string>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>31</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="Position">
+       <property name="minimumSize">
+        <size>
+         <width>45</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
     <widget class="QLabel" name="textLabel1_3">
      <property name="minimumSize">
       <size>
@@ -128,7 +178,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="2" column="1">
     <widget class="QLineEdit" name="Accelerator">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -138,26 +188,13 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>210</width>
+       <width>50</width>
        <height>20</height>
       </size>
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
-    <spacer name="horizontalSpacer_4">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>72</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="textLabel3">
      <property name="minimumSize">
       <size>
@@ -176,7 +213,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="3" column="2">
     <widget class="QLabel" name="textLabel4">
      <property name="minimumSize">
       <size>
@@ -185,14 +222,14 @@
       </size>
      </property>
      <property name="text">
-      <string>List of macros</string>
+      <string>List of allready existing macros</string>
      </property>
      <property name="wordWrap">
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="3">
+   <item row="4" column="0" colspan="2">
     <widget class="QTextEdit" name="MacroDefinition">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -202,75 +239,10 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3" colspan="4">
+   <item row="4" column="2">
     <widget class="QListView" name="MacroDisplay"/>
    </item>
-   <item row="4" column="0" rowspan="2" colspan="3">
-    <widget class="QListView" name="KeywordDisplay">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="QPushButton" name="buttonOk">
-     <property name="text">
-      <string>&amp;OK</string>
-     </property>
-     <property name="shortcut">
-      <string/>
-     </property>
-     <property name="autoDefault">
-      <bool>true</bool>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="4">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>72</width>
-       <height>22</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="5" column="5">
-    <widget class="QPushButton" name="buttonCancel">
-     <property name="text">
-      <string>&amp;Cancel</string>
-     </property>
-     <property name="shortcut">
-      <string/>
-     </property>
-     <property name="autoDefault">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="6">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>71</width>
-       <height>22</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="6" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="textLabel1_2">
      <property name="text">
       <string>Keywords</string>
@@ -280,66 +252,102 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="2">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="6" column="0" colspan="2">
+    <widget class="QListView" name="KeywordDisplay">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>237</width>
-       <height>21</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
-   <item row="6" column="3" colspan="5">
-    <spacer name="horizontalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>338</width>
-       <height>21</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="4" column="3" colspan="5">
+   <item row="6" column="2">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Example</string>
      </property>
-     <widget class="QLabel" name="textLabel6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>281</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="text">
-       <string>@TX@ cq cq de @CALLSIGN@ pse k @RX@</string>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::PlainText</enum>
-      </property>
-      <property name="wordWrap">
-       <bool>false</bool>
-      </property>
-     </widget>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="textLabel6">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="text">
+         <string>@TX@ cq cq de @CALLSIGN@ pse k @RX@</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::PlainText</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>356</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="7" column="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QPushButton" name="buttonOk">
+       <property name="text">
+        <string>&amp;OK</string>
+       </property>
+       <property name="shortcut">
+        <string/>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>72</width>
+         <height>22</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonCancel">
+       <property name="text">
+        <string>&amp;Cancel</string>
+       </property>
+       <property name="shortcut">
+        <string/>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -379,5 +387,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>KeywordDisplay</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>AddMacro</receiver>
+   <slot>insertKeyword(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>162</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>367</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>insertKeyword(QModelIndex)</slot>
+ </slots>
+ <buttongroups>
+  <buttongroup name="bG"/>
+ </buttongroups>
 </ui>

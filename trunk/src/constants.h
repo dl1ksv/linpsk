@@ -54,7 +54,7 @@ enum StopBits {One,Onepoint5,Two};
 enum RxTxParameterType{Reverse,Offset,Parity,Extra,Standard};
 enum StateOfReception { WaitingForMark,WaitingForSpace, CheckingStartBit,SkipRestOfStartBit,CollectingByte,
                         CheckingParity, WaitingForStopBits,ThrowHalfBit};
-enum QsoData{CallSign,QTH,Name,Locator,RST};
+enum QsoData{CallSign,QTH,Name,Locator,RST,DOK};
 
 
 typedef struct
@@ -79,21 +79,27 @@ typedef struct
  QString OpName;
  QString Qth;
  QString Locator;
- QString QsoFrequency;
+ int QsoFrequency; // Number of item in QCombobox
  QString HisRST;
  QString MyRST;
  QDate QsoDate;
  QTime QsoTime;
-QString mainPrefix;
-QString continent;
-QString wazZone;
-QString ituZone;
-QString countryName;
-QString worked;
+ QString mainPrefix;
+ QString continent;
+ QString wazZone;
+ QString ituZone;
+ QString countryName;
+ QString worked;
+ QString dokName;
 } QsoInfo;
 
-#define HilbertFilterLength 37
-
+//enum LangType{0,1,2};
+struct Macro {
+  QString name;
+  QString text;
+  QString accelerator;
+  int languageType; // 0,1,2
+};
 
 static const unsigned short int VARICODE_TABLE[] = {
     0xAAC0,	// ASCII =   0	1010101011

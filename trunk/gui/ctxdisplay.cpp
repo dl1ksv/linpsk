@@ -61,3 +61,7 @@ void CTxDisplay::abbruch()
 {
 TxFunctions->setStatus(UNDEF);
 }
+void CTxDisplay::insert(QString s)
+{
+ TxWindow->insertString(s);
+}

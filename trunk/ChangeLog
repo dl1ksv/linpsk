@@ -1,9 +1,12 @@
 LinPsk ChangeLog
 
-1.2 alpha
+1.2
 
-Modified gui. Introducing different sample rates. At the moment others than
-11025 Hz not working.
+Modified gui to fit on small screens.
+Improved soundcard detection.
+Introduced Dok field to qsodata.
+Predefined frequency values for use with linlogbook.
+Introduced language parameter for use with macros.
 
 1.1
 

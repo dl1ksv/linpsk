@@ -45,11 +45,6 @@ public:
 void setupDevices();
 // Variables
 
-/** MinimumWindowWidth */
-int MinimumWindowWidth;
-/** MinimumWindowHeight */
-int MinimumWindowHeight;
-
 
 QString callsign;                    // Callsign
 QString myLocator;
@@ -67,6 +62,7 @@ QString Host;
 int Port;
 bool DemoMode;                      // DemoMode ?
 
+QString LangName[3];		    //Contains the used language names for button labeling
 
 int timeoffset;                     // offset to UTC
 

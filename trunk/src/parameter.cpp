@@ -24,8 +24,8 @@ Status = UNDEF;
 
 // Defaultsettings
 
-MinimumWindowWidth=640;
-MinimumWindowHeight=480;
+//MinimumWindowWidth=640;
+//MinimumWindowHeight=480;
 
 
 callsign="";
@@ -53,6 +53,9 @@ InputDeviceName="LinPSK_Record";
 OutputDeviceName="LinPSK_Play";
 sampleRate=11025;
 complexFormat=false;
+LangName[0]="B";
+LangName[1]="E";
+LangName[2]="G";
 }
 Parameter::~Parameter()
 {

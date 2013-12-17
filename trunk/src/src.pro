@@ -11,8 +11,6 @@ CONFIG +=  debug
 }
 
 SOURCES += main.cpp \
- macros.cpp \
- macrowindow.cpp \
  bpskdemodulator.cpp \
  bpskmodulator.cpp \
  cdemodulator.cpp \
@@ -70,8 +68,6 @@ HEADERS += bpskdemodulator.h \
  frequencyselect.h \
  input.h \
  interleaver.h \
- macros.h \
- macrowindow.h \
  mfskdemodulator.h \
  mfskmodulator.h \
  mfskvaricode.h \
@@ -121,4 +117,6 @@ DISTFILES += ../README ../COPYING \
 INSTALLS += target
 
 target.path = /usr/local/bin
+
+FORMS +=
 
