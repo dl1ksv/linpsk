@@ -23,7 +23,8 @@ renamemacro.ui \
     crxdisplay.ui \
     spectrumdisplay.ui \
     ctxdisplay.ui \
-    macrocontrol.ui
+    macrocontrol.ui \
+    txwindow.ui
 
 CONFIG += build_all \
  staticlib \
@@ -44,7 +45,8 @@ SOURCES += generalsettings.cpp \
     crxdisplay.cpp \
     spectrumdisplay.cpp \
     ctxdisplay.cpp \
-    macrocontrol.cpp
+    macrocontrol.cpp \
+    txwindow.cpp
 
 HEADERS += generalsettings.h \
  addmacro.h \
@@ -59,7 +61,8 @@ HEADERS += generalsettings.h \
     crxdisplay.h \
     spectrumdisplay.h \
     ctxdisplay.h \
-    macrocontrol.h
+    macrocontrol.h \
+    txwindow.h
 
 
 TEMPLATE = lib

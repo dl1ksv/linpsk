@@ -425,7 +425,7 @@ void QSOData::sendRequest()
   }
   if ( !settings.LinLog || connectionError || !test ) // No request to LinLogbook if disabled in the settings
     return;
-  qDebug ( "Trying to request %s", qPrintable ( RemoteCallsign->text().toUpper() ) );
+//  qDebug ( "Trying to request %s", qPrintable ( RemoteCallsign->text().toUpper() ) );
   QLabel *results[6];
   results[0] = mainPrefix;
   results[1] = wazZone;
@@ -434,12 +434,8 @@ void QSOData::sendRequest()
   results[4] = continent;
   results[5] = worked;
   if ( !logBookCommunication->isRunning() )
-  {
     logBookCommunication->start();
-//    qApp->processEvents ( QEventLoop::AllEvents, 100 );
-  }
   logBookCommunication->requestCallSign ( results, RemoteCallsign->text().toUpper() );
-  qDebug ( "Request send" );
 }
 void QSOData::stopTrial()
 {

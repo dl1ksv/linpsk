@@ -18,7 +18,7 @@
 
 
 #include "cledbutton.h"
-#include "ctxwindow.h"
+#include "txwindow.h"
 #include "frequencyselect.h"
 /* 
  *  Constructs a CTxDisplay which is a child of 'parent', with the 
@@ -63,5 +63,9 @@ TxFunctions->setStatus(UNDEF);
 }
 void CTxDisplay::insert(QString s)
 {
- TxWindow->insertString(s);
+ txWindow->insertString(s);
+}
+void CTxDisplay::setTxFocus()
+{
+ txWindow->setFocus();
 }

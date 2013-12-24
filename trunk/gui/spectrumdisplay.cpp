@@ -89,14 +89,10 @@ void SpectrumDisplay::calcFFT()
     {
       for ( i = 0;i < displayWidth;i++ )
         {
-      //18.4 scales to a range from 0 - 100, as max(inputdata ) =  fft_length/4 ^ 2
-//          fftdata[i] = ( int ) ( 20 * ( log10 ( inputdata[xtranslate[i]] + 1000. ) - 3. ) );
           if(inputdata[xtranslate[i]]> 0.02)
             fftdata[i]=log10 ( inputdata[xtranslate[i]])+2;
           else
             fftdata[i]=0.;
-          if(fftdata[i]>8.0)
-            qDebug("fftlog: %f, spec: %f",fftdata[i],inputdata[xtranslate[i]]);
         }
     }
   i=spectrumWindow->height();

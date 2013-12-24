@@ -79,7 +79,7 @@
       </widget>
      </item>
      <item>
-      <widget class="CTxWindow" name="TxWindow">
+      <widget class="TxWindow" name="txWindow">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -108,9 +108,9 @@
    <header>cledbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>CTxWindow</class>
+   <class>TxWindow</class>
    <extends>QFrame</extends>
-   <header>ctxwindow.h</header>
+   <header>txwindow.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

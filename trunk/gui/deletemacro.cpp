@@ -40,7 +40,6 @@ DeleteMacro::DeleteMacro (QVector<Macro> *macroList, QWidget* parent, Qt::WFlags
 
 DeleteMacro::~DeleteMacro()
 {
-  qDebug("Delete Macro destructor");
   if ( model != 0 )
     delete model;
   delete deleteList;

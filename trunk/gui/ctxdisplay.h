@@ -31,6 +31,7 @@ public:
     CTxDisplay( QWidget* parent = 0);
     ~CTxDisplay();
     void insert(QString s);
+    void setTxFocus();
 
   public slots:
     void abbruch();

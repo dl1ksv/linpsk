@@ -34,7 +34,7 @@
 #define BUF_SIZE 4096	//size of data chunks to process at a time from
                         // the soundcard
 #define RXWINDOWBUFFER 50 // Max Number of Lines in the RX ScrollBuffer
-
+#define TXWINDOWBUFFER 6  // Mux Number of Lines in TX Scrollbuffer
 // define some constants
 #define PI2 ( M_PI + M_PI )		// 2 Pi
 
