@@ -22,7 +22,6 @@ SOURCES += main.cpp \
  csound.cpp \
  csquelch.cpp \
  ctxbuffer.cpp \
- ctxwindow.cpp \
  deinterleaver.cpp \
  feccoder.cpp \
  firfilter.cpp \
@@ -60,7 +59,6 @@ HEADERS += bpskdemodulator.h \
  csound.h \
  csquelch.h \
  ctxbuffer.h \
- ctxwindow.h \
  deinterleaver.h \
  feccoder.h \
  fircoeffs.h \

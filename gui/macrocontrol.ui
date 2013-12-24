@@ -58,6 +58,9 @@
      </property>
      <item>
       <widget class="QRadioButton" name="lang0">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>B</string>
        </property>
@@ -71,6 +74,9 @@
      </item>
      <item>
       <widget class="QRadioButton" name="lang1">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>e</string>
        </property>
@@ -81,6 +87,9 @@
      </item>
      <item>
       <widget class="QRadioButton" name="lang2">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>g</string>
        </property>

@@ -72,7 +72,11 @@ else
  {
   inpos=0;
   outpos=0;
-  filled=0;
+  if( filled < 0)
+  {
+    filled=1;
+    txbuffer[inpos++]=c;
+  }
  }
  else
  {

@@ -29,15 +29,19 @@ extern Parameter settings;
 CRxWindow::CRxWindow ( QWidget* parent )
     : QScrollArea ( parent )
 {
+
   QFontMetrics fm ( font() );
   rowHeight = fm.height()+3;
+  int pixelwidth=82*fm.width("A");
   DisplayBox = new QWidget ( this );
+  DisplayBox-> setFocusPolicy( Qt::NoFocus);
   DisplayBox->setFixedSize ( 642, RXWINDOWBUFFER*rowHeight );
   DisplayBox->setContextMenuPolicy ( Qt::CustomContextMenu );
   connect ( DisplayBox, SIGNAL ( customContextMenuRequested ( QPoint ) ), this, SLOT ( contextMenu ( QPoint ) ) );
 
   setWidget ( DisplayBox );
 
+//  setHorizontalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
   setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
   setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOn );
 
@@ -54,6 +58,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
   {
 
     ScrollBuffer[i] = new QLineEdit ( DisplayBox );
+    ScrollBuffer[i]->setFixedWidth(pixelwidth);
     ScrollBuffer[i]->move ( 1, 1+ DisplayLineHeight*i );
 
     ScrollBuffer[i]->setFrame ( false );
@@ -257,6 +262,8 @@ void CRxWindow::contextMenu ( QPoint p )
   char c = 0xF8;
   QPoint p1 = QCursor::pos();
   selectedLine = p.y() / DisplayLineHeight;
+  if(selectedLine >= RXWINDOWBUFFER)
+    selectedLine=RXWINDOWBUFFER-1;
   selectedColumn = ScrollBuffer[selectedLine]->cursorPositionAt ( QPoint ( p.x(), 2 ) );
   ScrollBuffer[selectedLine]->setCursorPosition ( selectedColumn );
   ScrollBuffer[selectedLine]->cursorWordForward ( true );
@@ -278,7 +285,6 @@ void CRxWindow::contextMenu ( QPoint p )
     ScrollBuffer[selectedLine]->cursorWordForward ( true );
     selectedString = ScrollBuffer[selectedLine]->selectedText();
   }
-  qDebug ( "Copy %s", qPrintable ( selectedString ) );
   menu->exec ( p1 );
 }
 void CRxWindow::copyCallSign()

@@ -78,7 +78,7 @@ void ProcessLogData::doAction()
     usleep(6000);
   if ( !connectionEstablished && tcpSocket->state() != 3)
   {
-    qDebug ( "Waiting for Socket timed out: %d",tcpSocket->state() );
+ //   qDebug ( "Waiting for Socket timed out: %d",tcpSocket->state() );
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question ( 0, "LinPSK", tr ( "Cannot connect to LinLogBook\nTry again later ?" ), QMessageBox::Yes | QMessageBox::No );
     if ( reply == QMessageBox::No )
@@ -90,22 +90,20 @@ void ProcessLogData::doAction()
     exit();
     return;
   }
-// if ( tcpSocket->state() != QAbstractSocket::ConnectedState )
-//  usleep ( 500 );
 
-  qDebug ( "SocketError %d", tcpSocket->state() );
+//  qDebug ( "SocketError %d", tcpSocket->state() );
   if ( tcpSocket->state() == QAbstractSocket::UnconnectedState )
   {
     QMessageBox::information ( 0, "LinPSK", tr ( "Cannot connect to LinLogBook" ) );
     return;
   }
   int n = tcpSocket->write ( actionString.toLatin1(), actionString.length() );
-  qDebug ( "Written %d, to be written %d", n, actionString.length() );
+//  qDebug ( "Written %d, to be written %d", n, actionString.length() );
   if ( n < 0 ) // Retry
   {
     usleep ( 100 );
     n = tcpSocket->write ( actionString.toLatin1(), actionString.length() );
-    qDebug ( "Written %d, to be written %d", n, actionString.length() );
+//    qDebug ( "Written %d, to be written %d", n, actionString.length() );
   }
  /** qt 4.7 lets flush write data again*/
 //  tcpSocket->flush();
@@ -122,7 +120,7 @@ void ProcessLogData::connectionClosedbyHost()
 
 void ProcessLogData::readAnswer()
 {
-  qDebug ( "Read Answer" );
+//  qDebug ( "Read Answer" );
 //Has to be improved, to get safer
   QString s;
   int i;
@@ -135,7 +133,7 @@ void ProcessLogData::readAnswer()
     results[i]->setText ( s );
     results[i]->show();
   }
-  qDebug ( "%d Zeilen gelesen", i );
+//  qDebug ( "%d Zeilen gelesen", i );
 emit answerAvailable();
 }
 void ProcessLogData::setConnected()
@@ -146,8 +144,8 @@ void ProcessLogData::setError ( QAbstractSocket::SocketError  )
 {
   connectionEstablished = false;
   connectionError = true;
-  if ( tcpSocket != 0 )
-    qDebug ( "SocketError %d", tcpSocket->state() );
+//  if ( tcpSocket != 0 )
+//    qDebug ( "SocketError %d", tcpSocket->state() );
 }
 
 

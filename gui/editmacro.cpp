@@ -75,7 +75,8 @@ void EditMacro::accept()
       mL->remove(aktPosition); // First remove, then insert
       mL->insert(newPosition,macro);
     }
-
+    else
+      mL->replace(aktPosition, macro);
   QDialog::accept();
 }
 

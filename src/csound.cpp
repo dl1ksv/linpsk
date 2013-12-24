@@ -263,8 +263,8 @@ bool CSound::open_Device_write ( QString *errorstring )
     *errorstring = QString ( "Unable to set buffer size %i for play: " ).arg ( buffer_size ) + QString ( snd_strerror ( err ) );
     return false;
   }
-  else
-    qDebug("Buffersize set to %i",(int) buffer_size);
+//  else
+//    qDebug("Buffersize set to %i",(int) buffer_size);
   err = snd_pcm_hw_params ( handle, hwparams );
   if ( err < 0 )
   {
@@ -288,8 +288,8 @@ bool CSound::open_Device_write ( QString *errorstring )
     *errorstring = QString ( "Unable to set start threshold mode : " ) + QString ( snd_strerror ( err ) );
     return false;
   }
-  else
-    qDebug("Setting start threshold to %i", (int) threshold);
+ // else
+ //   qDebug("Setting start threshold to %i", (int) threshold);
   /* Write the parameters to the record/playback device */
   err = snd_pcm_sw_params ( handle, swparams );
   if ( err < 0 )
@@ -309,8 +309,8 @@ int CSound::putSamples ( double *sample, int anzahl )
     LockPointers.lock();
     toBePlayed += anzahl;
     free -= anzahl;
-    if ( toBePlayed > 2*BUF_SIZE )
-      qDebug ( "putSamples: Bufferoverrun" );
+ //   if ( toBePlayed > 2*BUF_SIZE )
+ //     qDebug ( "putSamples: Bufferoverrun" );
     WakeUp.wakeAll();
     LockPointers.unlock();
 
@@ -405,13 +405,13 @@ void CSound::record()
     if ( !started )
       break;
     toBeRead = min ( free, 128 );
-    if ( toBeRead > BUF_SIZE )
-    {
-      qDebug ( "Error toBeRead zu gross" );
-      return;
-    }
-    if ( ( freePointer + toBeRead ) > 2*BUF_SIZE )
-      qDebug ( "Out of Bounds \n" );
+//    if ( toBeRead > BUF_SIZE )
+//    {
+//      qDebug ( "Error toBeRead zu gross" );
+//      return;
+//    }
+//    if ( ( freePointer + toBeRead ) > 2*BUF_SIZE )
+//      qDebug ( "Out of Bounds \n" );
     err = snd_pcm_readi ( handle,  SampleBuffer, toBeRead );
     if ( err == toBeRead )
     {
@@ -432,7 +432,7 @@ void CSound::record()
         // Overrun
         snd_pcm_prepare ( handle );
         snd_pcm_start ( handle );
-        qDebug ( "Record: Overrun" );
+ //       qDebug ( "Record: Overrun" );
       }
       else
       {
@@ -466,14 +466,14 @@ void CSound::play()
       emit samplesAvailable();
       signaled = true;
     }
-    if ( free > ( 2* BUF_SIZE ) )
-      qDebug ( "Out of bounds" );
+//    if ( free > ( 2* BUF_SIZE ) )
+//      qDebug ( "Out of bounds" );
     while ( toBePlayed < laenge && started )
       WakeUp.wait ( &LockPointers );
     LockPointers.unlock();
     if ( !started )
     {
-      qDebug ( "Stop received" );
+ //     qDebug ( "Stop received" );
       break;
     }
     if ( toBePlayed >= BUF_SIZE )
@@ -498,7 +498,7 @@ void CSound::play()
       if ( err == -EPIPE )
       {
         /* under-run */
-        qDebug ( "Underun in Play position 2 laenge %d Pointer %d available %d\n", laenge, readPointer,  toBePlayed );
+   //     qDebug ( "Underun in Play position 2 laenge %d Pointer %d available %d\n", laenge, readPointer,  toBePlayed );
         err = snd_pcm_prepare ( handle );
         if ( err < 0 )
         {
@@ -510,14 +510,12 @@ void CSound::play()
         qDebug ( "Play ???? \n" );
       else
       {
-        qDebug("Errorcode %i",err);
         qDebug ( " %s\nStopping Play Thread", snd_strerror ( err ) );
         break;
       }
 
     }
   }
-  qDebug ( "Now dropping" );
   snd_pcm_drop ( handle );
   qDebug ( "Play Thread terminated" );
 }

@@ -30,7 +30,6 @@
 #include <ctype.h>
 
 #include "ctxdisplay.h"
-#include "ctxwindow.h"
 #include "cmodulator.h"
 
 

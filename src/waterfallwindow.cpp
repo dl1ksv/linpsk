@@ -43,7 +43,7 @@ void WaterfallWindow::plotWaterfall(float *fftdata)
    y1=31*fftdata[i]; // Scale is 256/8.1
    if ( y1 > 255)
      {
-       qDebug("y1: %i, fft: %f",y1,fftdata[i]);
+  //     qDebug("y1: %i, fft: %f",y1,fftdata[i]);
     y1 = 255;
      }
    else if  ( y1 < 0 )

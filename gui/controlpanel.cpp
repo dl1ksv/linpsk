@@ -10,7 +10,6 @@
 
 #include "spectrumdisplay.h"
 #include "qsodata.h"
-#include "macrowindow.h"
 
 /* 
  *  Constructs a ControlPanel which is a child of 'parent', with the 

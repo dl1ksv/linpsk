@@ -146,7 +146,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   TxBuffer = new CTxBuffer();
 
   apply_settings();
-  TxDisplay->TxWindow->setTxBuffer ( TxBuffer );
+  TxDisplay->txWindow->setTxBuffer ( TxBuffer );
 
 }
 
@@ -337,8 +337,8 @@ void LinPSK::startRx()
     TxDisplay->TxFunctions->setStatus ( UNDEF );
   Control->display();
   settings.Status = TxDisplay->TxFunctions->getstatus();
-TxDisplay->TxWindow->setFocus();
-inAction=false;
+  TxDisplay->txWindow->setFocus();
+  inAction=false;
 }
 
 void LinPSK::startTx()
@@ -418,7 +418,7 @@ void LinPSK::startTx()
   connect ( Modulator, SIGNAL ( charSend ( char ) ), settings.ActChannel, SLOT ( updateRx ( char ) ) );
   TxDisplay->TxFunctions->setStatus ( ON );
   msg->setText ( tr ( "Transmitting " ) + Info );
-  TxDisplay->TxWindow->setFocus();
+  TxDisplay->txWindow->setFocus();
   settings.Status = TxDisplay->TxFunctions->getstatus();
   Control->undisplay();
 
@@ -804,7 +804,7 @@ void LinPSK::executeMacro ( int id )
     }
     anzahl=macro.length();
     TxBuffer->insert(macro,anzahl);
-    TxDisplay->setFocus();
+    TxDisplay->setTxFocus();
     TxDisplay->insert(macro);
     if(switchtoRx & (settings.Status == ON))
       {

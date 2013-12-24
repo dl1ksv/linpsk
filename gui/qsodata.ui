@@ -55,6 +55,9 @@
    </property>
    <item row="1" column="0">
     <widget class="QRadioButton" name="eQsl">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>eQsl</string>
      </property>
@@ -65,6 +68,9 @@
    </item>
    <item row="1" column="1">
     <widget class="QRadioButton" name="bureau">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>bureau</string>
      </property>
@@ -87,6 +93,9 @@
        <height>20</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Save</string>
      </property>
@@ -105,6 +114,9 @@
        <width>16777215</width>
        <height>20</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="text">
       <string>Clear</string>
@@ -354,6 +366,9 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
          <property name="textInteractionFlags">
           <set>Qt::NoTextInteraction</set>
@@ -1404,6 +1419,9 @@
          <property name="text">
           <string/>
          </property>
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
+         </property>
         </widget>
        </item>
        <item row="0" column="0" colspan="2">
@@ -1493,6 +1511,9 @@
            <width>0</width>
            <height>1</height>
           </size>
+         </property>
+         <property name="maxLength">
+          <number>7</number>
          </property>
         </widget>
        </item>

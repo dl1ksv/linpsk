@@ -202,10 +202,7 @@ void CRxDisplay::process_rxdata()
   for ( int i = 0; i < N;i++ )
   {
     if ( inbuf[i] > 0.9 )
-      {
         overload = true;
-        qDebug("In: %f, filtered in: %f",inbuf[i],outbuf[i]);
-      }
 // Apply Hamming to Data
     outbuf[i] *= ( 0.54 - 0.46 * cos ( ( i * PI2 ) / N ) );
   }
