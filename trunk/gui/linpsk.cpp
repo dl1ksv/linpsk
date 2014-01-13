@@ -52,11 +52,7 @@
 #include <QtGui>
 #include <QEventLoop>
 
-#ifdef HAVE_CONFIG
-#include "config.h"
-#else
-#define VERSION "1.2"
-#endif
+#define VERSION "1.2.1"
 
 
 #define ProgramName "LinPSK "
@@ -77,7 +73,8 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
 
   setupUi(this);
   read_config();
-  Control->enableSaveData();
+  /** Fixme: handle font change: fontChange() **/
+  /**
   if ( settings.ApplicationFont == 0 )
   {
     settings.ApplicationFont = new QFont ( qApp->font().family() );
@@ -86,7 +83,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   }
   else
     qApp->setFont ( *settings.ApplicationFont );
-
+  **/
 // Save Settings to be able to make local modifications
   *SaveParameters = settings;
 
@@ -512,6 +509,8 @@ void LinPSK::stopTx()
 void LinPSK::apply_settings()
 {
   selectPTTDevice();
+  Control->enableSaveData();
+  Control->setAutoDate();
 }
 void LinPSK::setChannelParams()
 {
@@ -635,6 +634,7 @@ void LinPSK::save_config()
   config.setValue ( "dateFormat", settings.dateFormat );
   config.setValue ( "Slashed0", settings.slashed0 );
   config.setValue ("autoCrLf",settings.autoCrLf);
+  config.setValue ("autoDate",settings.autoDate);
   /** Colors **/
   if ( WindowColors.size() > 0 )
   {
@@ -901,6 +901,7 @@ void LinPSK::read_config()
   settings.dateFormat = config.value ( "dateFormat", "dd.MM.yyyy" ).toString();
   settings.slashed0 = config.value ( "Slashed0" ).toBool();
   settings.autoCrLf = config.value("autoCrLf").toBool();
+  settings.autoDate = config.value("autoDate").toBool();
   /** Colors **/
   if ( config.contains ( "Colors" ) )
   {

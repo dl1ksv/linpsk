@@ -41,6 +41,7 @@ public:
   QSOData(QWidget* parent = 0);
   ~QSOData();
   void enableSaveData();
+  void setAutoDate();
 
 public slots:
   /*$PUBLIC_SLOTS$*/

@@ -1,5 +1,13 @@
 LinPsk ChangeLog
 
+1.2.1
+
+Modified RxWindow to enable horizontal scrollbar correctly.
+Enable/disable date/time data in qsowindow.
+This fields can be set automatically on saving qso data.
+
+Copy data of rx window to clipboard.
+
 1.2
 
 Modified gui to fit on small screens.

@@ -225,6 +225,9 @@
    </property>
   </action>
   <action name="actionFont_settings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Font settings</string>
    </property>

@@ -268,7 +268,7 @@ bool CSound::open_Device_write ( QString *errorstring )
   err = snd_pcm_hw_params ( handle, hwparams );
   if ( err < 0 )
   {
-    *errorstring = QString ( "Unable to set hw params for input: " ) + QString ( snd_strerror ( err ) );
+    *errorstring = QString ( "Unable to set hw params for Output: " ) + QString ( snd_strerror ( err ) );
     return false;
   }
   snd_pcm_hw_params_free ( hwparams );

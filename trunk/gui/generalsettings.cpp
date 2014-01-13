@@ -28,7 +28,7 @@
 
 extern Parameter settings;
 GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
-		: QDialog ( parent, fl ), Ui::GeneralSettings()
+  : QDialog ( parent, fl ), Ui::GeneralSettings()
 {
   setupUi ( this );
   QString DirectoryName;
@@ -50,6 +50,7 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
   SlashedZero->setChecked ( LocalSettings.slashed0 );
   autoCrLf->setAutoExclusive(false);
   autoCrLf->setChecked(LocalSettings.autoCrLf);
+  autoDate->setChecked(LocalSettings.autoDate);
   QRegExp rx ( "^[A-R][A-R][0-9][0-9][A-X][A-X]$" );
   QValidator *validator = new QRegExpValidator ( rx, this );
   myLocator->setValidator ( validator );
@@ -63,9 +64,9 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
   else
     selectDemomode(false);
 
-//PTT
+  //PTT
   SelectedDevice->setText ( LocalSettings.SerialDevice );
-// First look in the /dev Directory
+  // First look in the /dev Directory
   DirectoryName = "/dev/";
 
   dir.setPath ( DirectoryName );
@@ -76,32 +77,31 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
   for ( int kk = 0; kk < Files.size(); kk++ )
     Files.replace ( kk, DirectoryName + Files.at ( kk ) );
   ReadOnlyStringListModel *m = new ReadOnlyStringListModel ( this );
-	m->setStringList ( Files );
-	AvailableDevices->setModel ( m );
-	AvailableDevices->show();
-// Now check for usb devices
-	/**
-	Directory="/dev/usb/tts/";
-	dir.setPath(Directory);
-	Files=dir.entryList(QDir::Files|QDir::System,QDir::Name);
-
-	for(QStringList::iterator Name=Files.begin();Name !=Files.end(); Name++)
-	 AvailableDevices->insertItem(Directory + *Name);
-	**/
-// Sound Devices
+  m->setStringList ( Files );
+  AvailableDevices->setModel ( m );
+  AvailableDevices->show();
+  // Now check for usb devices
+  /**
+Directory="/dev/usb/tts/";
+dir.setPath(Directory);
+Files=dir.entryList(QDir::Files|QDir::System,QDir::Name);
+for(QStringList::iterator Name=Files.begin();Name !=Files.end(); Name++)
+ AvailableDevices->insertItem(Directory + *Name);
+**/
+  // Sound Devices
   soundInputDeviceName->setText(LocalSettings.InputDeviceName);
   soundOutputDeviceName->setText(LocalSettings.OutputDeviceName);
- //Logging
-	Directory->setText ( LocalSettings.Directory );
-	QsoFile->setText ( LocalSettings.QSOFileName );
-	fileLog->setChecked ( LocalSettings.fileLog );
-connect(fileLog,SIGNAL(clicked(bool)),this,SLOT(selectFileLogging(bool)));
-	Directory->setDisabled ( !LocalSettings.fileLog );
-	QsoFile->setDisabled ( !LocalSettings.fileLog );
-	LinLog->setChecked ( LocalSettings.LinLog );
-connect(LinLog,SIGNAL(clicked(bool)),this,SLOT(selectLinLogLogging(bool)));
-	Port->setDisabled ( !LocalSettings.LinLog );
-	Host->setDisabled ( !LocalSettings.LinLog );
+  //Logging
+  Directory->setText ( LocalSettings.Directory );
+  QsoFile->setText ( LocalSettings.QSOFileName );
+  fileLog->setChecked ( LocalSettings.fileLog );
+  connect(fileLog,SIGNAL(clicked(bool)),this,SLOT(selectFileLogging(bool)));
+  Directory->setDisabled ( !LocalSettings.fileLog );
+  QsoFile->setDisabled ( !LocalSettings.fileLog );
+  LinLog->setChecked ( LocalSettings.LinLog );
+  connect(LinLog,SIGNAL(clicked(bool)),this,SLOT(selectLinLogLogging(bool)));
+  Port->setDisabled ( !LocalSettings.LinLog );
+  Host->setDisabled ( !LocalSettings.LinLog );
 
 }
 
@@ -114,56 +114,51 @@ GeneralSettings::~GeneralSettings()
 
 Parameter GeneralSettings::getSettings()
 {
-	LocalSettings.callsign = Callsign->text();
-	LocalSettings.myLocator = myLocator->text();
-	if ( Demomode->isChecked() )
-	{
-		LocalSettings.DemoMode = true;
-		LocalSettings.DemoTypeNumber = FileFormat->checkedId();
-		LocalSettings.inputFilename = "";
-	}
-	else
+  LocalSettings.callsign = Callsign->text();
+  LocalSettings.myLocator = myLocator->text();
+  if ( Demomode->isChecked() )
     {
-		LocalSettings.DemoMode = false;
-        LocalSettings.InputDeviceName=soundInputDeviceName->text();
-        LocalSettings.OutputDeviceName=soundOutputDeviceName->text();
+      LocalSettings.DemoMode = true;
+      LocalSettings.DemoTypeNumber = FileFormat->checkedId();
+      LocalSettings.inputFilename = "";
+    }
+  else
+    {
+      LocalSettings.DemoMode = false;
+      LocalSettings.InputDeviceName=soundInputDeviceName->text();
+      LocalSettings.OutputDeviceName=soundOutputDeviceName->text();
     }
 
-	LocalSettings.timeoffset = UTC->value();
-	if ( SlashedZero->isChecked() )
-		LocalSettings.slashed0 = true;
-	else
-		LocalSettings.slashed0 = false;
-	if ( autoCrLf->isChecked() )
-		LocalSettings.autoCrLf = true;
-	else
-		LocalSettings.autoCrLf = false;
-	LocalSettings.SerialDevice = SelectedDevice->text();
-	LocalSettings.fileLog = fileLog->isChecked();
-	if ( LocalSettings.fileLog )
-	{
-		LocalSettings.Directory = Directory->text();
-		LocalSettings.QSOFileName = QsoFile->text();
-	}
+  LocalSettings.timeoffset = UTC->value();
+  LocalSettings.slashed0 = SlashedZero->isChecked();
+  LocalSettings.autoCrLf = autoCrLf->isChecked();
+  LocalSettings.autoDate=autoDate->isChecked();
+  LocalSettings.SerialDevice = SelectedDevice->text();
+  LocalSettings.fileLog = fileLog->isChecked();
+  if ( LocalSettings.fileLog )
+    {
+      LocalSettings.Directory = Directory->text();
+      LocalSettings.QSOFileName = QsoFile->text();
+    }
 
-	LocalSettings.LinLog = LinLog->isChecked();
-	if ( LocalSettings.LinLog )
-	{
-		LocalSettings.Host = Host->text();
-		LocalSettings.Port = Port->value();
-	}
-LocalSettings.dateFormat=dateFormat->currentText();
-	return LocalSettings;
+  LocalSettings.LinLog = LinLog->isChecked();
+  if ( LocalSettings.LinLog )
+    {
+      LocalSettings.Host = Host->text();
+      LocalSettings.Port = Port->value();
+    }
+  LocalSettings.dateFormat=dateFormat->currentText();
+  return LocalSettings;
 }
 
 void GeneralSettings::selectDemomode ( bool mode )
 {
-	if ( mode )
+  if ( mode )
     {
       FileFormatLayout->show();
       SoundDeviceBox->hide();
     }
-	else
+  else
     {
       FileFormatLayout->hide();
       SoundDeviceBox->show();
@@ -172,22 +167,22 @@ void GeneralSettings::selectDemomode ( bool mode )
 
 void GeneralSettings::setPTTDevice ( const QModelIndex &index )
 {
-	QString s = index.data().toString();
+  QString s = index.data().toString();
 
-	SelectedDevice->clear();
-	SelectedDevice->setText ( s );
-	LocalSettings.SerialDevice = s;
+  SelectedDevice->clear();
+  SelectedDevice->setText ( s );
+  LocalSettings.SerialDevice = s;
 }
 
 void GeneralSettings::selectFileLogging ( bool b)
 {
-Directory->setDisabled ( !b);
-	QsoFile->setDisabled ( !b );
+  Directory->setDisabled ( !b);
+  QsoFile->setDisabled ( !b );
 }
 void GeneralSettings::selectLinLogLogging ( bool b )
 {
-	Port->setDisabled ( !b );
-	Host->setDisabled ( !b );
+  Port->setDisabled ( !b );
+  Host->setDisabled ( !b );
 }
 void GeneralSettings::setSampleRate(QString s)
 {

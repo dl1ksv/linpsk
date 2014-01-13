@@ -80,6 +80,9 @@
      </item>
      <item>
       <widget class="TxWindow" name="txWindow">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
        </property>

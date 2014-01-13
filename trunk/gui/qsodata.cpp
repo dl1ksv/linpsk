@@ -43,7 +43,6 @@ QSOData::QSOData ( QWidget* parent )
   validator = new QRegExpValidator ( rx, this );
   Loc->setValidator ( validator );
   Loc->setStyleSheet ( "QLineEdit{color: black ; }" );
-  Distance->setAlignment ( Qt::AlignRight );
   QsoDate->setDisplayFormat ( settings.dateFormat );
   refreshDateTime();
   if ( settings.QslData )
@@ -209,6 +208,8 @@ void QSOData::save()
   Locatorchanged();
   HisRSTchanged();
   MyRSTchanged();
+  if(settings.autoDate)
+    refreshDateTime();
   Datechanged();
   Timechanged();
   QString saveString, s;
@@ -324,7 +325,9 @@ void QSOData::save()
     saveString.append ( "<eor>\n" );
     if ( !logBookCommunication->isRunning() )
       logBookCommunication->start();
+#ifndef QT_NO_DEBUG
     qDebug ( "Written to Logbook\n%s", qPrintable ( saveString ) );
+#endif
     logBookCommunication->saveQsoData ( saveString );
   }
 }
@@ -344,7 +347,7 @@ void QSOData::calculateDistance ( QString loc )
   mine = loc2coordinates ( settings.myLocator.constData() );
   his = loc2coordinates ( loc.constData() );
   dist = 6371. * acos ( sin ( mine.breite ) * sin ( his.breite ) + cos ( mine.breite ) * cos ( his.breite ) * cos ( mine.laenge - his.laenge ) );
-  Distance->setText ( s.arg ( ( int ) dist, 6 ) );
+  Distance->setText ( s.arg ( ( int ) dist, 5 ) );
 }
 QSOData::coordinates QSOData::loc2coordinates ( const QChar *l )
 {
@@ -362,7 +365,7 @@ void QSOData::setQsoData(QsoData value,QString s)
   switch (value)
   {
     case CallSign :
-      RemoteCallsign->setText ( s );
+      RemoteCallsign->setText ( s.remove(QChar(' ')) );
       Callsignchanged();
       break;
     case QTH :
@@ -449,4 +452,21 @@ void QSOData::copyAnswer()
   settings.QslData->countryName = countryName->text();
   settings.QslData->continent = continent->text();
   settings.QslData->worked = worked->text();
+}
+void QSOData::setAutoDate()
+{
+  if(settings.autoDate)
+    {
+      dateLabel->hide();
+      QsoDate->hide();
+      timeLabel->hide();
+      QsoTime->hide();
+    }
+  else
+    {
+      dateLabel->show();
+      QsoDate->show();
+      timeLabel->show();
+      QsoTime->show();
+    }
 }

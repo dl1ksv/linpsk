@@ -41,12 +41,12 @@ TxWindow::TxWindow(QWidget *parent) :
   {
     scrollBuffer[i] = new QLineEdit ( ui->txLines );
     scrollBuffer[i]->setFrame ( false );
-    scrollBuffer[i]->setFocusProxy(ui->txLines);
+//    scrollBuffer[i]->setFocusProxy(ui->txLines);
+    scrollBuffer[i]->setFocusProxy(this);
     scrollBuffer[i]->setMaximumHeight(18);
     scrollBuffer[i]->setFixedWidth(pixelwidth);
     ui->linesLayout->addWidget(scrollBuffer[i]);
   }
-  setFocusPolicy(Qt::ClickFocus);
   ui->txArea->ensureWidgetVisible(scrollBuffer[zeile]);
 }
 
@@ -192,3 +192,22 @@ void TxWindow::backspace()
     ui->txArea->ensureWidgetVisible(scrollBuffer[zeile]);
   }
 }
+void TxWindow::focusInEvent(QFocusEvent *e)
+{
+  qDebug("Focus in");
+  setStyleSheet("TxWindow{border: 2px solid green;}");
+//  setStyleSheet("txArea{border: 1px solid red;}");
+  QFrame::focusInEvent(e);
+}
+
+void TxWindow::focusOutEvent(QFocusEvent *e)
+{
+  qDebug("Focus out");
+  setStyleSheet("TxWindow{border: 1px solid red;}");
+//  setStyleSheet("txArea{border: 1px solid green;}");
+  QFrame::focusOutEvent(e);
+}
+/**void TxWindow::mousePressEvent(QMouseEvent *)
+{
+  setStyleSheet("TxWindow{border: 1px solid red;}");
+}**/

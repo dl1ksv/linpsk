@@ -27,6 +27,7 @@ public:
     void updateMacroWindow(int macroNumber);
     void insertMacros(QVector<Macro> *macroList);
     void enableSaveData();
+    void setAutoDate();
     void restoreSplitterStates(const QByteArray & controlState,const QByteArray & spectrumState);
     QByteArray controlSplitterState() const;
     QByteArray spectrumSplitterState() const;

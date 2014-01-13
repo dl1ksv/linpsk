@@ -18,6 +18,8 @@
 #include <QLineEdit>
 #include <QFontMetrics>
 #include <QMenu>
+#include <QVBoxLayout>
+#include <QClipboard>
 
 #include "parameter.h"
 
@@ -33,16 +35,21 @@ CRxWindow::CRxWindow ( QWidget* parent )
   QFontMetrics fm ( font() );
   rowHeight = fm.height()+3;
   int pixelwidth=82*fm.width("A");
-  DisplayBox = new QWidget ( this );
+  DisplayBox = new QWidget ();
   DisplayBox-> setFocusPolicy( Qt::NoFocus);
-  DisplayBox->setFixedSize ( 642, RXWINDOWBUFFER*rowHeight );
+  DisplayBox->setGeometry( 0,0 ,pixelwidth, RXWINDOWBUFFER*rowHeight );
   DisplayBox->setContextMenuPolicy ( Qt::CustomContextMenu );
   connect ( DisplayBox, SIGNAL ( customContextMenuRequested ( QPoint ) ), this, SLOT ( contextMenu ( QPoint ) ) );
 
   setWidget ( DisplayBox );
+  linesLayout = new QVBoxLayout(DisplayBox);
+  linesLayout->setSpacing(0);
+  linesLayout->setContentsMargins(0, 0, 0, 0);
+  linesLayout->setObjectName(QString::fromUtf8("linesLayout"));
+  linesLayout->setSizeConstraint(QLayout::SetNoConstraint);
 
-//  setHorizontalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
-  setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
+
+  setHorizontalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
   setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOn );
 
   trigger = false;
@@ -53,20 +60,19 @@ CRxWindow::CRxWindow ( QWidget* parent )
   Row = 0;
   Column = 0;
   AutoScroll = true;
-  DisplayLineHeight = rowHeight - 1;
+
   for ( int i = 0;i < RXWINDOWBUFFER;i++ )
   {
 
     ScrollBuffer[i] = new QLineEdit ( DisplayBox );
     ScrollBuffer[i]->setFixedWidth(pixelwidth);
-    ScrollBuffer[i]->move ( 1, 1+ DisplayLineHeight*i );
-
+    ScrollBuffer[i]->setMaximumHeight(18);
     ScrollBuffer[i]->setFrame ( false );
     ScrollBuffer[i]->setReadOnly ( true );
-    ScrollBuffer[i]->setFixedHeight ( rowHeight );
+    linesLayout->addWidget(ScrollBuffer[i]);
     ScrollBuffer[i]->setContextMenuPolicy ( Qt::NoContextMenu );
-    ScrollBuffer[i]->show();
   }
+  DisplayLineHeight = ScrollBuffer[0]->height()-1;
   setBackgroundRole ( ScrollBuffer[0]->backgroundRole() );
   menu = new QMenu ( tr ( "Log value" ), DisplayBox );
   QAction *A = menu->addAction ( tr ( "Callsign" ) );
@@ -81,9 +87,10 @@ CRxWindow::CRxWindow ( QWidget* parent )
   connect ( A, SIGNAL ( triggered() ), this, SLOT ( copyRST() ) );
   A = menu->addAction ("Dok");
   connect ( A, SIGNAL ( triggered() ), this, SLOT ( copyDok() ) );
+  A = menu->addAction ("Clipboard");
+  connect ( A, SIGNAL ( triggered() ), this, SLOT ( copy() ) );
 
   selectedString.clear();
-
 }
 
 /*
@@ -196,13 +203,17 @@ void CRxWindow::setColor ( QColor color )
   for ( int i = 0;i < RXWINDOWBUFFER;i++ )
     ScrollBuffer[i]->setStyleSheet ( "QLineEdit{color: " + color.name() + "; }" );
 }
-
+/**
 void CRxWindow::fontChange ( const QFont & )
 {
   QFontMetrics fm ( font() );
+  int pixelwidth=82*fm.width("A");
   for ( int i = 0;i < RXWINDOWBUFFER;i++ )
-    ScrollBuffer[i]->setFixedHeight ( fm.height() );
+    ScrollBuffer[i]->setFixedWidth( pixelwidth );
+  DisplayLineHeight = ScrollBuffer[0]->height()-1;
+
 }
+**/
 void CRxWindow::activateTrigger ( QString s )
 {
   trigger = true;
@@ -249,24 +260,21 @@ bool CRxWindow::getRecordingState()
   return save;
 }
 
-void CRxWindow::resizeEvent ( QResizeEvent * )
-{
-  int width = this->width();
-  DisplayBox->setFixedWidth ( width );;
-  for ( int i = 0;i < RXWINDOWBUFFER;i++ )
-    ScrollBuffer[i]->setFixedWidth ( width );
-}
+
 void CRxWindow::contextMenu ( QPoint p )
 {
   int selectedLine, selectedColumn;
   char c = 0xF8;
   QPoint p1 = QCursor::pos();
-  selectedLine = p.y() / DisplayLineHeight;
+  selectedLine = (p.y()-3) / DisplayLineHeight;
   if(selectedLine >= RXWINDOWBUFFER)
     selectedLine=RXWINDOWBUFFER-1;
-  selectedColumn = ScrollBuffer[selectedLine]->cursorPositionAt ( QPoint ( p.x(), 2 ) );
-  ScrollBuffer[selectedLine]->setCursorPosition ( selectedColumn );
-  ScrollBuffer[selectedLine]->cursorWordForward ( true );
+  if(!ScrollBuffer[selectedLine]->hasSelectedText())
+    {
+      selectedColumn = ScrollBuffer[selectedLine]->cursorPositionAt ( QPoint ( p.x(), 2 ) );
+      ScrollBuffer[selectedLine]->setCursorPosition ( selectedColumn );
+      ScrollBuffer[selectedLine]->cursorWordForward ( true );
+    }
   selectedString = ScrollBuffer[selectedLine]->selectedText();
   if(!selectedString.endsWith(QChar(' ')))
   {
@@ -285,7 +293,19 @@ void CRxWindow::contextMenu ( QPoint p )
     ScrollBuffer[selectedLine]->cursorWordForward ( true );
     selectedString = ScrollBuffer[selectedLine]->selectedText();
   }
+  /**
+  qDebug("*****Cursor: x: %i y: %i",p.x(),p.y());
+  int start;
+  start=selectedLine-4;
+  if(start <0)
+    start=0;
+  for(int i=start;i <=selectedLine;i++)
+    {
+      qDebug("Zeile: %i, %s",i,qPrintable(ScrollBuffer[i]->text()));
+    }
+    **/
   menu->exec ( p1 );
+  ScrollBuffer[selectedLine]->deselect();
 }
 void CRxWindow::copyCallSign()
 {
@@ -310,4 +330,8 @@ void CRxWindow::copyRST()
 void CRxWindow::copyDok()
 {
   emit setQsoData( DOK, selectedString );
+}
+void CRxWindow::copy()
+{
+  QApplication::clipboard()->setText(selectedString);
 }
