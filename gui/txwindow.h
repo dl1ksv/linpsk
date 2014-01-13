@@ -55,7 +55,9 @@ private:
 
   void keyPressEvent(QKeyEvent *); // Bearbeiten der Eingaben im TX Window
   protected:
-//  virtual void mousePressEvent( QMouseEvent * );
+  virtual void focusInEvent(QFocusEvent *e);
+  virtual void focusOutEvent(QFocusEvent *e);
+//  virtual void mousePressEvent(QMouseEvent *);
 private slots:
   void clearBuffers();
 };

@@ -46,25 +46,25 @@ void setupDevices();
 // Variables
 
 
-QString callsign;                    // Callsign
+QString callsign;             // Callsign
 QString myLocator;
-QString inputFilename;              //Name of Demofile
-QString DemoModeFileType[2];        // File Type of DemoFile
-int DemoTypeNumber;                 // Index of selected FileType
-int serial;                         // Filedescriptor for serial Device for PTT
-QString SerialDevice;               //Filename for PTT Device
+QString inputFilename;        //Name of Demofile
+QString DemoModeFileType[2];  // File Type of DemoFile
+int DemoTypeNumber;           // Index of selected FileType
+int serial;                   // Filedescriptor for serial Device for PTT
+QString SerialDevice;         //Filename for PTT Device
 //Logging
-QString QSOFileName;                 // Name of the file,where qsodata will be stored
+QString QSOFileName;          // Name of the file,where qsodata will be stored
 QString Directory;
 bool fileLog;
 bool LinLog;
 QString Host;
 int Port;
-bool DemoMode;                      // DemoMode ?
+bool DemoMode;                // DemoMode ?
 
-QString LangName[3];		    //Contains the used language names for button labeling
+QString LangName[3];	      //Contains the used language names for button labeling
 
-int timeoffset;                     // offset to UTC
+int timeoffset;               // offset to UTC
 
 /** DeviceSection */
 QString InputDeviceName;
@@ -73,8 +73,10 @@ QString OutputDeviceName;
 int sampleRate;
 bool complexFormat;
 
-bool slashed0; 				// True if to print 0 slashed
-bool autoCrLf;              // True if sending cr lf on enter
+bool slashed0;		      // True if to print 0 slashed
+bool autoCrLf;		      // True if sending cr lf on enter
+bool autoDate;		      // True if date/time will be set automatically when qso data are saved
+			      // If false, fields are displayed in qso data and editable
 
 int  RxChannels;
 CRxChannel * ChannelChain;

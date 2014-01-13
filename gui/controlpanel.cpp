@@ -83,6 +83,11 @@ void ControlPanel::enableSaveData()
 {
   QSO->enableSaveData();
 }
+void ControlPanel::setAutoDate()
+{
+  QSO->setAutoDate();
+}
+
 void ControlPanel::restoreSplitterStates(const QByteArray & controlState,const QByteArray & spectrumState)
 {
   controlSplitter->restoreState(controlState);

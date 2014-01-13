@@ -24,10 +24,6 @@ Status = UNDEF;
 
 // Defaultsettings
 
-//MinimumWindowWidth=640;
-//MinimumWindowHeight=480;
-
-
 callsign="";
 QslData=0;
 
@@ -41,12 +37,15 @@ DemoMode=true;
 DemoModeFileType[0]="*.wav";
 DemoModeFileType[1]="*.out";
 DemoTypeNumber=0;
+
 slashed0=false;
+autoCrLf=true;
+autoDate=true;
+
 RxChannels=1;
 ActChannel = 0;   // Pointer to the active Channel
 ChannelChain = 0; // Pointer to the Start of the Rx - ChannelChain
 ApplicationFont =0;
-autoCrLf=true;
 dateFormat="dd.MM.yyyy";
 
 InputDeviceName="LinPSK_Record";
