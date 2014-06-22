@@ -19,15 +19,11 @@
 #include "viterbi.h"
 
 // phase wraparound correction table for viterbi decoder
-//static const double AngleTbl1[4] = { M_PI_3_2, 0.0, M_PI/2.0, M_PI};
-//static const double AngleTbl2[4] = { M_PI_3_2, PI2, M_PI/2.0, M_PI};
-//static const double AngleTbl1[4] = {  M_PI_2, -M_PI, -M_PI_2,0.0};
-//static const double AngleTbl2[4] = {  M_PI_2, M_PI, M_PI_3_2,0.0};
 static const double AngleTbl1[4] = {  0.0, -M_PI_2, -M_PI,-M_PI_3_2};
 static const double AngleTbl2[4] = {  0.0, M_PI_3_2, M_PI,M_PI_2};
 
 
-static const double  qdistance(double *x,int i)
+static double  qdistance(double *x,int i)
 {
 
 const double *pAngle;

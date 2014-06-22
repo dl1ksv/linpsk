@@ -75,6 +75,7 @@ CRxChannel::CRxChannel ( int ID, QWidget *parent, Mode DemodulatorType, unsigned
 
   QsoData.QsoDate= t.date() ;
   QsoData.QsoTime= t1.time();
+  QsoData.QsoFrequency=5;
 }
 CRxChannel::~CRxChannel()
 {

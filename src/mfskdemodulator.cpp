@@ -23,7 +23,7 @@
 
 #define NumberofTones 16
 
-const double MFSKDistance ( double *xa, int b )
+double MFSKDistance ( double *xa, int b )
 {
 	double dist;
 	int a1, a2;
@@ -174,7 +174,7 @@ void MFSKDemodulator::bitEstimate()
 	double max ;
 	int j, k, freq, pos;
 	double softBits[4];;
-
+	freq=pos=0;
 // Now we do some sliding fft on the downsampled values
 	for ( int i = 0;i < DOWNSAMPLEDBUFFERLENGTH;i++ )
 	{

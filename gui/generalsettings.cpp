@@ -71,7 +71,8 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
 
   dir.setPath ( DirectoryName );
   QStringList filenames;
-  filenames << "ttyS*";
+  //Check for serial and usb to serial devices
+  filenames << "ttyS*" << "ttyUSB*";
   QStringList Files = dir.entryList ( filenames, QDir::System | QDir::CaseSensitive, QDir::Name );
 
   for ( int kk = 0; kk < Files.size(); kk++ )
@@ -80,14 +81,6 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
   m->setStringList ( Files );
   AvailableDevices->setModel ( m );
   AvailableDevices->show();
-  // Now check for usb devices
-  /**
-Directory="/dev/usb/tts/";
-dir.setPath(Directory);
-Files=dir.entryList(QDir::Files|QDir::System,QDir::Name);
-for(QStringList::iterator Name=Files.begin();Name !=Files.end(); Name++)
- AvailableDevices->insertItem(Directory + *Name);
-**/
   // Sound Devices
   soundInputDeviceName->setText(LocalSettings.InputDeviceName);
   soundOutputDeviceName->setText(LocalSettings.OutputDeviceName);

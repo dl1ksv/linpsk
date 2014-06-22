@@ -1,7 +1,7 @@
 /***************************************************************************
                           viterbi.h  -  description
                              -------------------
-    begin                : Sam Mär 8 2003
+    begin                : Sam Maerz 8 2003
     copyright            : (C) 2003 by Volker Schroer
     email                : dl1ksv@gmx.de
  ***************************************************************************/
@@ -25,7 +25,8 @@
 
 class Viterbi {
 public: 
-	Viterbi(int,unsigned int,unsigned int,const double (*)(double *,int));
+//	Viterbi(int,unsigned int,unsigned int,const double (*)(double *,int));
+	Viterbi(int,unsigned int,unsigned int,double (*)(double *,int));
 	~Viterbi();
   int encode(int);
   void decode(double *);
@@ -42,7 +43,8 @@ long long int * bitestimate;
 int NumberofStates;
 int MinimumPath;
 unsigned int CoderState;
-const double (*dist)(double *,int);
+//const double (*dist)(double *,int);
+double (*dist)(double *,int);
 
 
 };

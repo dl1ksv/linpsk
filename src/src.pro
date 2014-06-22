@@ -2,6 +2,7 @@ CONFIG(debug, debug|release) {
     QMAKE_CXXFLAGS_DEBUG += -g3 \
     -fpermissive \
     -O0
+DEFINES +=SOUND_DEBUG
 CONFIG +=  debug
 } else {
     DEFINES += QT_NO_DEBUG

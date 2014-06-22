@@ -36,7 +36,7 @@ MFSKModulator::MFSKModulator ( int FS, double freq, CTxBuffer *TxBuffer ) : FSKM
 	Baudrate = 15.625;
 	SamplesperSymbol = ( int ) ( SampleRate / Baudrate + 0.5 );
 // Tonespacing has the same value like Baudrate so
-	for ( int i = 0; i < NumberofTones;i++ )
+	for ( unsigned int i = 0; i < NumberofTones;i++ )
 	{
 		ToneFrequencyr[i] = cos ( PI2 * ( freq + i * Baudrate ) / SampleRate );
 		ToneFrequencyi[i] = sin ( PI2 * ( freq + i * Baudrate ) / SampleRate );

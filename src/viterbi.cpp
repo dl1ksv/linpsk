@@ -1,7 +1,7 @@
 /***************************************************************************
                           viterbi.cpp  -  description
                              -------------------
-    begin                : Sam Mär 8 2003
+    begin                : Sam Maerz 8 2003
     copyright            : (C) 2003 by Volker Schroer
     email                : dl1ksv@gmx.de
  ***************************************************************************/
@@ -19,7 +19,7 @@
 #include <iostream>
 using namespace std;
 
-Viterbi::Viterbi(int K,unsigned int PolyA, unsigned int PolyB,const double (*d)(double *,int))
+Viterbi::Viterbi(int K, unsigned int PolyA, unsigned int PolyB,double (*d)(double *, int))
 {
 int i;
 dist = d;

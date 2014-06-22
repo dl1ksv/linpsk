@@ -254,7 +254,8 @@ void QSOData::save()
   }
   if ( QsoTime->text() != "" )
   {
-    s = QString ( "<TIME_ON:%1>%2\n" ).arg ( QsoTime->text().length() ).arg ( QsoTime->text().remove ( ':' ) );
+    QString timeValue= QsoTime->text().remove ( ':' );
+    s = QString ( "<TIME_ON:%1>%2\n" ).arg ( timeValue.length() ).arg ( timeValue );
     saveString.append ( s );
   }
 
@@ -317,11 +318,21 @@ void QSOData::save()
        saveString.append("R\n");
     else
        saveString.append("N\n");
+    saveString.append("<QSL_RCVD:1>");
+    if(bureau->isChecked())
+       saveString.append("R\n");
+    else
+       saveString.append("N\n");
     saveString.append("<EQSL_QSL_SENT:1>");
     if(eQsl->isChecked())
        saveString.append("R\n");
      else
        saveString.append("N\n");
+    saveString.append("<EQSL_QSL_RCVD:1>");
+    if(eQsl->isChecked())
+       saveString.append("R\n");
+    else
+    saveString.append("N\n");
     saveString.append ( "<eor>\n" );
     if ( !logBookCommunication->isRunning() )
       logBookCommunication->start();
@@ -401,7 +412,8 @@ void QSOData::newChannel()
     Qth->setText ( settings.QslData->Qth );
     Loc->setText ( settings.QslData->Locator );
     Locatorchanged(); // Check Locator and set Color
-    QsoFrequency->setCurrentIndex ( settings.QslData->QsoFrequency );
+//    QsoFrequency->setCurrentIndex ( settings.QslData->QsoFrequency );
+    settings.QslData->QsoFrequency=QsoFrequency->currentIndex();
     HisRST->setText ( settings.QslData->HisRST );
     MyRST->setText ( settings.QslData->MyRST );
     QsoDate->setDate ( settings.QslData->QsoDate );
