@@ -473,8 +473,8 @@ int PSKModulator::CalcSignal(double *pData, int n)
   {
     m_t += m_PSKPhaseInc; // increment radian phase count
 
-    pData[i] = 0.45 * (m_pPSKtxI[m_Ramp] * sin(m_t) + m_pPSKtxQ[m_Ramp++] * cos(m_t));
-
+    pData[i] = 0.45 * (m_pPSKtxI[m_Ramp] * sin(m_t) + m_pPSKtxQ[m_Ramp] * cos(m_t));
+    m_Ramp++;
     m_PSKTime += m_PSKSecPerSamp;
     if (m_PSKTime >= m_PSKPeriodUpdate)//if time to update envelope ramp index
     {
@@ -572,8 +572,7 @@ char PSKModulator::GetNextCWSymbol(void) {
 /////////////////////////////////////////////////////////////
 
 int PSKModulator::GetChar() {
-  int ch;
-//  static int last = 0;
+  int ch=0;
   switch (status) {
     case TX_OFF_STATE: //is receiving
       ch = TXOFF_CODE; //else turn off
@@ -585,7 +584,6 @@ int PSKModulator::GetChar() {
       ch = TXTOG_CODE; // steady idle symbol
       break;
     case TX_POSTAMBLE_STATE: // ending sequence
-      ///			if( !(ch = m_Postamble[m_AmblePtr++] ))  //m_Postamble is 0 terminated
       ch = m_Postamble[m_AmblePtr++];
       if (ch == 0) //m_Postamble is 0 terminated
       {
@@ -612,6 +610,7 @@ int PSKModulator::GetChar() {
       else
       ch = settings.CWIdString.at(m_AmblePtr++).cell();
        **/
+      ch = TXOFF_CODE;
       break;
     case TX_SENDING_STATE: //if sending text from TX window
       ch = Buffer->getTxChar();
@@ -624,6 +623,7 @@ int PSKModulator::GetChar() {
       m_AmblePtr = 0;
       break;
     case TX_END_STATE:
+      ch=0;
       break;
   }
 //  last = ch;

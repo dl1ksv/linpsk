@@ -194,20 +194,13 @@ void TxWindow::backspace()
 }
 void TxWindow::focusInEvent(QFocusEvent *e)
 {
-  qDebug("Focus in");
-  setStyleSheet("TxWindow{border: 2px solid green;}");
-//  setStyleSheet("txArea{border: 1px solid red;}");
+  setStyleSheet("TxWindow{border: 1px solid green;}");
   QFrame::focusInEvent(e);
 }
 
 void TxWindow::focusOutEvent(QFocusEvent *e)
 {
-  qDebug("Focus out");
+
   setStyleSheet("TxWindow{border: 1px solid red;}");
-//  setStyleSheet("txArea{border: 1px solid green;}");
   QFrame::focusOutEvent(e);
 }
-/**void TxWindow::mousePressEvent(QMouseEvent *)
-{
-  setStyleSheet("TxWindow{border: 1px solid red;}");
-}**/

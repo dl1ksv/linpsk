@@ -21,6 +21,54 @@
 
 using namespace std;
 extern Parameter settings;
+#ifdef SOUND_DEBUG
+static snd_pcm_format_t format_types[] = {
+  // SND_PCM_FORMAT_UNKNOWN,
+  SND_PCM_FORMAT_S8,
+  SND_PCM_FORMAT_U8,
+  SND_PCM_FORMAT_S16_LE,
+  SND_PCM_FORMAT_S16_BE,
+  SND_PCM_FORMAT_U16_LE,
+  SND_PCM_FORMAT_U16_BE,
+  SND_PCM_FORMAT_S24_LE,
+  SND_PCM_FORMAT_S24_BE,
+  SND_PCM_FORMAT_U24_LE,
+  SND_PCM_FORMAT_U24_BE,
+  SND_PCM_FORMAT_S32_LE,
+  SND_PCM_FORMAT_S32_BE,
+  SND_PCM_FORMAT_U32_LE,
+  SND_PCM_FORMAT_U32_BE,
+  SND_PCM_FORMAT_FLOAT_LE,
+  SND_PCM_FORMAT_FLOAT_BE,
+  SND_PCM_FORMAT_FLOAT64_LE,
+  SND_PCM_FORMAT_FLOAT64_BE,
+  SND_PCM_FORMAT_IEC958_SUBFRAME_LE,
+  SND_PCM_FORMAT_IEC958_SUBFRAME_BE,
+  SND_PCM_FORMAT_MU_LAW,
+  SND_PCM_FORMAT_A_LAW,
+  SND_PCM_FORMAT_IMA_ADPCM,
+  SND_PCM_FORMAT_MPEG,
+  SND_PCM_FORMAT_GSM,
+  SND_PCM_FORMAT_SPECIAL,
+  SND_PCM_FORMAT_S24_3LE,
+  SND_PCM_FORMAT_S24_3BE,
+  SND_PCM_FORMAT_U24_3LE,
+  SND_PCM_FORMAT_U24_3BE,
+  SND_PCM_FORMAT_S20_3LE,
+  SND_PCM_FORMAT_S20_3BE,
+  SND_PCM_FORMAT_U20_3LE,
+  SND_PCM_FORMAT_U20_3BE,
+  SND_PCM_FORMAT_S18_3LE,
+  SND_PCM_FORMAT_S18_3BE,
+  SND_PCM_FORMAT_U18_3LE,
+  SND_PCM_FORMAT_U18_3BE
+};
+static unsigned int test_rates[] = {
+  8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000, 192000
+};
+
+#define NELEMS(x) (sizeof(x)/sizeof(x[0]))
+#endif
 CSound::CSound ( int ptt = -1 ) : Input ( ptt )
 {
   started = false;
@@ -93,6 +141,9 @@ bool CSound::open_Device_read ( QString *errorstring )
     *errorstring = QString ( "Broken configuration : no configurations available: " ) + QString ( snd_strerror ( err ) );
     return false;
   }
+  #ifdef SOUND_DEBUG
+  dump_hw_params(handle,hwparams);
+  #endif
   /* Set the interleaved read/write format */
   err = snd_pcm_hw_params_set_access ( handle, hwparams, SND_PCM_ACCESS_RW_INTERLEAVED );
   if ( err < 0 )
@@ -102,6 +153,7 @@ bool CSound::open_Device_read ( QString *errorstring )
   }
   /* Set the sample format */
   err = snd_pcm_hw_params_set_format ( handle, hwparams, SND_PCM_FORMAT_FLOAT_LE );
+//  err = snd_pcm_hw_params_set_format ( handle, hwparams, SND_PCM_FORMAT_S32_LE );
   if ( err < 0 )
   {
     *errorstring = QString ( "Sample format Float not available : " ) + QString ( snd_strerror ( err ) );
@@ -139,6 +191,9 @@ bool CSound::open_Device_read ( QString *errorstring )
   if ( err < 0 )
   {
     *errorstring = QString ( "Unable to set hw params for input: " ) + QString ( snd_strerror ( err ) );
+    #ifdef SOUND_DEBUG
+    dump_hw_params(handle,hwparams);
+    #endif
     return false;
   }
   snd_pcm_hw_params_free ( hwparams );
@@ -536,3 +591,24 @@ int CSound::getDeviceNumber(QString device)
   }
   return id;
 }
+#ifdef SOUND_DEBUG
+void CSound::dump_hw_params(snd_pcm_t *h,snd_pcm_hw_params_t* hw_p)
+{
+ unsigned int i;
+ qDebug("PCM name: %s\n", snd_pcm_name (h));
+ qDebug("Formats:\n");
+
+ for (i = 0; i < NELEMS (format_types); i++){
+   snd_pcm_format_t    ft = format_types[i];
+  if (snd_pcm_hw_params_test_format (h, hw_p, ft) == 0)
+       qDebug( "    %-20s YES", snd_pcm_format_name (ft));
+   }
+
+ qDebug("Sample Rates:\n");
+  for (i = 0; i < NELEMS (test_rates); i++){
+    unsigned int rate = test_rates[i];
+    qDebug( "    %6u  %s", rate,
+             snd_pcm_hw_params_test_rate (h, hw_p, rate, 0) == 0 ? "YES" : "NO");
+  }
+}
+#endif

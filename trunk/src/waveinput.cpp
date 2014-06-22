@@ -48,8 +48,7 @@ void WaveInput::PTT(bool )
 bool WaveInput::open_Device_read(QString *errorstring)
 {
  char header[5];
- unsigned char header1[4]; // Only 3 are used, but lead to buffer 
-                           // overflow while reading, when compiled with -O2
+ unsigned char header1[4];
  char c;
  QString s;
  int i;
@@ -195,14 +194,14 @@ offset +=36;
 lseek(fd,offset,SEEK_SET);
 i=read(fd,&header[0],4*sizeof(header[0]));
 
-header[5]=0;
+header[4]=0;
 s=QString(header);
 // Checking for fact chunk
 if ( s == "fact")
 {
  lseek(fd,8,SEEK_CUR);
  i=read(fd,&header[0],4*sizeof(header[0]));
- header[5]=0;
+ header[4]=0;
  s=QString(header);
 
 } 

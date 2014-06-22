@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=LinPSK
+GenericName=A Modem for PSK31, RTTY and MFSK16 ( experimental ) 
+Comment=A modem for some digital Ham modes
+# FIXME add comments in other languages
+Exec=linpsk
+Categories=Qt;HamRadio;
+Terminal=false
+Icon=linpsk
+Keywords=Radio;HAM;

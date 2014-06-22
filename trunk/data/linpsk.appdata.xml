@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+  <id type="desktop">linpsk.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <description>
+    <p>
+      LinPSK is a hamradio application for different digital modes.
+      Suported modes:	
+    </p>
+    <ul>
+      <li>BPSK31</li>
+      <li>QPSK31</li>
+      <li>RTTY</li>
+      <li>MFSK16</li>
+    </ul>
+    <p>
+      The main features:
+    </p>
+    <ul>
+     <li>Decoding multiple signals simultaneously</li>
+     <li>Macro definition for  transmit</li>
+     <li>Sending qso data to LinLogbook</li>
+     <li>Requesting callsign data from LinLogbook</li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default">http://a.fsdn.com/con/app/proj/linpsk/screenshots/LinPskbig.png</screenshot>
+  </screenshots>
+  <url type="homepage">http://linpsk.sf.net</url>
+  <updatecontact>a@sf.net</updatecontact>
+</application>

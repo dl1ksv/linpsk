@@ -55,6 +55,9 @@ class CSound : public Input
     void record();
     void play();
     int getDeviceNumber(QString device);
+#ifdef SOUND_DEBUG
+    void dump_hw_params(snd_pcm_t *h,snd_pcm_hw_params_t* hw_p);
+#endif
   protected:
     void run();
     int free, freePointer, available, readPointer,toBePlayed;

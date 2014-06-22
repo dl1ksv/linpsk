@@ -125,6 +125,8 @@ void SpectrumWindow::plotSpectrum(bool overload,float *fftdata,int minfreq,int m
    }
     if ( overload )
             p.setPen ( Qt::red );
+    else
+      p.setPen ( Qt::black );
     for ( int i = 1;i < xmax;i++ )
     {
 

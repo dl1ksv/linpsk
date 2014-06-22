@@ -269,6 +269,7 @@ void CRxWindow::contextMenu ( QPoint p )
   selectedLine = (p.y()-3) / DisplayLineHeight;
   if(selectedLine >= RXWINDOWBUFFER)
     selectedLine=RXWINDOWBUFFER-1;
+  selectedColumn=0;
   if(!ScrollBuffer[selectedLine]->hasSelectedText())
     {
       selectedColumn = ScrollBuffer[selectedLine]->cursorPositionAt ( QPoint ( p.x(), 2 ) );

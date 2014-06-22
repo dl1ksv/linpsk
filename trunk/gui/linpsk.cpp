@@ -133,8 +133,6 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
 //========== Macro Processing ======================================
   tokenList << "@CALLSIGN@" << "@DATE@" << "@Replace by filename@" << "@RX@" << "@THEIRCALL@" << "@THEIRNAME@" << "@TIMELOCAL@" << "@TIMEUTC@" << "@TX@" << "@RSTGIVEN@" << "@RSTRCVD@";
   Control->insertMacros( &macroList );
-//  connect(Control,SIGNAL(executeMacro(int)),this,SLOT(executeMacro(int)));
-
   connect ( this, SIGNAL ( StartRx() ), this, SLOT ( startRx() ) );
   connect ( this, SIGNAL ( StartTx() ), this, SLOT ( startTx() ) );
 
@@ -246,7 +244,6 @@ void LinPSK::addRxWindow()
   if ( Channel->exec() != 0 )
   {
     AfcMode modus;
-//    modus = RxDisplay->RxFreq->getAfcMode();
     modus = RxDisplay->getAfcMode();
     settings.ActChannel->setAfcMode ( modus );
     Mode rxmode = ( Mode ) Channel->selectedMode();
@@ -582,11 +579,6 @@ void LinPSK::setRxMode()
       case MFSK16:
         Info = "MFSK16";
         break;
-/* RIP 
-    case RTTY2:
-        Info = "RTTY2";
-        break;
-*/
       default:
         Info = "undefined";
     }
@@ -600,9 +592,7 @@ void LinPSK::save_config()
   QSettings config ( "DL1KSV", "LinPSK" );
   /** Windows Parameter **/
   config.beginGroup ( "WindowsParameter" );
-// config.setValue ( "MinimumWindowWidth", settings.MinimumWindowWidth );
   config.setValue ( "WindowWidth", width() );
-// config.setValue ( "MinimumWindowHeight", settings.MinimumWindowHeight );
   config.setValue ( "Xpos", this->x() );
   config.setValue ( "Ypos", this->y() );
   config.setValue ( "WindowHeight", height() );
