@@ -21,7 +21,7 @@
 CLedButton::CLedButton(QWidget *parent) : QPushButton(parent)
 {
 status=UNDEF;
-setText("RX");
+setText("&RX");
 setFlat(false);
 connect(this,SIGNAL ( clicked() ),this,SLOT(rxtx()));
 }
@@ -47,11 +47,15 @@ switch (status)
 		break;
 	case UNDEF:
 		paint.setPen(Qt::black);
-		paint.setBrush(Qt::yellow);		
+    paint.setBrush(Qt::gray);
 		paint.drawEllipse(4,4,14,14);
 		break;
+  case SW:
+    paint.setPen(Qt::black);
+    paint.setBrush(Qt::yellow);
+    paint.drawEllipse(4,4,14,14);
+    break;
 	}
-//paint.drawText(4,height()-5,text());
 }
 /** sets the buttonstatus */
 void CLedButton::setStatus(BUTTONSTATUS state)
@@ -61,10 +65,13 @@ switch(status)
   {
   case UNDEF:
   case ON:
-    setText("RX");
+    setText("&RX");
     break;
   case OFF:
-    setText("TX");
+    setText("&TX");
+    break;
+  case SW:
+    setText("&A");
     break;
   }
 repaint();
@@ -82,6 +89,9 @@ switch(status)
   case OFF:
 //    setStatus(ON);
     emit startTx();
+    break;
+  case SW:
+    emit abortTx();
     break;
   }
 }

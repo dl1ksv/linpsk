@@ -88,7 +88,7 @@ void MacroControl::displayMacros()
       for ( i = 0; i < anzahl;i++ ) // insert macro buttons
       {
          lT=mL->at(i).languageType;
-         if((macroLang == 0) || ( lT == macroLang)|| (lT == 0))
+         if(((macroLang == 0) && (lT >0)) || ( lT == macroLang)|| (lT == 0))
              displayBox->button(i)->show();
           else
            displayBox->button(i) ->hide();

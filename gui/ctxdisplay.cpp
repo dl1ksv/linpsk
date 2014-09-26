@@ -34,7 +34,7 @@ CTxDisplay::CTxDisplay( QWidget* parent )
     TxFreq->setAfcMode(Narrow);
     connect(TxFunctions,SIGNAL(startRx()),this,SIGNAL(startRx()));
     connect(TxFunctions,SIGNAL(startTx()),this,SIGNAL(startTx()));
-
+    connect(TxFunctions,SIGNAL(abortTx()),this,SIGNAL(abortTx()));
     languageChange();
 }
 
@@ -57,10 +57,7 @@ void CTxDisplay::resizeEvent( QResizeEvent * )
 {
 TxFunctions->setFixedSize(QSize(height()-20,height()-20));
 }
-void CTxDisplay::abbruch()
-{
-TxFunctions->setStatus(UNDEF);
-}
+
 void CTxDisplay::insert(QString s)
 {
  txWindow->insertString(s);
@@ -68,4 +65,8 @@ void CTxDisplay::insert(QString s)
 void CTxDisplay::setTxFocus()
 {
  txWindow->setFocus();
+}
+void CTxDisplay::switch2Rx()
+{
+  TxFunctions->setStatus(SW);
 }

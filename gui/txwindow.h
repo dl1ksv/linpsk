@@ -58,7 +58,7 @@ private:
   virtual void focusInEvent(QFocusEvent *e);
   virtual void focusOutEvent(QFocusEvent *e);
 //  virtual void mousePressEvent(QMouseEvent *);
-private slots:
+public slots:
   void clearBuffers();
 };
 

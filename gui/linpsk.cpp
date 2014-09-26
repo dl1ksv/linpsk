@@ -42,6 +42,7 @@
 #include "modemenu.h"
 #include "addmacro.h"
 #include "deletemacro.h"
+#include "activatemacros.h"
 #include "qsodata.h"
 #include "editmacro.h"
 #include "deletemacro.h"
@@ -52,7 +53,7 @@
 #include <QtGui>
 #include <QEventLoop>
 
-#define VERSION "1.2.1"
+#define VERSION "1.2.2"
 
 
 #define ProgramName "LinPSK "
@@ -69,6 +70,9 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   Sound = 0;
   Modulator = 0;
   inAction=false;
+  /** To avoid multipe Macro clicking **/
+  blockMacros=false;
+  /************************************/
   SaveParameters = new Parameter();
 
   setupUi(this);
@@ -292,6 +296,7 @@ void LinPSK::startRx()
     TxBuffer->insert ( TXOFF_CODE );
     if ( Sound != NULL )  // Switch Trx to rx
       {
+        TxDisplay->switch2Rx();
         msg->setText ( tr ( "Switching to receive" ) );
         while ( Sound->isRunning() ) // Wait for buffer to be cleared
           qApp->processEvents ( QEventLoop::AllEvents, 100 );
@@ -341,7 +346,6 @@ void LinPSK::startTx()
   QString errorstring;
   QString Info;
   double Frequency;
-
 
   RxDisplay->stop_process_loop();
   if ( settings.ActChannel == 0 )
@@ -406,6 +410,7 @@ void LinPSK::startTx()
   {
     QMessageBox::information ( 0, ProgramName, errorstring );
     stopTx();
+     emit  StartRx();
     return;
   }
 
@@ -501,6 +506,7 @@ void LinPSK::stopTx()
   }
   delete Modulator;
   Modulator = 0;
+  TxDisplay->txWindow->clearBuffers();
 }
 
 void LinPSK::apply_settings()
@@ -666,6 +672,15 @@ void LinPSK::save_config()
 void LinPSK::executeMacro ( int id )
 {
 //  qDebug("Execute macro %d",id);
+  if(blockMacros) {
+    qDebug("Macro %d blocked",id);
+    return;
+  }
+  else
+  {
+    blockMacros=true;
+    QTimer::singleShot(1000,this,SLOT(unblockMacros()));
+  }
   QString macro = macroList.at(id).text;
   QString Token;
   QFile *MacroFile;
@@ -737,6 +752,18 @@ void LinPSK::executeMacro ( int id )
                                                  QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
                           return;
                         }
+                         if(settings.callsign.isEmpty())
+                         {
+                            QMessageBox::warning(0,"Parameter error",QLatin1String("Callsign not set"));
+                            TxDisplay->TxFunctions->setStatus ( OFF );
+                            return;
+                          }
+                         if(macro.contains(tokenList.at(4)) && settings.QslData->RemoteCallsign.isEmpty())  //Check if macro contains remote callsign when switching to tx
+                          {
+                            QMessageBox::critical(0,"Parameter error",QLatin1String("Remote callsign not set"));
+                            TxDisplay->TxFunctions->setStatus ( OFF );
+                            return;
+                          }
                         macro.remove ( indexvon, 4 );
                         if(settings.Status == OFF)
                           emit StartTx();
@@ -798,6 +825,7 @@ void LinPSK::executeMacro ( int id )
     TxDisplay->insert(macro);
     if(switchtoRx & (settings.Status == ON))
       {
+        TxDisplay->TxFunctions->setStatus(SW);
         msg->setText ( tr ( "Switching to receive" ) );
         emit  StartRx();
       }
@@ -828,6 +856,14 @@ void LinPSK::deleteMacro()
    Control->insertMacros( &macroList );
   }
   delete dL;
+}
+void LinPSK::actdeactMacros()
+{
+  ActivateMacros *act =new ActivateMacros(&macroList);
+  if(act->exec() !=0 ) {
+    Control->insertMacros( &macroList );
+  }
+  delete act;
 }
 void LinPSK::renameMacro()
 {
@@ -984,4 +1020,8 @@ void LinPSK::closeEvent ( QCloseEvent *e )
 void LinPSK::on_RxDisplay_newActiveChannel()
 {
 
+}
+void LinPSK::unblockMacros()
+{
+ blockMacros=false;
 }

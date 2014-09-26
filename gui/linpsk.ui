@@ -145,6 +145,7 @@
      <addaction name="actionDelete_macro"/>
      <addaction name="actionRename_macro"/>
      <addaction name="separator"/>
+     <addaction name="actionActivate_deactivate_Macro"/>
     </widget>
     <addaction name="actionGeneral_Settings"/>
     <addaction name="separator"/>
@@ -247,12 +248,9 @@
     <string>Change Rx mode</string>
    </property>
   </action>
-  <action name="actionEdit_macro_language">
+  <action name="actionActivate_deactivate_Macro">
    <property name="text">
-    <string>Edit macro language</string>
-   </property>
-   <property name="toolTip">
-    <string>Change used macro languages</string>
+    <string>Activate/ deactivate Macro</string>
    </property>
   </action>
  </widget>
@@ -279,6 +277,7 @@
    <slots>
     <signal>startRx()</signal>
     <signal>startTx()</signal>
+    <signal>abortTx()</signal>
    </slots>
   </customwidget>
   <customwidget>
@@ -534,8 +533,8 @@
      <y>154</y>
     </hint>
     <hint type="destinationlabel">
-     <x>404</x>
-     <y>532</y>
+     <x>405</x>
+     <y>455</y>
     </hint>
    </hints>
   </connection>
@@ -562,8 +561,8 @@
    <slot>executeMacro(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>404</x>
-     <y>532</y>
+     <x>405</x>
+     <y>455</y>
     </hint>
     <hint type="destinationlabel">
      <x>404</x>
@@ -598,8 +597,8 @@
      <y>154</y>
     </hint>
     <hint type="destinationlabel">
-     <x>404</x>
-     <y>532</y>
+     <x>405</x>
+     <y>455</y>
     </hint>
    </hints>
   </connection>
@@ -610,8 +609,8 @@
    <slot>startRx()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>404</x>
-     <y>343</y>
+     <x>405</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>404</x>
@@ -626,12 +625,44 @@
    <slot>startTx()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>404</x>
-     <y>343</y>
+     <x>405</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>404</x>
      <y>341</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionActivate_deactivate_Macro</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>actdeactMacros()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TxDisplay</sender>
+   <signal>abortTx()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>stopTx()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>236</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>239</y>
     </hint>
    </hints>
   </connection>
@@ -657,5 +688,7 @@
   <slot>recording(bool)</slot>
   <slot>startRx()</slot>
   <slot>startTx()</slot>
+  <slot>actdeactMacros()</slot>
+  <slot>stopTx()</slot>
  </slots>
 </ui>

@@ -520,10 +520,25 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>Callsign</tabstop>
+  <tabstop>myLocator</tabstop>
+  <tabstop>UTC</tabstop>
+  <tabstop>dateFormat</tabstop>
+  <tabstop>SlashedZero</tabstop>
+  <tabstop>autoDate</tabstop>
+  <tabstop>autoCrLf</tabstop>
   <tabstop>Demomode</tabstop>
+  <tabstop>Wav</tabstop>
   <tabstop>Text</tabstop>
-  <tabstop>buttonOk</tabstop>
-  <tabstop>buttonCancel</tabstop>
+  <tabstop>AvailableDevices</tabstop>
+  <tabstop>SelectedDevice</tabstop>
+  <tabstop>soundInputDeviceName</tabstop>
+  <tabstop>soundOutputDeviceName</tabstop>
+  <tabstop>fileLog</tabstop>
+  <tabstop>Directory</tabstop>
+  <tabstop>QsoFile</tabstop>
+  <tabstop>LinLog</tabstop>
+  <tabstop>Host</tabstop>
+  <tabstop>Port</tabstop>
  </tabstops>
  <includes>
   <include location="local">parameter.h</include>

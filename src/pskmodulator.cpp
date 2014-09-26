@@ -473,7 +473,7 @@ int PSKModulator::CalcSignal(double *pData, int n)
   {
     m_t += m_PSKPhaseInc; // increment radian phase count
 
-    pData[i] = 0.45 * (m_pPSKtxI[m_Ramp] * sin(m_t) + m_pPSKtxQ[m_Ramp] * cos(m_t));
+    pData[i] = 0.3 * (m_pPSKtxI[m_Ramp] * sin(m_t) + m_pPSKtxQ[m_Ramp] * cos(m_t));
     m_Ramp++;
     m_PSKTime += m_PSKSecPerSamp;
     if (m_PSKTime >= m_PSKPeriodUpdate)//if time to update envelope ramp index

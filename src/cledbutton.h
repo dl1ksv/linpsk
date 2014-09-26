@@ -18,15 +18,11 @@
 #define CLEDBUTTON_H
 
 #include <qpushbutton.h>
+#include "constants.h"
 /**Constucts a pushbutton with a led in it
   *@author Volker Schroer
   */
-enum BUTTONSTATUS
-{
-UNDEF,				// undefined
-ON,						// TX
-OFF						// RX
-};
+
 class CLedButton : public QPushButton  {
    Q_OBJECT
 public: 
@@ -46,6 +42,7 @@ private slots: // Private slots
 signals:
 void startRx();
 void startTx();
+void abortTx();
 };
 
 #endif

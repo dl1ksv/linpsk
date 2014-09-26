@@ -23,6 +23,14 @@
 #include <QDate>
 #include <QTime>
 
+enum BUTTONSTATUS // Status of RX/TX Button
+{
+UNDEF,				// undefined
+ON,						// TX
+OFF,					// RX
+SW            // Switching to RX
+};
+
 #define TXOFF_CODE -1			// control codes that can be placed in the input
 #define TXON_CODE -2			// queue for various control functions
 #define TXTOG_CODE -3
@@ -98,7 +106,7 @@ struct Macro {
   QString name;
   QString text;
   QString accelerator;
-  int languageType; // 0,1,2
+  int languageType; // 0,1,2 languageType-3 >> Macro is disabled
 };
 
 static const unsigned short int VARICODE_TABLE[] = {
