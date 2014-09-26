@@ -28,3 +28,11 @@ LIBS += gui/libgui.a
 
 POST_TARGETDEPS += gui/libgui.a \
 src/../bin/linpsk
+
+desktop.path=/usr/share/applications
+desktop.files=data/linpsk.desktop
+images.path=/usr/share/pixmaps
+images.files=images/linpsk.png
+
+INSTALLS +=desktop
+INSTALLS +=images

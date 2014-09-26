@@ -77,6 +77,7 @@ CSound::CSound ( int ptt = -1 ) : Input ( ptt )
   available = 0;
   readPointer = 0;
   free = 2 * BUF_SIZE;
+  handle=0;
 
 }
 CSound::~CSound()

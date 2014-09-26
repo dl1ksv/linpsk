@@ -87,6 +87,8 @@ protected slots:
   void deleteMacro();
   /** Rename Macro **/
   void renameMacro();
+  /**Activate /Deactivate Macros**/
+  void actdeactMacros();
   /** Font Settings **/
   void FontSetup();
   /** Save Settings **/
@@ -96,11 +98,13 @@ protected slots:
 
 private slots:
   void on_RxDisplay_newActiveChannel();
+  void unblockMacros();
 private:
 
     void read_config();
     void save_config();
     bool inAction;
+    bool blockMacros;
 Parameter *SaveParameters;    
 /** Modulator **/
 CModulator *Modulator;

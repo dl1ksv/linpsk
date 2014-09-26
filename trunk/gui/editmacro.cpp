@@ -64,8 +64,10 @@ void EditMacro::accept()
   macro=(*mL).at(aktPosition);
   macro.text=ui->Definition->toPlainText();
   macro.accelerator=ui->Accelerator->text();
-  macro.languageType=ui->bG->checkedId();
-  if(aktPosition < newPosition) // Macro shoul be moved behind
+  int langType=ui->bG->checkedId();
+  if(macro.languageType < 0) //Deactivated
+    macro.languageType = langType-3;
+  if(aktPosition < newPosition) // Macro should be moved behind
     {
       mL->insert(newPosition,macro); //First insert then remove
       mL->remove(aktPosition);
@@ -90,7 +92,9 @@ if( Number > 0)
       ui->Definition->setText((*mL).at(Number).text);
       ui->Accelerator->setText((*mL).at(Number).accelerator);
       langType=(*mL).at(Number).languageType;
-      if(langType <0 || langType > 2 ) //Chek range if config file was wrongly modified
+      if(langType <0 )
+        langType +=3;
+      if ((langType <0) || (langType > 2 ) ) //Check range if config file was wrongly modified
         langType=0;
       ui->bG->button(langType)->setChecked(true);
   }

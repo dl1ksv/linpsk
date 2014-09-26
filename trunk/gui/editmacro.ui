@@ -227,7 +227,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>Keywords</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>EditMacro</receiver>
+   <slot>insertKeyword(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>288</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>insertKeyword(QModelIndex)</slot>
+ </slots>
  <buttongroups>
   <buttongroup name="bG"/>
  </buttongroups>

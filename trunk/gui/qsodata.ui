@@ -2246,19 +2246,16 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>scrollArea</tabstop>
   <tabstop>RemoteCallsign</tabstop>
   <tabstop>OpName</tabstop>
   <tabstop>Qth</tabstop>
-  <tabstop>MyRST</tabstop>
-  <tabstop>HisRST</tabstop>
-  <tabstop>dokName</tabstop>
-  <tabstop>Clear</tabstop>
-  <tabstop>eQsl</tabstop>
-  <tabstop>bureau</tabstop>
-  <tabstop>Save</tabstop>
-  <tabstop>scrollArea</tabstop>
-  <tabstop>QsoTime</tabstop>
   <tabstop>Loc</tabstop>
+  <tabstop>HisRST</tabstop>
+  <tabstop>MyRST</tabstop>
+  <tabstop>dokName</tabstop>
+  <tabstop>QsoFrequency</tabstop>
+  <tabstop>QsoTime</tabstop>
   <tabstop>QsoDate</tabstop>
  </tabstops>
  <resources/>

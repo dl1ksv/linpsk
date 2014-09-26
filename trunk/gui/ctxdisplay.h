@@ -32,9 +32,9 @@ public:
     ~CTxDisplay();
     void insert(QString s);
     void setTxFocus();
-
+    void switch2Rx();
   public slots:
-    void abbruch();
+ //   void abbruch();
   protected:
     void resizeEvent( QResizeEvent * );
 
@@ -45,6 +45,7 @@ protected slots:
   signals:
     void startRx();
     void startTx();
+    void abortTx();
 
 };
 

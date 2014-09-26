@@ -1,5 +1,20 @@
 LinPsk ChangeLog
 
+1.2.2
+As I got some usb3 problems when transmitting
+- the same macro was executed several times though only clicked once
+
+I introduced a timer that assures a minum click time of one second.
+More rapid clicks are ignored.
+
+Introducing explicit mode - switching to receive.
+In this state you see the letter "A" ( Abort ) in the rx/tx button and you can abort the transmission.
+This might help if the transmission does not stop. ( Probably a bug, but I didn' find the reason. )This avoids killing the program.
+
+In debug mode: showing the properties of the sound device.
+
+Enabling usb2serial converters.
+
 1.2.1
 
 Modified RxWindow to enable horizontal scrollbar correctly.
