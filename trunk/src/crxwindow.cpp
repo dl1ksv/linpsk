@@ -149,7 +149,7 @@ void CRxWindow::updateRx ( char c )
           }
         }
       }
-      QString s = ScrollBuffer[Row]->text() + QString ( QChar ( c ) );
+      QString s = ScrollBuffer[Row]->text() + QString ( QLatin1Char ( c ) );
       ScrollBuffer[Row]->setText ( s );
       Column++;
 
