@@ -163,6 +163,8 @@
     <addaction name="actionFont_settings"/>
     <addaction name="actionColor_settings"/>
     <addaction name="separator"/>
+    <addaction name="actionDefine_Bandlist"/>
+    <addaction name="separator"/>
     <addaction name="actionSave_settings"/>
    </widget>
    <widget class="QMenu" name="menuRxParams">
@@ -262,9 +264,9 @@
     <string>Activate/ deactivate Macro</string>
    </property>
   </action>
-  <action name="actionRestore_default_font">
+  <action name="actionDefine_Bandlist">
    <property name="text">
-    <string>Restore default font</string>
+    <string>Define Bandlist</string>
    </property>
   </action>
  </widget>
@@ -679,6 +681,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionDefine_Bandlist</sender>
+   <signal>triggered()</signal>
+   <receiver>LinPSK</receiver>
+   <slot>defineBandlist()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>fileOpen()</slot>
@@ -703,5 +721,6 @@
   <slot>startTx()</slot>
   <slot>actdeactMacros()</slot>
   <slot>stopTx()</slot>
+  <slot>defineBandlist()</slot>
  </slots>
 </ui>

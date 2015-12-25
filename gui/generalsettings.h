@@ -26,6 +26,8 @@
 class Parameter;
 class QButtonGroup;
 class QModelIndex;
+class QMenu;
+
 class GeneralSettings : public QDialog, private Ui::GeneralSettings
 {
   Q_OBJECT
@@ -40,15 +42,21 @@ public slots:
 
 protected:
 QButtonGroup *FileFormat;
-  /*$PROTECTED_FUNCTIONS$*/
 Parameter LocalSettings;
+QModelIndex selectedDevice;
+
+QMenu * selectionMenu;
 protected slots:
 void selectDemomode(bool);
-void setPTTDevice(const QModelIndex &);
+void setControlDevice(QModelIndex);
+void setRigDevice();
+void setPTTDevice();
+//void setRigNumber();
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);
 void setComplexFormat(bool);
+
 };
 
 #endif

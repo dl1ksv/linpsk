@@ -25,6 +25,9 @@
 #include <QButtonGroup>
 #include "readonlystringlistmodel.h"
 #include <QModelIndex>
+#include <QMenu>
+
+#include <hamlib/rig.h>
 
 extern Parameter settings;
 GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
@@ -56,8 +59,6 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   myLocator->setValidator ( validator );
   myLocator->setText ( LocalSettings.myLocator );
   Demomode->setChecked ( LocalSettings.DemoMode );
-  connect ( Demomode, SIGNAL ( clicked ( bool ) ), this, SLOT ( selectDemomode ( bool ) ) );
-  connect ( AvailableDevices, SIGNAL ( clicked ( const QModelIndex & ) ), this, SLOT ( setPTTDevice ( const QModelIndex & ) ) );
 
   if ( Demomode->isChecked() )
     selectDemomode(true);
@@ -65,7 +66,7 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
     selectDemomode(false);
 
   //PTT
-  SelectedDevice->setText ( LocalSettings.SerialDevice );
+  pttDevice->setText ( LocalSettings.SerialDevice );
   // First look in the /dev Directory
   DirectoryName = "/dev/";
 
@@ -88,14 +89,27 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   Directory->setText ( LocalSettings.Directory );
   QsoFile->setText ( LocalSettings.QSOFileName );
   fileLog->setChecked ( LocalSettings.fileLog );
-  connect(fileLog,SIGNAL(clicked(bool)),this,SLOT(selectFileLogging(bool)));
   Directory->setDisabled ( !LocalSettings.fileLog );
   QsoFile->setDisabled ( !LocalSettings.fileLog );
   LinLog->setChecked ( LocalSettings.LinLog );
-  connect(LinLog,SIGNAL(clicked(bool)),this,SLOT(selectLinLogLogging(bool)));
   Port->setDisabled ( !LocalSettings.LinLog );
   Host->setDisabled ( !LocalSettings.LinLog );
+  /** +++++ Rig +++ */
+  // Rig number
+  modelNr->setText(QString("%1").arg(LocalSettings.rigModelNumber));
+  // PTT
+  pttDevice->setText ( LocalSettings.SerialDevice );
+  // Rig device
+  rigControl->setText(LocalSettings.rigDevice);
+  // Rig- Serial
+  handShake->setCurrentIndex(LocalSettings.handshake);
+  baudRate->setCurrentIndex(baudRate->findText(QString("%1").arg(LocalSettings.baudrate),Qt::MatchExactly));
 
+  selectionMenu= new QMenu(AvailableDevices);
+  QAction *A = selectionMenu->addAction ( tr ( "Set PTT device" ) );
+  connect ( A, SIGNAL ( triggered() ), this, SLOT ( setPTTDevice() ) );
+  A = selectionMenu->addAction ( "Set Rig device" );
+  connect ( A, SIGNAL ( triggered() ), this, SLOT ( setRigDevice() ) );
 }
 
 
@@ -126,7 +140,7 @@ Parameter GeneralSettings::getSettings()
   LocalSettings.slashed0 = SlashedZero->isChecked();
   LocalSettings.autoCrLf = autoCrLf->isChecked();
   LocalSettings.autoDate=autoDate->isChecked();
-  LocalSettings.SerialDevice = SelectedDevice->text();
+  LocalSettings.SerialDevice = pttDevice->text();
   LocalSettings.fileLog = fileLog->isChecked();
   if ( LocalSettings.fileLog )
     {
@@ -141,6 +155,10 @@ Parameter GeneralSettings::getSettings()
       LocalSettings.Port = Port->value();
     }
   LocalSettings.dateFormat=dateFormat->currentText();
+  // Rig parameter
+  LocalSettings.rigModelNumber=modelNr->text().toInt();
+  LocalSettings.baudrate=baudRate->currentText().toInt();
+  LocalSettings.handshake=static_cast<serial_handshake_e>(handShake->currentIndex());
   return LocalSettings;
 }
 
@@ -158,13 +176,17 @@ void GeneralSettings::selectDemomode ( bool mode )
     }
 }
 
-void GeneralSettings::setPTTDevice ( const QModelIndex &index )
+void GeneralSettings::setControlDevice (QModelIndex index )
 {
+  selectedDevice=index;
+  /**
   QString s = index.data().toString();
 
-  SelectedDevice->clear();
-  SelectedDevice->setText ( s );
+  pttDevice->clear();
+  pttDevice->setText ( s );
   LocalSettings.SerialDevice = s;
+  **/
+  selectionMenu->popup(mapToGlobal( mapFromParent(QCursor::pos())));
 }
 
 void GeneralSettings::selectFileLogging ( bool b)
@@ -185,3 +207,40 @@ void GeneralSettings::setComplexFormat(bool b)
 {
   LocalSettings.complexFormat=b;
 }
+void GeneralSettings::setRigDevice()
+{
+  QString s = selectedDevice.data().toString();
+
+  rigControl->clear();
+  rigControl->setText ( s );
+  LocalSettings.rigDevice=s;
+  if(LocalSettings.SerialDevice == s)
+    {
+      LocalSettings.SerialDevice = "None";
+      pttDevice->setText(LocalSettings.SerialDevice);
+    }
+
+}
+
+void GeneralSettings::setPTTDevice()
+{
+  QString s = selectedDevice.data().toString();
+
+  pttDevice->clear();
+  pttDevice->setText ( s );
+  LocalSettings.SerialDevice = s;
+  if(LocalSettings.rigDevice == s)
+    {
+      LocalSettings.rigDevice="";
+      rigControl->setText(LocalSettings.rigDevice);
+    }
+}
+/**
+void GeneralSettings::setRigNumber()
+{
+  QString s = modelNr->text();
+  int ii=-1;
+  ii=s.toInt();
+  LocalSettings.rigModelNumber = ii;
+}
+**/

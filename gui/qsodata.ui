@@ -2185,58 +2185,34 @@
           <bool>false</bool>
          </property>
          <property name="currentIndex">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="5">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Power (Watt)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="6">
+        <widget class="QSpinBox" name="txPwr">
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="singleStep">
           <number>5</number>
          </property>
-         <item>
-          <property name="text">
-           <string/>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>80m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>60m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>40m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>30m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>20m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>17m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>15m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>12m</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>10m</string>
-          </property>
-         </item>
+         <property name="value">
+          <number>5</number>
+         </property>
         </widget>
        </item>
       </layout>

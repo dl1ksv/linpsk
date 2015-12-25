@@ -29,6 +29,7 @@
 class CRxChannel;
 class QString;
 class QFont;
+class RigControl;
 
 /**Contains parameters for transmitting and receiving
 
@@ -85,6 +86,17 @@ QsoInfo *QslData;
 BUTTONSTATUS Status;
 QFont *ApplicationFont;
 QString dateFormat;
+
+/** Rig **/
+int QsoFrequency; // Number of item in QCombobox
+int pwr;
+int rigModelNumber;
+int handshake;
+int baudrate;
+RigControl *rig;
+QString rigDevice;
+
+QList<Band> bandList;
 
 };
 

@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,72 +17,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef QSODATA_H
-#define QSODATA_H
+#ifndef DEFINEBANDLIST_H
+#define DEFINEBANDLIST_H
 
-#include <QGroupBox>
-#include "ui_qsodata.h"
-#include "constants.h"
+#include <QDialog>
 
-class QChar;
-class ProcessLogData;
-class QValidator;
-class RigControl;
+namespace Ui {
+  class DefineBandList;
+}
 
-class QSOData : public QGroupBox, private Ui::QSOData
+class DefineBandList : public QDialog
 {
   Q_OBJECT
-struct coordinates
-{
-        double laenge;
-        double breite;
-};
 
 public:
-  QSOData(QWidget* parent = 0);
-  ~QSOData();
-  void enableSaveData();
-  void setAutoDate();
-  void initQsoData();
+  explicit DefineBandList(QWidget *parent = 0);
+  ~DefineBandList();
 
-public slots:
-  /*$PUBLIC_SLOTS$*/
-  void Timechanged();
-  void Datechanged();
-  void MyRSTchanged();
-  void HisRSTchanged();
-  void frequencyChanged(int);
-  void Locatorchanged();
-  void QTHchanged();
-  void Namechanged();
-  void Callsignchanged();
-  void clear();
-  void refreshDateTime();
-  void save();
-  void calculateDistance(QString);
-  void dokChanged();
-
-  void setQsoData(QsoData,QString);
-  void newChannel();
-  void pwrChanged(int);
-
-signals:
-
-protected:
-  coordinates loc2coordinates ( const QChar *l );
-
-protected slots:
-  void sendRequest();
-  void stopTrial();
-  void copyAnswer();
 private:
-  ProcessLogData *logBookCommunication;
-  bool connectionError;
-  QValidator *validator;
-
-  int findBand();
-
+  Ui::DefineBandList *ui;
+public slots:
+  virtual void accept();
+  void addRow();
+  void deleteRow();
+  void rowUp();
+  void rowDown();
 };
 
-#endif
-
+#endif // DEFINEBANDLIST_H

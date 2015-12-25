@@ -91,6 +91,8 @@ protected slots:
   void actdeactMacros();
   /** Font Settings **/
   void FontSetup();
+  /** Define Bandlist **/
+  void defineBandlist();
   /** Save Settings **/
   void saveSettings();
   /** Closing this window **/
@@ -118,8 +120,6 @@ unsigned int Txcount;
 Input *Sound;
 /** To show messages in Statusbar */
 QLabel *msg;
-/** TxTimer **/
-///QTimer *TxTimer;
 
 void selectPTTDevice();
 
