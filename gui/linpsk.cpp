@@ -48,12 +48,14 @@
 #include "deletemacro.h"
 #include "renamemacro.h"
 #include "color.h"
+#include "definebandlist.h"
+#include "rigcontrol.h"
 
 
 #include <QtGui>
 #include <QEventLoop>
 
-#define VERSION "1.2.2"
+#define VERSION "1.3"
 
 
 #define ProgramName "LinPSK "
@@ -70,6 +72,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   Sound = 0;
   Modulator = 0;
   inAction=false;
+  settings.rig =new RigControl();
   /** To avoid multipe Macro clicking **/
   blockMacros=false;
   /************************************/
@@ -77,6 +80,28 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
 
   setupUi(this);
   read_config();
+  if(settings.rigModelNumber > 0)
+    {
+     int rc=-settings.rig->connectRig();
+//     if(rc < 0 )
+//       QMessageBox::warning(0,"Connection Error",QLatin1String(rigerror(rc)));
+     if(rc != RIG_OK)
+       {
+         switch(rc) {
+           case RIG_ETIMEOUT:
+             QMessageBox::warning(0,"Connection time out",QLatin1String("Could not connect to rig"));
+             break;
+           case RIG_EINVAL :
+             QMessageBox::warning(0,"Invalid parameter",QLatin1String("Probably unknown rig"));
+             break;
+           default:
+             QMessageBox::warning(0,"Connection time out",QLatin1String(rigerror(rc)));
+             break;
+
+        }
+       }
+    }
+  Control->initQsoData();
   /** Fixme: handle font change: fontChange() **/
   /**
   if ( settings.ApplicationFont == 0 )
@@ -132,10 +157,10 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
 
   Control->setColorList ( &WindowColors );
   languageChange();
-
 // signals and slots connections
 //========== Macro Processing ======================================
-  tokenList << "@CALLSIGN@" << "@DATE@" << "@Replace by filename@" << "@RX@" << "@THEIRCALL@" << "@THEIRNAME@" << "@TIMELOCAL@" << "@TIMEUTC@" << "@TX@" << "@RSTGIVEN@" << "@RSTRCVD@";
+  tokenList << "@CALLSIGN@" << "@DATE@" << "@Replace by filename@" << "@RX@" << "@THEIRCALL@" << "@THEIRNAME@";
+  tokenList << "@TIMELOCAL@" << "@TIMEUTC@" << "@TX@" << "@RSTGIVEN@" << "@RSTRCVD@" <<"@TXPWR@";
   Control->insertMacros( &macroList );
   connect ( this, SIGNAL ( StartRx() ), this, SLOT ( startRx() ) );
   connect ( this, SIGNAL ( StartTx() ), this, SLOT ( startTx() ) );
@@ -146,7 +171,6 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
 
   apply_settings();
   TxDisplay->txWindow->setTxBuffer ( TxBuffer );
-
 }
 
 /*
@@ -461,7 +485,34 @@ void LinPSK::generalSettings()
 {
   GeneralSettings *LocalSettings = new GeneralSettings ( this );
   if ( LocalSettings->exec() != 0 )
-    settings = LocalSettings->getSettings();
+    {
+      int modelNr = settings.rigModelNumber;
+      settings = LocalSettings->getSettings();
+      if(modelNr != settings.rigModelNumber) //Rig has changed
+        {
+          settings.rig->disconnectRig();
+          int rc = -settings.rig->connectRig();
+          if(rc != RIG_OK)
+            {
+              switch(rc) {
+                case RIG_ETIMEOUT:
+                  QMessageBox::warning(0,"Connection time out",QLatin1String("Could not connect to rig"));
+                  break;
+                case RIG_EINVAL :
+                  QMessageBox::warning(0,"Invalid parameter",QLatin1String("Probably unknown rig.\nTrying to keep previous one"));
+                  break;
+                default:
+                  QMessageBox::warning(0,"Connection time out",QLatin1String("Unknown reason"));
+                  break;
+
+             }
+              settings.rigModelNumber=modelNr; // Reconnect here ?
+              if(settings.rig->connectRig() != RIG_OK)
+                return;
+            }
+        }
+
+    }
   apply_settings();
 }
 void LinPSK::chooseColor()
@@ -613,8 +664,6 @@ void LinPSK::save_config()
 //Operating
   config.setValue ( "Callsign", settings.callsign );
   config.setValue ( "MyLocator", settings.myLocator );
-
-  config.setValue ( "PTTDevice", settings.SerialDevice );
 //Logging
   config.setValue ( "Directory", settings.Directory );
   config.setValue ( "QSoFileName", settings.QSOFileName );
@@ -659,6 +708,30 @@ void LinPSK::save_config()
      }
      config.endArray();
    }
+  // Bandlist
+   size=settings.bandList.size()-1;
+   if(size >0)
+     {
+       config.beginWriteArray ("Bandlist");
+       for(i=0;i < size;i++)
+         {
+           config.setArrayIndex ( i );
+           config.setValue ( "Bandname", settings.bandList.at( i ).bandName );
+           config.setValue ( "Bandstart", settings.bandList.at(i).bandStart );
+           config.setValue ( "Bandend", settings.bandList.at(i).bandEnd );
+           config.setValue ( "PreferedFrequency",settings.bandList.at(i).preferedFreq);
+
+         }
+       config.endArray();
+     }
+   // Rig parameter for use with hamlib
+     config.beginGroup ( "Rigparameter" );
+     config.setValue ( "PTTDevice", settings.SerialDevice );
+     config.setValue( "RIGDevice", settings.rigDevice);
+     config.setValue("Modelnr",settings.rigModelNumber);
+     config.setValue("BaudRate",settings.baudrate);
+     config.setValue("Handshake",settings.handshake);
+     config.endGroup();
 
   // SoundDevices
    config .beginGroup("SoundDevices");
@@ -783,6 +856,13 @@ void LinPSK::executeMacro ( int id )
                            macro.replace ( indexvon, tokenList.at(10).length(),settings.QslData->HisRST );
 
                           }
+                          else
+                            if( Token == tokenList.at(11) )  // TXPWR
+                            {
+                             QString pwr;
+                             pwr.setNum(settings.pwr);
+                             macro.replace ( indexvon, tokenList.at(11).length(),pwr);
+                            }
                           else  // Must be File
                           {
                             macro.remove ( indexvon, Token.length() );
@@ -911,7 +991,6 @@ void LinPSK::read_config()
   settings.callsign = config.value ( "Callsign" ).toString();
   settings.myLocator = config.value ( "MyLocator" ).toString();
 
-  settings.SerialDevice = config.value ( "PTTDevice" ).toString();
 //Logging
   settings.Directory = config.value ( "Directory", QDir::homePath() ).toString();
 
@@ -959,13 +1038,43 @@ void LinPSK::read_config()
         }
     }
     config.endArray();
+// Bandlist
+    size = config.beginReadArray ("Bandlist");
 
-
+    if(size >0)
+      {
+        Band band;
+        for(i=0;i < size;i++)
+          {
+            config.setArrayIndex ( i );
+            band.bandName = config.value ( "Bandname" ).toString();
+            band.bandStart = config.value ( "Bandstart",1).toInt();
+            band.bandEnd = config.value ( "Bandend",1).toInt();
+            band.preferedFreq = config.value ( "PreferedFrequency",1).toInt();
+            settings.bandList.append(band);
+          }
+      }
+     config.endArray();
+     Band none;
+     none.bandName   = "--";
+     none.bandStart  = 0;
+     none.bandEnd    = 60000000;
+     none.preferedFreq=0;
+     settings.bandList.append(none);
  if ( ( HeighttoSet > 0 ) && ( WidthtoSet > 0 ) )
     resize ( WidthtoSet, HeighttoSet );
  if ( ( X >= 0 ) && ( Y >= 0 ) )
     move ( X, Y );
  // SoundDevices
+ // Rig parameter for use with hamlib
+   config.beginGroup ( "Rigparameter" );
+   settings.SerialDevice = config.value ( "PTTDevice" ).toString();
+   settings.rigDevice = config.value( "RIGDevice").toString();
+   settings.rigModelNumber = config.value("Modelnr",0).toInt();
+   settings.baudrate = config.value("BaudRate",9600).toInt();
+   settings.handshake= config.value("Handshake",1).toInt();
+   config.endGroup();
+
   config .beginGroup("SoundDevices");
   settings.InputDeviceName=config.value("InputDeviceName","LinPSK_Record").toString();
   settings.sampleRate=config.value("sampleRate",11025).toInt();
@@ -976,7 +1085,7 @@ void LinPSK::read_config()
 void LinPSK::selectPTTDevice()
 {
   settings.serial = -1;
-  if ( settings.SerialDevice != "None" )
+  if ( settings.SerialDevice != "none" )
   {
     int flags = TIOCM_RTS | TIOCM_DTR;
     settings.serial = open ( settings.SerialDevice.toAscii().data(), O_EXCL | O_WRONLY );
@@ -1024,4 +1133,11 @@ void LinPSK::on_RxDisplay_newActiveChannel()
 void LinPSK::unblockMacros()
 {
  blockMacros=false;
+}
+void LinPSK::defineBandlist()
+{
+  DefineBandList *dF = new DefineBandList();
+  if (dF->exec() != 0 )
+    Control->initQsoData();
+  delete dF;
 }

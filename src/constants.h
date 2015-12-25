@@ -52,6 +52,13 @@ SW            // Switching to RX
 #define M_PI_5_4	(M_PI + M_PI_4) // 5Pi/4
 #define M_PI_7_4	(M_PI + M_PI_2 + M_PI_4) // 7Pi/4
 
+struct Band {
+  QString bandName;
+  int bandStart;
+  int bandEnd;
+  int preferedFreq;
+};
+
 enum Mode {BPSK=0,QPSK,RTTY,MFSK16};
 enum AfcMode {Off,Narrow,Wide};
 
@@ -87,7 +94,6 @@ typedef struct
  QString OpName;
  QString Qth;
  QString Locator;
- int QsoFrequency; // Number of item in QCombobox
  QString HisRST;
  QString MyRST;
  QDate QsoDate;

@@ -24,9 +24,9 @@ QT += network
 
 TEMPLATE = subdirs
 
-LIBS += gui/libgui.a
+LIBS += build/gui/libgui.a
 
-POST_TARGETDEPS += gui/libgui.a \
+POST_TARGETDEPS += build/gui/libgui.a \
 src/../bin/linpsk
 
 desktop.path=/usr/share/applications

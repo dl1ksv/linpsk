@@ -55,6 +55,16 @@ complexFormat=false;
 LangName[0]="B";
 LangName[1]="E";
 LangName[2]="G";
+
+/** Rig **/
+rigModelNumber=0; // No rig
+rig=0;
+rigDevice="none";
+QsoFrequency=-1;
+pwr=5;
+handshake=1; // hardware
+baudrate=9600;
+
 }
 Parameter::~Parameter()
 {

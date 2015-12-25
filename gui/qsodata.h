@@ -28,6 +28,8 @@
 class QChar;
 class ProcessLogData;
 class QValidator;
+class RigControl;
+
 class QSOData : public QGroupBox, private Ui::QSOData
 {
   Q_OBJECT
@@ -42,6 +44,7 @@ public:
   ~QSOData();
   void enableSaveData();
   void setAutoDate();
+  void initQsoData();
 
 public slots:
   /*$PUBLIC_SLOTS$*/
@@ -62,6 +65,7 @@ public slots:
 
   void setQsoData(QsoData,QString);
   void newChannel();
+  void pwrChanged(int);
 
 
 protected:
@@ -75,6 +79,9 @@ private:
   ProcessLogData *logBookCommunication;
   bool connectionError;
   QValidator *validator;
+
+  int findBand();
+
 };
 
 #endif

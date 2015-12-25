@@ -1,16 +1,18 @@
 To build linpsk, untar the tar archiv and switch to the linpsk directory.
+You need fftw and hamlib.
 
 run:
-qmake -o Makefile linpsk.pro
+mkdir -p build
+cd build
+qmake -o Makefile ../linpsk.pro
 make
+sudo make install
 
-The executable linpsk is build in the bin subdirectory. Move the binary into prefered location , probably /usr/local/bin
 
 LinPSK now uses the alsa sound system.
-The names of the used alsa devices are LinPSK_Record and LinPSK_Play as default.
-To map these names to your soundcard edit the file asoundrc in the linpsk directory appropriately and append it to .asoundrc in your homedirectory.
-If no .asoundrc exists copy the edited asoundrc to .asoundrc in your homedirectory instead of appending.
 
-Instead of using LinPSK_Record/ LinPSK_Play now you can use valid alsa devices like plughw:1 in the settings dialog
+You can use valid alsa devices like plughw:1 in the settings dialog
 Also using the card name can be used. In this case LinPSK searches the cardnumber and opens
 plughw:[cardnumber]
+
+In case of problems you can define ( more complex ) devices in your .asoundrc file

@@ -18,20 +18,21 @@ generalsettings.ui \
 modemenu.ui \
 qsodata.ui \
 renamemacro.ui \
-    controlpanel.ui \
-    linpsk.ui \
-    crxdisplay.ui \
-    spectrumdisplay.ui \
-    ctxdisplay.ui \
-    macrocontrol.ui \
-    txwindow.ui \
-    activatemacros.ui
+controlpanel.ui \
+linpsk.ui \
+crxdisplay.ui \
+spectrumdisplay.ui \
+ctxdisplay.ui \
+macrocontrol.ui \
+txwindow.ui \
+activatemacros.ui \
+definebandlist.ui
 
 CONFIG += build_all \
  staticlib \
  debug
 
-DESTDIR = .
+DESTDIR = ../build/gui
 
 SOURCES += generalsettings.cpp \
  addmacro.cpp \
@@ -41,14 +42,15 @@ SOURCES += generalsettings.cpp \
  qsodata.cpp \
  renamemacro.cpp \
  editmacro.cpp \
-    controlpanel.cpp \
-    linpsk.cpp \
-    crxdisplay.cpp \
-    spectrumdisplay.cpp \
-    ctxdisplay.cpp \
-    macrocontrol.cpp \
-    txwindow.cpp \
-    activatemacros.cpp
+ controlpanel.cpp \
+ linpsk.cpp \
+ crxdisplay.cpp \
+ spectrumdisplay.cpp \
+ ctxdisplay.cpp \
+ macrocontrol.cpp \
+ txwindow.cpp \
+ activatemacros.cpp \
+ definebandlist.cpp
 
 HEADERS += generalsettings.h \
  addmacro.h \
@@ -58,14 +60,15 @@ HEADERS += generalsettings.h \
  qsodata.h \
  renamemacro.h \
  editmacro.h \
-    controlpanel.h \
-    linpsk.h \
-    crxdisplay.h \
-    spectrumdisplay.h \
-    ctxdisplay.h \
-    macrocontrol.h \
-    txwindow.h \
-    activatemacros.h
+ controlpanel.h \
+ linpsk.h \
+ crxdisplay.h \
+ spectrumdisplay.h \
+ ctxdisplay.h \
+ macrocontrol.h \
+ txwindow.h \
+ activatemacros.h \
+ definebandlist.h
 
 
 TEMPLATE = lib

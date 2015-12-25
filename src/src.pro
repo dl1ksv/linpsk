@@ -44,9 +44,10 @@ SOURCES += main.cpp \
  waveinput.cpp \
  readonlystringlistmodel.cpp \
  processlogdata.cpp \
-    tabwidget.cpp \
-    spectrumwindow.cpp \
-    waterfallwindow.cpp
+ tabwidget.cpp \
+ spectrumwindow.cpp \
+ waterfallwindow.cpp \
+ rigcontrol.cpp
 HEADERS += bpskdemodulator.h \
  bpskmodulator.h \
  cdemodulator.h \
@@ -83,9 +84,10 @@ HEADERS += bpskdemodulator.h \
  readonlystringlistmodel.h \
  fskmodulator.h \
  processlogdata.h \
-    tabwidget.h \
-    spectrumwindow.h \
-    waterfallwindow.h
+ tabwidget.h \
+ spectrumwindow.h \
+ waterfallwindow.h \
+ rigcontrol.h
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \
@@ -97,13 +99,13 @@ DESTDIR = .
 
 QT += network
 
-INCLUDEPATH += ../gui
-
+INCLUDEPATH += ../build/gui ../gui
 LIBS += ../gui/libgui.a \
 -L/usr/lib64 \
 -L/usr/lib \
 -lasound \
 -lfftw3
+LIBS +=`pkg-config --libs hamlib`
 POST_TARGETDEPS += ../gui/libgui.a
 
 DISTFILES += ../README ../COPYING \

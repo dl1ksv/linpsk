@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,46 +17,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef GENERALSETTINGS_H
-#define GENERALSETTINGS_H
+#ifndef DEFINEBANDLIST_H
+#define DEFINEBANDLIST_H
 
 #include <QDialog>
-#include "ui_generalsettings.h"
-class Parameter;
-class QButtonGroup;
-class QModelIndex;
-class QMenu;
 
-class GeneralSettings : public QDialog, private Ui::GeneralSettings
+namespace Ui {
+  class DefineBandList;
+}
+
+class DefineBandList : public QDialog
 {
   Q_OBJECT
 
 public:
-  GeneralSettings(QWidget* parent = 0, Qt::WFlags fl = 0 );
-  ~GeneralSettings();
-Parameter getSettings();
+  explicit DefineBandList(QWidget *parent = 0);
+  ~DefineBandList();
 
+private:
+  Ui::DefineBandList *ui;
 public slots:
-  /*$PUBLIC_SLOTS$*/
-
-protected:
-QButtonGroup *FileFormat;
-Parameter LocalSettings;
-QModelIndex selectedDevice;
-
-QMenu * selectionMenu;
-protected slots:
-void selectDemomode(bool);
-void setControlDevice(QModelIndex);
-void setRigDevice();
-void setPTTDevice();
-//void setRigNumber();
-void selectFileLogging(bool);
-void selectLinLogLogging(bool);
-void setSampleRate(QString s);
-void setComplexFormat(bool);
-
+  virtual void accept();
+  void addRow();
+  void deleteRow();
+  void rowUp();
+  void rowDown();
 };
 
-#endif
-
+#endif // DEFINEBANDLIST_H
