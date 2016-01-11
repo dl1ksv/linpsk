@@ -152,3 +152,16 @@ void SpectrumDisplay::restoreSplitterState(const QByteArray & spectrumState)
 {
   spectrumSplitter->restoreState(spectrumState);
 }
+void SpectrumDisplay::showSpectren(bool p)
+{
+  if(p)
+    {
+      spectrumWindow->show();
+      waterfallWindow->show();
+    }
+  else
+    {
+      spectrumWindow->hide();
+      waterfallWindow->hide();
+    }
+}

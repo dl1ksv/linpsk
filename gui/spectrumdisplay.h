@@ -42,6 +42,7 @@ public:
   void setColorList(QList<QColor> *c);
   QByteArray spectrumSplitterState() const;
   void restoreSplitterState(const QByteArray & spectrumState);
+  void showSpectren(bool p);
 
 public slots:
   void startPlot(double *,bool);

@@ -21,8 +21,7 @@ public:
     void insertMacros(Macros *);
     void setPhasePointer(std::complex<float> *);
     void setColorList(QList<QColor> *c);
-    void display();
-    void undisplay();
+    void present(bool p);
     void newChannel();
     void updateMacroWindow(int macroNumber);
     void insertMacros(QVector<Macro> *macroList);

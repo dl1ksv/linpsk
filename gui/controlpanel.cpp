@@ -57,14 +57,9 @@ void ControlPanel::startPlot ( double *d, bool b)
 {
   Display->startPlot(d,b);
 }
-void ControlPanel::display()
+void ControlPanel::present(bool p)
 {
-  Display->show();
-}
-
-void ControlPanel::undisplay()
-{
-  Display->hide();
+  Display->showSpectren(p);
 }
 void ControlPanel::newChannel()
 {

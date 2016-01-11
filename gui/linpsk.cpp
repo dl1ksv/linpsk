@@ -82,7 +82,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
   setupUi(this);
   read_config();
   /** Fixme: handle font change: fontChange() **/
-  /**
+
   if ( settings.ApplicationFont == 0 )
   {
     settings.ApplicationFont = new QFont ( qApp->font().family() );
@@ -91,7 +91,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
   }
   else
     qApp->setFont ( *settings.ApplicationFont );
-  **/
+
 // Save Settings to be able to make local modifications
   *SaveParameters = settings;
 
@@ -338,7 +338,7 @@ void LinPSK::startRx()
   }
   else
     TxDisplay->TxFunctions->setStatus ( UNDEF );
-  Control->display();
+  Control->present(true);
   settings.Status = TxDisplay->TxFunctions->getstatus();
   TxDisplay->txWindow->setFocus();
   inAction=false;
@@ -423,7 +423,7 @@ void LinPSK::startTx()
   msg->setText ( tr ( "Transmitting " ) + Info );
   TxDisplay->txWindow->setFocus();
   settings.Status = TxDisplay->TxFunctions->getstatus();
-  Control->undisplay();
+  Control->present(false);
 
   Txcount = BUF_SIZE;
 //  process_txdata(); // Generate first Sample
@@ -500,6 +500,7 @@ void LinPSK::FontSetup()
     qApp->setFont ( f );
   }
 }
+
 void LinPSK::stopTx()
 {
   Modulator->disconnect();

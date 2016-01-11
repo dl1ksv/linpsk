@@ -1,4 +1,7 @@
 LinPsk ChangeLog
+1.2.5
+Now building in build directory.
+Switching to qt5.
 
 1.2.2
 As I got some usb3 problems when transmitting

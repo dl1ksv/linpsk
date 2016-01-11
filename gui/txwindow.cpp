@@ -33,17 +33,16 @@ TxWindow::TxWindow(QWidget *parent) :
 {
   QFontMetrics fm ( font() );
   int pixelwidth=82*fm.width("A");
+  int height=fm.height();
   ui->setupUi(this);
   zeile=0;
   spalte=0;
-//  ui->txLines->setFixedWidth(40*fm.maxWidth());
   for ( int i = 0;i < TXWINDOWBUFFER;i++ )
   {
     scrollBuffer[i] = new QLineEdit ( ui->txLines );
     scrollBuffer[i]->setFrame ( false );
-//    scrollBuffer[i]->setFocusProxy(ui->txLines);
     scrollBuffer[i]->setFocusProxy(this);
-    scrollBuffer[i]->setMaximumHeight(18);
+    scrollBuffer[i]->setMaximumHeight(2*height);
     scrollBuffer[i]->setFixedWidth(pixelwidth);
     ui->linesLayout->addWidget(scrollBuffer[i]);
   }
