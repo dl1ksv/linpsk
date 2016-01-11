@@ -32,7 +32,7 @@ class ModeMenu : public QDialog, private Ui::ModeMenu
   Q_OBJECT
 
 public:
-  ModeMenu(QWidget* parent = 0, Qt::WFlags fl = 0 );
+  ModeMenu(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
   ~ModeMenu();
   /*$PUBLIC_FUNCTIONS$*/
 void setParameter(ExtraParameter Param);

@@ -52,8 +52,12 @@
 
 #include <QtGui>
 #include <QEventLoop>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QFontDialog>
+#include <QColorDialog>
 
-#define VERSION "1.2.2"
+#define VERSION "1.2.5"
 
 
 #define ProgramName "LinPSK "
@@ -64,7 +68,7 @@ extern Parameter settings;
  *  name 'name' and widget flags set to 'f'.
  *
  */
-LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
+LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
   : QMainWindow ( parent, fl ), Ui::LinPSK()
 {
   Sound = 0;
@@ -979,7 +983,7 @@ void LinPSK::selectPTTDevice()
   if ( settings.SerialDevice != "None" )
   {
     int flags = TIOCM_RTS | TIOCM_DTR;
-    settings.serial = open ( settings.SerialDevice.toAscii().data(), O_EXCL | O_WRONLY );
+    settings.serial = open ( settings.SerialDevice.toLatin1().data(), O_EXCL | O_WRONLY );
     if ( settings.serial > 0 )
       ioctl ( settings.serial, TIOCMBIC, &flags );
     else

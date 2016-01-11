@@ -89,7 +89,7 @@ int TextInput::putSamples ( double *sample, int anzahl )
   {
 
     s.setNum ( sample[i], 'f', 6 );
-    write ( fd, s.toAscii(), s.length() );
+    write ( fd, s.toLatin1(), s.length() );
     c = '\n';
     write ( fd, &c, 1 );
   }
@@ -109,7 +109,7 @@ bool TextInput::open_Device_read ( QString *errorstring )
     *errorstring = QString ( QObject::tr ( "Error, no Demofile selected" ) );
     return false;
   }
-  fd = open ( settings.inputFilename.toAscii(), O_RDONLY );
+  fd = open ( settings.inputFilename.toLatin1(), O_RDONLY );
   if ( fd > 0 )
     return true;
   else

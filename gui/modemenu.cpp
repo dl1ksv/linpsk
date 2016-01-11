@@ -25,7 +25,7 @@
 
 extern Parameter settings;
 
-ModeMenu::ModeMenu(QWidget* parent, Qt::WFlags fl)
+ModeMenu::ModeMenu(QWidget* parent, Qt::WindowFlags fl)
 : QDialog( parent, fl ), Ui::ModeMenu()
 {
 	setupUi(this);

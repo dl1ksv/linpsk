@@ -125,7 +125,7 @@ bool CSound::open_Device_read ( QString *errorstring )
   }
   else
    device=settings.InputDeviceName;
-  err = snd_pcm_open ( &handle, device.toAscii(), SND_PCM_STREAM_CAPTURE, SND_PCM_ASYNC );
+  err = snd_pcm_open ( &handle, device.toLatin1(), SND_PCM_STREAM_CAPTURE, SND_PCM_ASYNC );
 
   if ( err < 0 )
   {
@@ -257,7 +257,7 @@ bool CSound::open_Device_write ( QString *errorstring )
   }
   else
    device=settings.OutputDeviceName;
-  err = snd_pcm_open ( &handle, device.toAscii(), SND_PCM_STREAM_PLAYBACK, 0 );
+  err = snd_pcm_open ( &handle, device.toLatin1(), SND_PCM_STREAM_PLAYBACK, 0 );
   if ( err < 0 )
   {
       *errorstring = QString ( "Unable to open Device: " )+settings.OutputDeviceName+ QString(" ") + QString ( snd_strerror ( err ) );

@@ -58,7 +58,7 @@ bool WaveInput::open_Device_read(QString *errorstring)
    *errorstring= QString(QObject::tr("Error, no Demofile selected")); 
     return false;
   }
- fd = open(settings.inputFilename.toAscii(),O_RDONLY);
+ fd = open(settings.inputFilename.toLatin1(),O_RDONLY);
  if ( fd < 0)
   {
     *errorstring= QString(QObject::tr("Error, Could not open Demofile "));

@@ -76,7 +76,7 @@ void TxWindow::insert ( unsigned char c )
 void TxWindow::insertString (QString string )
 {
   for(int i=0;i < string.length();i++)
-    insert(string.at(i).toAscii());
+    insert(string.at(i).toLatin1());
 }
 void TxWindow::setTxBuffer ( CTxBuffer *p )
 {
@@ -158,14 +158,14 @@ void TxWindow::keyPressEvent ( QKeyEvent *e )
       if ( ( e->modifiers() == Qt::ShiftModifier ) || CapsLock )
       {
         if ( !e->text().isEmpty() )
-          c = e->text().toUpper().at ( 0 ).toAscii();
+          c = e->text().toUpper().at ( 0 ).toLatin1();
         else
           c = 0;
       }
       else
       {
         if ( !e->text().isEmpty() )
-          c = e->text().toLower().at ( 0 ).toAscii();
+          c = e->text().toLower().at ( 0 ).toLatin1();
         else
           c = 0;
       }

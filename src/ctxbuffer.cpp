@@ -117,7 +117,7 @@ for (int i=0;i <length; i++)
     while(this->Filled()) // Wait until Buffer is not filled
       qApp->processEvents(QEventLoop::AllEvents,100);
     filled++;
-    txbuffer[inpos++]=Text.at(i).toAscii();
+    txbuffer[inpos++]=Text.at(i).toLatin1();
     inpos = inpos % TXBUFFER_LENGTH;
       
     }   

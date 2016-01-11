@@ -23,7 +23,7 @@
 #include "readonlystringlistmodel.h"
 #include <QMessageBox>
 
-EditMacro::EditMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent, Qt::WFlags fl)
+EditMacro::EditMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent, Qt::WindowFlags fl)
   : QDialog( parent, fl ), ui(new Ui::EditMacro)
 {
   ui->setupUi(this);

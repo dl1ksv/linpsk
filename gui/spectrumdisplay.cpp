@@ -29,7 +29,6 @@ extern Parameter settings;
 SpectrumDisplay::SpectrumDisplay ( QWidget* parent ) : QFrame ( parent ), Ui::SpectrumDisplay()
 {
   setupUi(this);
-  languageChange();
   inputdata = 0;
   for(int i=0; i< fftsize;i++)
     smoothedfft[i]=0.;
@@ -46,10 +45,6 @@ SpectrumDisplay::~SpectrumDisplay()
 	// no need to delete child widgets, Qt does it all for us
 }
 
-/*
- *  Sets the strings of the subwidgets using the current
- *  language.
- */
 void SpectrumDisplay::resizeEvent ( QResizeEvent * )
 {
   if ( inputdata == 0 )

@@ -27,7 +27,7 @@
 #include <QModelIndex>
 
 extern Parameter settings;
-GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
+GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   : QDialog ( parent, fl ), Ui::GeneralSettings()
 {
   setupUi ( this );

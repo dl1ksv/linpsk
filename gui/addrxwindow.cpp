@@ -24,7 +24,7 @@
 
 extern Parameter settings;
 
-AddRxWindow::AddRxWindow(QWidget* parent, Qt::WFlags fl)
+AddRxWindow::AddRxWindow(QWidget* parent, Qt::WindowFlags fl)
 : QDialog( parent, fl ), Ui::AddRxWindow()
 {
 	setupUi(this);

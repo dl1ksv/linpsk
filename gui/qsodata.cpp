@@ -363,9 +363,9 @@ void QSOData::calculateDistance ( QString loc )
 QSOData::coordinates QSOData::loc2coordinates ( const QChar *l )
 {
   coordinates c;
-  c.laenge = ( 20. * ( l[0].toAscii() - 'A' ) + 2. * ( l[2].toAscii() - '0' ) + ( 1. / 12. ) * ( l[4].toAscii() - 'A' ) + 1. / 24. );
+  c.laenge = ( 20. * ( l[0].toLatin1() - 'A' ) + 2. * ( l[2].toLatin1() - '0' ) + ( 1. / 12. ) * ( l[4].toLatin1() - 'A' ) + 1. / 24. );
   c.laenge *= M_PI / 180.;
-  c.breite = 90. - ( 10. * ( l[1].toAscii() - 'A' ) + 1. * ( l[3].toAscii() - '0' ) + ( 1. / 24. ) * ( l[5].toAscii() - 'A' ) + 1. / 48. );
+  c.breite = 90. - ( 10. * ( l[1].toLatin1() - 'A' ) + 1. * ( l[3].toLatin1() - '0' ) + ( 1. / 24. ) * ( l[5].toLatin1() - 'A' ) + 1. / 48. );
   c.breite *= M_PI / 180.;
   return c;
 }
