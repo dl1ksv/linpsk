@@ -235,4 +235,3 @@ void GeneralSettings::setPTTDevice()
       rigControl->setText(LocalSettings.rigDevice);
     }
 }
-

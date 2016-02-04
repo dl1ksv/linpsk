@@ -13,7 +13,8 @@ sudo make install
 This will install the binary into usr/local/bin and the desktop file into /usr/share/pixmaps/ and the icon file into /usr/share/pixmaps/ .
 
 As LinPSK uses the alsa sound system, you can use valid alsa devices like plughw:1 in the settings dialog
-Also using the card name can be usedi now. In this case LinPSK searches the cardnumber and opens
+Also using the card name can be used now. In this case LinPSK searches the cardnumber and opens
+
 plughw:[cardnumber]
 
 In case of problems you can define ( more complex ) devices in your .asoundrc file
