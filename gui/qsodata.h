@@ -63,6 +63,7 @@ public slots:
   void setQsoData(QsoData,QString);
   void newChannel();
 
+signals:
 
 protected:
   coordinates loc2coordinates ( const QChar *l );

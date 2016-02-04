@@ -38,16 +38,19 @@ class ProcessLogData : public QThread
 
     ~ProcessLogData();
     void saveQsoData ( QString s );
-    void requestCallSign ( QLabel **, QString s );
     void run();
+    void requestCallsign (QLabel **r, QString s );
+
   private:
-    enum RequestType {Save = 0, Request};
-    RequestType requestType;
+
     QString actionString;
     QTcpSocket *tcpSocket;
     QLabel * results[6];
     bool connectionEstablished;
     bool connectionError;
+  public slots:
+
+
   private slots:
     void doAction();
     void connectionClosedbyHost();
@@ -57,6 +60,7 @@ class ProcessLogData : public QThread
 signals:
 void unabletoConnect();
 void answerAvailable();
+void executeAction();
 };
 
 #endif

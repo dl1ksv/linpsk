@@ -31,6 +31,8 @@ ProcessLogData::ProcessLogData ( QObject *parent )
   tcpSocket = 0;
   connectionEstablished = false;
   connectionError = false;
+  connect(this,SIGNAL(executeAction()),this,SLOT(doAction()),Qt::QueuedConnection);
+
 }
 
 
@@ -39,15 +41,11 @@ ProcessLogData::~ProcessLogData()
 }
 void ProcessLogData::saveQsoData ( QString s )
 {
-  qDebug ( "Request save" );
-  requestType = Save;
   actionString = s;
-  doAction();
+  emit executeAction();
 }
-void ProcessLogData::requestCallSign ( QLabel **r, QString s )
+void ProcessLogData::requestCallsign (QLabel **r, QString s )
 {
-  qDebug ( "Request Callsign" );
-  requestType = Request;
   actionString.clear();
   actionString.append ( "@@@@" );
   actionString.append ( s );
@@ -55,19 +53,23 @@ void ProcessLogData::requestCallSign ( QLabel **r, QString s )
 
   for ( int i = 0; i < 6;i++ )
     results[i] = r[i];
-  doAction();
+  emit executeAction();
 }
 void ProcessLogData::run()
 {
   connectionEstablished = false;
   connectionError = false;
   qRegisterMetaType<QAbstractSocket::SocketError> ( "QAbstractSocket::SocketError" );
+
   tcpSocket = new QTcpSocket();
-  connect ( tcpSocket, SIGNAL ( disconnected() ), this, SLOT ( connectionClosedbyHost() ) );
-  connect ( tcpSocket, SIGNAL ( readyRead() ), this, SLOT ( readAnswer() ) );
-  connect ( tcpSocket, SIGNAL ( connected() ), this, SLOT ( setConnected() ) );
+  connect ( tcpSocket, SIGNAL ( disconnected() ), this, SLOT ( connectionClosedbyHost() ) ,Qt::QueuedConnection);
+  connect ( tcpSocket, SIGNAL ( readyRead() ), this, SLOT ( readAnswer() ) ,Qt::QueuedConnection);
+  connect ( tcpSocket, SIGNAL ( connected() ), this, SLOT ( setConnected() ) ,Qt::QueuedConnection);
+
   connect ( tcpSocket, SIGNAL ( error ( QAbstractSocket::SocketError ) ), this, SLOT ( setError ( QAbstractSocket::SocketError ) ) );
   tcpSocket->connectToHost ( QHostAddress::LocalHost, 8080, QIODevice::ReadWrite );
+  tcpSocket->waitForConnected(6000);
+
   exec();
 }
 void ProcessLogData::doAction()
@@ -91,14 +93,15 @@ void ProcessLogData::doAction()
     return;
   }
 
-//  qDebug ( "SocketError %d", tcpSocket->state() );
+  //qDebug ( "SocketError %d", tcpSocket->state() );
   if ( tcpSocket->state() == QAbstractSocket::UnconnectedState )
   {
     QMessageBox::information ( 0, "LinPSK", tr ( "Cannot connect to LinLogBook" ) );
     return;
   }
+
   int n = tcpSocket->write ( actionString.toLatin1(), actionString.length() );
-//  qDebug ( "Written %d, to be written %d", n, actionString.length() );
+ // qDebug ( "Written %d, to be written %d", n, actionString.length() );
   if ( n < 0 ) // Retry
   {
     usleep ( 100 );
@@ -106,11 +109,12 @@ void ProcessLogData::doAction()
 //    qDebug ( "Written %d, to be written %d", n, actionString.length() );
   }
  /** qt 4.7 lets flush write data again*/
-//  tcpSocket->flush();
+  tcpSocket->flush();
 }
 void ProcessLogData::connectionClosedbyHost()
 {
   connectionEstablished = false;
+  tcpSocket->disconnect();
   if ( tcpSocket != 0 )
     delete tcpSocket;
   tcpSocket = 0;
@@ -144,8 +148,6 @@ void ProcessLogData::setError ( QAbstractSocket::SocketError  )
 {
   connectionEstablished = false;
   connectionError = true;
-//  if ( tcpSocket != 0 )
-//    qDebug ( "SocketError %d", tcpSocket->state() );
 }
 
 

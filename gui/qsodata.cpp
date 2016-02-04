@@ -335,7 +335,10 @@ void QSOData::save()
     saveString.append("N\n");
     saveString.append ( "<eor>\n" );
     if ( !logBookCommunication->isRunning() )
-      logBookCommunication->start();
+      {
+        logBookCommunication->start();
+        QThread::usleep(2000);
+      }
 #ifndef QT_NO_DEBUG
     qDebug ( "Written to Logbook\n%s", qPrintable ( saveString ) );
 #endif
@@ -449,8 +452,12 @@ void QSOData::sendRequest()
   results[4] = continent;
   results[5] = worked;
   if ( !logBookCommunication->isRunning() )
-    logBookCommunication->start();
-  logBookCommunication->requestCallSign ( results, RemoteCallsign->text().toUpper() );
+    {
+      logBookCommunication->start();
+      QThread::usleep(2000);
+    }
+  logBookCommunication->requestCallsign ( results, RemoteCallsign->text().toUpper() );
+
 }
 void QSOData::stopTrial()
 {
