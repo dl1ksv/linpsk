@@ -51,7 +51,6 @@ void selectDemomode(bool);
 void setControlDevice(QModelIndex);
 void setRigDevice();
 void setPTTDevice();
-//void setRigNumber();
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);

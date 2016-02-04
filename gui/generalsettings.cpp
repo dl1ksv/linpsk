@@ -235,12 +235,4 @@ void GeneralSettings::setPTTDevice()
       rigControl->setText(LocalSettings.rigDevice);
     }
 }
-/**
-void GeneralSettings::setRigNumber()
-{
-  QString s = modelNr->text();
-  int ii=-1;
-  ii=s.toInt();
-  LocalSettings.rigModelNumber = ii;
-}
-**/
+

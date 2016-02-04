@@ -43,6 +43,7 @@ int RigControl::connectRig()
         strcpy(rig->state.rigport.pathname,settings.rigDevice.toAscii());
         rig->state.rigport.parm.serial.rate=settings.baudrate;
         rig->state.rigport.parm.serial.handshake = (serial_handshake_e) settings.handshake;
+        rig->state.rigport.retry=3;
 
       }
     if (rig)
