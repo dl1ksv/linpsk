@@ -18,7 +18,7 @@ INSTALLS +=target
 INCLUDEPATH += . src gui
 
 LIBS += -lasound -lfftw3
-
+LIBS +=`pkg-config --libs hamlib`
 
 # Input
 HEADERS += gui/activatemacros.h \
@@ -27,6 +27,7 @@ HEADERS += gui/activatemacros.h \
            gui/controlpanel.h \
            gui/crxdisplay.h \
            gui/ctxdisplay.h \
+           gui/definebandlist.h \
            gui/deletemacro.h \
            gui/editmacro.h \
            gui/generalsettings.h \
@@ -67,6 +68,7 @@ HEADERS += gui/activatemacros.h \
            src/psktable.h \
            src/qpskdemodulator.h \
            src/qpskmodulator.h \
+	   src/rigcontrol.h \
            src/readonlystringlistmodel.h \
            src/rttydemodulator.h \
            src/rttymodulator.h \
@@ -82,6 +84,7 @@ FORMS += gui/activatemacros.ui \
          gui/controlpanel.ui \
          gui/crxdisplay.ui \
          gui/ctxdisplay.ui \
+         gui/definebandlist.ui \
          gui/deletemacro.ui \
          gui/editmacro.ui \
          gui/generalsettings.ui \
@@ -98,6 +101,7 @@ SOURCES += gui/activatemacros.cpp \
            gui/controlpanel.cpp \
            gui/crxdisplay.cpp \
            gui/ctxdisplay.cpp \
+           gui/definebandlist.cpp \
            gui/deletemacro.cpp \
            gui/editmacro.cpp \
            gui/generalsettings.cpp \
@@ -135,6 +139,7 @@ SOURCES += gui/activatemacros.cpp \
            src/pskmodulator.cpp \
            src/qpskdemodulator.cpp \
            src/qpskmodulator.cpp \
+	   src/rigcontrol.cpp \
            src/readonlystringlistmodel.cpp \
            src/rttydemodulator.cpp \
            src/rttymodulator.cpp \

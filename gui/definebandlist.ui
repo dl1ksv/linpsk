@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>618</width>
-    <height>260</height>
+    <width>675</width>
+    <height>296</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,10 @@
    <item row="1" column="3">
     <widget class="QPushButton" name="upButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
+     </property>
+     <property name="toolTip">
+      <string>To select row click Band name</string>
      </property>
      <property name="text">
       <string>Row up</string>
@@ -106,13 +109,22 @@
       <property name="text">
        <string>Preferred frequency</string>
       </property>
+      <property name="toolTip">
+       <string>Set Frequency to switch to</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
      </column>
     </widget>
    </item>
    <item row="2" column="3">
     <widget class="QPushButton" name="downButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
+     </property>
+     <property name="toolTip">
+      <string>To select row click Band name</string>
      </property>
      <property name="text">
       <string>Row down</string>

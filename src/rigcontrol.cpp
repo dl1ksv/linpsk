@@ -40,7 +40,7 @@ int RigControl::connectRig()
   {
     if(rig->caps->port_type == RIG_PORT_SERIAL)
       {
-        strcpy(rig->state.rigport.pathname,settings.rigDevice.toAscii());
+        strcpy(rig->state.rigport.pathname,settings.rigDevice.toLatin1());
         rig->state.rigport.parm.serial.rate=settings.baudrate;
         rig->state.rigport.parm.serial.handshake = (serial_handshake_e) settings.handshake;
         rig->state.rigport.retry=3;

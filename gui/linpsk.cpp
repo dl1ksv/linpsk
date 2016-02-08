@@ -714,7 +714,7 @@ void LinPSK::save_config()
      config.endArray();
    }
   // Bandlist
-   size=settings.bandList.size()-1;
+   size=settings.bandList.size();
    if(size >0)
      {
        config.beginWriteArray ("Bandlist");
@@ -1059,13 +1059,17 @@ void LinPSK::read_config()
             settings.bandList.append(band);
           }
       }
+     else
+      {
+        Band none;
+        none.bandName   = "--";
+        none.bandStart  = 0;
+        none.bandEnd    = 60000000;
+        none.preferedFreq=0;
+        settings.bandList.append(none);
+      }
      config.endArray();
-     Band none;
-     none.bandName   = "--";
-     none.bandStart  = 0;
-     none.bandEnd    = 60000000;
-     none.preferedFreq=0;
-     settings.bandList.append(none);
+
  if ( ( HeighttoSet > 0 ) && ( WidthtoSet > 0 ) )
     resize ( WidthtoSet, HeighttoSet );
  if ( ( X >= 0 ) && ( Y >= 0 ) )
