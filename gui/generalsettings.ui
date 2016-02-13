@@ -394,13 +394,6 @@
       <string>Sound Device</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="soundOutputDeviceName">
-        <property name="text">
-         <string>LinPSK_Play</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
@@ -408,17 +401,24 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="soundInputDeviceName">
-        <property name="text">
-         <string>LinPSK_Record</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
          <string>Output card or device</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="soundInputDeviceName">
+        <property name="editable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="soundOutputDeviceName">
+        <property name="editable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -531,8 +531,6 @@
   <tabstop>Text</tabstop>
   <tabstop>AvailableDevices</tabstop>
   <tabstop>SelectedDevice</tabstop>
-  <tabstop>soundInputDeviceName</tabstop>
-  <tabstop>soundOutputDeviceName</tabstop>
   <tabstop>fileLog</tabstop>
   <tabstop>Directory</tabstop>
   <tabstop>QsoFile</tabstop>

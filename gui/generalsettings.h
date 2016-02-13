@@ -22,7 +22,9 @@
 #define GENERALSETTINGS_H
 
 #include <QDialog>
+#include <QStringList>
 #include "ui_generalsettings.h"
+
 class Parameter;
 class QButtonGroup;
 class QModelIndex;
@@ -49,6 +51,8 @@ void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);
 void setComplexFormat(bool);
+QStringList getSoundCards();
+
 };
 
 #endif

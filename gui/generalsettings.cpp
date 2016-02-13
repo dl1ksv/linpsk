@@ -25,6 +25,7 @@
 #include <QButtonGroup>
 #include "readonlystringlistmodel.h"
 #include <QModelIndex>
+#include <QTextStream>
 
 extern Parameter settings;
 GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
@@ -34,6 +35,7 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   QString DirectoryName;
   QDir dir;
   QString s;
+  int index;
   LocalSettings = settings;
   FileFormat = new QButtonGroup ( FileFormatLayout );
   FileFormat->setExclusive ( true );
@@ -82,8 +84,16 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   AvailableDevices->setModel ( m );
   AvailableDevices->show();
   // Sound Devices
-  soundInputDeviceName->setText(LocalSettings.InputDeviceName);
-  soundOutputDeviceName->setText(LocalSettings.OutputDeviceName);
+  soundInputDeviceName->addItems(getSoundCards());
+  soundInputDeviceName->addItem(QLatin1String("LinPSK_Record"));
+  index=soundInputDeviceName->findText(LocalSettings.InputDeviceName);
+  if(index >=0)
+    soundInputDeviceName->setCurrentIndex(index);
+  soundOutputDeviceName->addItems(getSoundCards());
+  soundOutputDeviceName->addItem(QLatin1String("LinPSK_Play"));
+  index=soundOutputDeviceName->findText(LocalSettings.OutputDeviceName);
+  if(index >= 0)
+    soundOutputDeviceName->setCurrentIndex(index);
   //Logging
   Directory->setText ( LocalSettings.Directory );
   QsoFile->setText ( LocalSettings.QSOFileName );
@@ -118,8 +128,8 @@ Parameter GeneralSettings::getSettings()
   else
     {
       LocalSettings.DemoMode = false;
-      LocalSettings.InputDeviceName=soundInputDeviceName->text();
-      LocalSettings.OutputDeviceName=soundOutputDeviceName->text();
+      LocalSettings.InputDeviceName=soundInputDeviceName->currentText();
+      LocalSettings.OutputDeviceName=soundOutputDeviceName->currentText();
     }
 
   LocalSettings.timeoffset = UTC->value();
@@ -184,4 +194,27 @@ void GeneralSettings::setSampleRate(QString s)
 void GeneralSettings::setComplexFormat(bool b)
 {
   LocalSettings.complexFormat=b;
+}
+QStringList GeneralSettings::getSoundCards()
+{
+  QString line;
+  QFile cards( "/proc/asound/cards" );
+  QStringList cardList;
+  int pos;
+  cardList << "None";
+  if (!cards.open(QIODevice::ReadOnly | QIODevice::Text))
+          return cardList;
+
+  QTextStream in(&cards);
+  cardList.clear();
+  do {
+      line = in.readLine();
+      pos=line.indexOf(QLatin1String(": "));
+      if(pos > 0)
+        cardList << line.mid(pos+1);
+  } while (!in.atEnd());
+  if(cardList.isEmpty())
+    cardList << "None";
+  cards.close();
+  return cardList;
 }

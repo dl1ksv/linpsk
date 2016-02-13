@@ -586,10 +586,12 @@ int CSound::getDeviceNumber(QString device)
           getline (cards, line);
           if ( line.find( device.toStdString() ) != std::string::npos )  {
               std::istringstream( line ) >>id;
+              cards.close();
               return id;
           }
       }
   }
+  cards.close();
   return id;
 }
 #ifdef SOUND_DEBUG
