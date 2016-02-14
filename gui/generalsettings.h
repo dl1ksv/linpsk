@@ -46,7 +46,6 @@ QButtonGroup *FileFormat;
 Parameter LocalSettings;
 protected slots:
 void selectDemomode(bool);
-void setPTTDevice(const QModelIndex &);
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);

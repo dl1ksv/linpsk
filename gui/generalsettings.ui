@@ -269,10 +269,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QListView" name="AvailableDevices"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="SelectedDevice"/>
+       <widget class="QComboBox" name="selectedDevice"/>
       </item>
      </layout>
     </widget>
@@ -529,8 +526,6 @@
   <tabstop>Demomode</tabstop>
   <tabstop>Wav</tabstop>
   <tabstop>Text</tabstop>
-  <tabstop>AvailableDevices</tabstop>
-  <tabstop>SelectedDevice</tabstop>
   <tabstop>fileLog</tabstop>
   <tabstop>Directory</tabstop>
   <tabstop>QsoFile</tabstop>

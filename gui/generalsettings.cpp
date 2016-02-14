@@ -59,7 +59,7 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   myLocator->setText ( LocalSettings.myLocator );
   Demomode->setChecked ( LocalSettings.DemoMode );
   connect ( Demomode, SIGNAL ( clicked ( bool ) ), this, SLOT ( selectDemomode ( bool ) ) );
-  connect ( AvailableDevices, SIGNAL ( clicked ( const QModelIndex & ) ), this, SLOT ( setPTTDevice ( const QModelIndex & ) ) );
+  //connect ( AvailableDevices, SIGNAL ( clicked ( const QModelIndex & ) ), this, SLOT ( setPTTDevice ( const QModelIndex & ) ) );
 
   if ( Demomode->isChecked() )
     selectDemomode(true);
@@ -67,7 +67,6 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
     selectDemomode(false);
 
   //PTT
-  SelectedDevice->setText ( LocalSettings.SerialDevice );
   // First look in the /dev Directory
   DirectoryName = "/dev/";
 
@@ -79,17 +78,25 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
 
   for ( int kk = 0; kk < Files.size(); kk++ )
     Files.replace ( kk, DirectoryName + Files.at ( kk ) );
-  ReadOnlyStringListModel *m = new ReadOnlyStringListModel ( this );
-  m->setStringList ( Files );
-  AvailableDevices->setModel ( m );
-  AvailableDevices->show();
+  selectedDevice->addItems(Files);
+  index=selectedDevice->findText(LocalSettings.SerialDevice);
+  if(index >= 0)
+    selectedDevice->setCurrentIndex(index);
+  else
+   {
+    index=selectedDevice->count();
+    selectedDevice->addItem(QLatin1String("None"));
+    selectedDevice->setCurrentIndex(index);
+   }
+
   // Sound Devices
-  soundInputDeviceName->addItems(getSoundCards());
+  QStringList cards=getSoundCards();
+  soundInputDeviceName->addItems(cards);
   soundInputDeviceName->addItem(QLatin1String("LinPSK_Record"));
   index=soundInputDeviceName->findText(LocalSettings.InputDeviceName);
   if(index >=0)
     soundInputDeviceName->setCurrentIndex(index);
-  soundOutputDeviceName->addItems(getSoundCards());
+  soundOutputDeviceName->addItems(cards);
   soundOutputDeviceName->addItem(QLatin1String("LinPSK_Play"));
   index=soundOutputDeviceName->findText(LocalSettings.OutputDeviceName);
   if(index >= 0)
@@ -136,7 +143,11 @@ Parameter GeneralSettings::getSettings()
   LocalSettings.slashed0 = SlashedZero->isChecked();
   LocalSettings.autoCrLf = autoCrLf->isChecked();
   LocalSettings.autoDate=autoDate->isChecked();
-  LocalSettings.SerialDevice = SelectedDevice->text();
+  if(selectedDevice->currentIndex() >= 0)
+    LocalSettings.SerialDevice = selectedDevice->currentText();
+  else
+    LocalSettings.SerialDevice=QLatin1String("None");
+  return LocalSettings;
   LocalSettings.fileLog = fileLog->isChecked();
   if ( LocalSettings.fileLog )
     {
@@ -151,7 +162,7 @@ Parameter GeneralSettings::getSettings()
       LocalSettings.Port = Port->value();
     }
   LocalSettings.dateFormat=dateFormat->currentText();
-  return LocalSettings;
+
 }
 
 void GeneralSettings::selectDemomode ( bool mode )
@@ -167,7 +178,7 @@ void GeneralSettings::selectDemomode ( bool mode )
       SoundDeviceBox->show();
     }
 }
-
+/**
 void GeneralSettings::setPTTDevice ( const QModelIndex &index )
 {
   QString s = index.data().toString();
@@ -176,7 +187,7 @@ void GeneralSettings::setPTTDevice ( const QModelIndex &index )
   SelectedDevice->setText ( s );
   LocalSettings.SerialDevice = s;
 }
-
+**/
 void GeneralSettings::selectFileLogging ( bool b)
 {
   Directory->setDisabled ( !b);
