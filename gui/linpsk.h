@@ -121,7 +121,7 @@ Input *Sound;
 /** To show messages in Statusbar */
 QLabel *msg;
 
-void selectPTTDevice();
+void checkControlDevices();
 
 /** To show date and time **/
 QLabel *datum;

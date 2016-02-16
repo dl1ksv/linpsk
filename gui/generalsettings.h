@@ -22,6 +22,7 @@
 #define GENERALSETTINGS_H
 
 #include <QDialog>
+#include <QStringList>
 #include "ui_generalsettings.h"
 class Parameter;
 class QButtonGroup;
@@ -38,23 +39,20 @@ public:
 Parameter getSettings();
 
 public slots:
-  /*$PUBLIC_SLOTS$*/
 
 protected:
 QButtonGroup *FileFormat;
 Parameter LocalSettings;
-QModelIndex selectedDevice;
 
 QMenu * selectionMenu;
 protected slots:
 void selectDemomode(bool);
-void setControlDevice(QModelIndex);
-void setRigDevice();
-void setPTTDevice();
+
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);
 void setComplexFormat(bool);
+QStringList getSoundCards();
 
 };
 

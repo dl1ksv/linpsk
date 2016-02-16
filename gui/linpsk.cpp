@@ -50,6 +50,7 @@
 #include "color.h"
 #include "definebandlist.h"
 #include "rigcontrol.h"
+#include <unistd.h>
 
 
 #include <QtGui>
@@ -84,11 +85,10 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
 
   setupUi(this);
   read_config();
-  if(settings.rigModelNumber > 0)
+  apply_settings();
+  if((settings.rigModelNumber > 0) && settings.rigDevice != "None")
     {
      int rc=-settings.rig->connectRig();
-//     if(rc < 0 )
-//       QMessageBox::warning(0,"Connection Error",QLatin1String(rigerror(rc)));
      if(rc != RIG_OK)
        {
          switch(rc) {
@@ -172,8 +172,6 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
 //===================================================================
 
   TxBuffer = new CTxBuffer();
-
-  apply_settings();
   TxDisplay->txWindow->setTxBuffer ( TxBuffer );
 }
 
@@ -567,7 +565,7 @@ void LinPSK::stopTx()
 
 void LinPSK::apply_settings()
 {
-  selectPTTDevice();
+  checkControlDevices();
   Control->enableSaveData();
   Control->setAutoDate();
 }
@@ -1091,20 +1089,43 @@ void LinPSK::read_config()
   settings.complexFormat=config.value("ComplexFormat").toBool();
   config.endGroup();
 }
-void LinPSK::selectPTTDevice()
+void LinPSK::checkControlDevices()
 {
+
+  int  err;
   settings.serial = -1;
-  if ( settings.SerialDevice != "none" )
-  {
-    int flags = TIOCM_RTS | TIOCM_DTR;
-    settings.serial = open ( settings.SerialDevice.toLatin1().data(), O_EXCL | O_WRONLY );
-    if ( settings.serial > 0 )
-      ioctl ( settings.serial, TIOCMBIC, &flags );
-    else
+  int flags = TIOCM_RTS | TIOCM_DTR;
+  if( (settings.SerialDevice != "None") && (settings.SerialDevice == settings.rigDevice))
     {
-      QMessageBox::critical ( 0, "LinPsk", "Unable to open Device " + settings.SerialDevice+"\nCheck permission of device" );
-      settings.SerialDevice = "None"; //Their seems to be a wrong Value in the ConfigFile
+      QMessageBox::critical ( 0, "LinPsk", "PTT device and device to control the rig must be different\nPlease change configuration" );
+      settings.SerialDevice = "None";
+      settings.rigDevice="None";
+      return;
     }
+  if ( settings.SerialDevice != "None" )
+  {
+    settings.serial = open( settings.SerialDevice.toLatin1().data(), O_EXCL | O_WRONLY );
+    if ( settings.serial > 0 )
+      err=ioctl ( settings.serial, TIOCMBIC, &flags );
+    if( (settings.serial <0) || (err < 0 ))
+    {
+      QMessageBox::critical ( 0, "LinPsk", "Unable to open PTT device " + settings.SerialDevice+"\nCheck if device is available or permission of device" );
+      settings.SerialDevice = "None"; //Their seems to be a wrong Value in the ConfigFile
+      settings.serial=-1;
+    }
+   }
+  if ( settings.rigDevice != "None")
+  {
+    int fd = open( settings.rigDevice.toLatin1().data(), O_EXCL | O_WRONLY );
+    if ( fd > 0 )
+      err=ioctl ( fd, TIOCMBIC, &flags );
+    if( (fd <0) || (err < 0 ))
+    {
+      QMessageBox::critical ( 0, "LinPsk", "Unable to open serial port to control  rig" + settings.rigDevice+"\nCheck if device is available or permission of device" );
+      settings.rigDevice = "None"; //Their seems to be a wrong Value in the ConfigFile
+    }
+    if(fd >0)
+      ::close(fd);
    }
 }
 

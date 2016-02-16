@@ -105,6 +105,10 @@ void RigControl::set_pwr(int p)
 void RigControl::disconnectRig()
 {
   if (rig != NULL)
-    rig_close(rig);
+    {
+     rig_close(rig);
+     rig_cleanup(rig);
+    }
   rig = NULL;
+  connected=false;
 }
