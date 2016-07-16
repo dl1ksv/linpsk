@@ -68,7 +68,7 @@ extern Parameter settings;
  *  name 'name' and widget flags set to 'f'.
  *
  */
-LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
+LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
   : QMainWindow ( parent, fl ), Ui::LinPSK()
 {
   Sound = 0;

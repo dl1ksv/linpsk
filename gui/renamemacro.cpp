@@ -23,7 +23,7 @@
 #include "readonlystringlistmodel.h"
 #include <QMessageBox>
 
-RenameMacro::RenameMacro(QVector<Macro> *macroList,QWidget* parent, Qt::WindowFlags fl)
+RenameMacro::RenameMacro(QVector<Macro> *macroList,QWidget* parent, Qt::WFlags fl)
   : QDialog( parent, fl ), ui(new Ui:: RenameMacro())
 {
   ui->setupUi(this);

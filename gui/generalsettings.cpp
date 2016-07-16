@@ -28,7 +28,7 @@
 #include <QTextStream>
 
 extern Parameter settings;
-GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
+GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WFlags fl )
   : QDialog ( parent, fl ), Ui::GeneralSettings()
 {
   setupUi ( this );

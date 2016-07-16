@@ -42,7 +42,7 @@ class LinPSK : public QMainWindow, private Ui::LinPSK
     Q_OBJECT
 
 public:
-    LinPSK( QWidget* parent = 0,Qt::WindowFlags fl = 0);
+    LinPSK( QWidget* parent = 0,Qt::WFlags fl = 0);
     ~LinPSK();
 
 

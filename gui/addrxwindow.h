@@ -30,7 +30,7 @@ class AddRxWindow : public QDialog, private Ui::AddRxWindow
   Q_OBJECT
 
 public:
-  AddRxWindow(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+  AddRxWindow(QWidget* parent = 0, Qt::WFlags fl = 0 );
   ~AddRxWindow();
 Mode selectedMode();
 QString titleText();

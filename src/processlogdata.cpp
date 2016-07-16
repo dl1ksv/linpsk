@@ -109,7 +109,7 @@ void ProcessLogData::doAction()
 //    qDebug ( "Written %d, to be written %d", n, actionString.length() );
   }
  /** qt 4.7 lets flush write data again*/
-  tcpSocket->flush();
+ // tcpSocket->flush();
 }
 void ProcessLogData::connectionClosedbyHost()
 {

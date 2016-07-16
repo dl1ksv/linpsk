@@ -21,7 +21,7 @@
 #include "ui_deletemacro.h"
 
 #include "readonlystringlistmodel.h"
-DeleteMacro::DeleteMacro (QVector<Macro> *macroList, QWidget* parent, Qt::WindowFlags fl )
+DeleteMacro::DeleteMacro (QVector<Macro> *macroList, QWidget* parent, Qt::WFlags fl )
                 : QDialog ( parent, fl ),  ui(new Ui::DeleteMacro)
 {
   ui->setupUi ( this );

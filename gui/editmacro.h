@@ -36,7 +36,7 @@ class EditMacro : public QDialog
   Q_OBJECT
 
 public:
-  EditMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+  EditMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0, Qt::WFlags fl = 0 );
   ~EditMacro();
 
 
