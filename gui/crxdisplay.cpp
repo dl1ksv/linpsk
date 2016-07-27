@@ -270,13 +270,10 @@ void CRxDisplay::stop_process_loop()
 {
   if ( Sound != 0 )
   {
-    disconnect(Sound,0,0,0);
     Sound->stop();
     Sound->wait();
     Sound->close_Device();
-    delete Sound;
   }
-  Sound = 0 ;
 }
 void CRxDisplay::trigger()
 {
