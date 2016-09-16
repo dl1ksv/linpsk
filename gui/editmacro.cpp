@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
+ *   Copyright (C) 2012 - 2016  by Volker Schroer, DL1KSV                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +23,8 @@
 #include "readonlystringlistmodel.h"
 #include <QMessageBox>
 
-EditMacro::EditMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent, Qt::WFlags fl)
-  : QDialog( parent, fl ), ui(new Ui::EditMacro)
+EditMacro::EditMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent)
+  : QDialog( parent ), ui(new Ui::EditMacro)
 {
   ui->setupUi(this);
   mL=macroList;

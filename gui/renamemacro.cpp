@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2007 - 2016 by Volker Schroer, DL1KSV                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +22,8 @@
 #include "readonlystringlistmodel.h"
 #include <QMessageBox>
 
-RenameMacro::RenameMacro(QVector<Macro> *macroList,QWidget* parent, Qt::WFlags fl)
-  : QDialog( parent, fl ), ui(new Ui:: RenameMacro())
+RenameMacro::RenameMacro(QVector<Macro> *macroList,QWidget* parent)
+  : QDialog( parent), ui(new Ui:: RenameMacro())
 {
   ui->setupUi(this);
   mL = macroList;

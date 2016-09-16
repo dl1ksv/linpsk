@@ -35,7 +35,7 @@ class AddMacro : public QDialog
   Q_OBJECT
 
 public:
-  AddMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  AddMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0);
   ~AddMacro();
 
 public slots:

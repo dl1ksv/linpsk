@@ -25,8 +25,8 @@
 #include <QMessageBox>
 #include <QButtonGroup>
 
-AddMacro::AddMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent, Qt::WFlags fl)
-: QDialog( parent, fl ),  ui(new Ui::AddMacro)
+AddMacro::AddMacro(QVector<Macro> *macroList,QStringList tokenList, QWidget* parent)
+: QDialog( parent),  ui(new Ui::AddMacro)
 {
   ui->setupUi(this);
   ui->bG->setId(ui->lang0,0);

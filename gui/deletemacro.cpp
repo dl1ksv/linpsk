@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
+ *   Copyright (C) 2012 - 2016 by Volker Schroer, DL1KSV                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,8 @@
 #include "ui_deletemacro.h"
 
 #include "readonlystringlistmodel.h"
-DeleteMacro::DeleteMacro (QVector<Macro> *macroList, QWidget* parent, Qt::WFlags fl )
-                : QDialog ( parent, fl ),  ui(new Ui::DeleteMacro)
+DeleteMacro::DeleteMacro (QVector<Macro> *macroList, QWidget* parent)
+                : QDialog ( parent),  ui(new Ui::DeleteMacro)
 {
   ui->setupUi ( this );
   mL = macroList;

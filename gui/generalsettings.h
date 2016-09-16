@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2007 - 2016 by Volker Schroer , DL1KSV                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,7 +32,7 @@ class GeneralSettings : public QDialog, private Ui::GeneralSettings
   Q_OBJECT
 
 public:
-  GeneralSettings(QWidget* parent = 0, Qt::WFlags fl = 0 );
+  GeneralSettings(QWidget* parent = 0 );
   ~GeneralSettings();
 Parameter getSettings();
 

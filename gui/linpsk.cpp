@@ -1,12 +1,4 @@
 /***************************************************************************
-                          |FILENAME|  -  description
-                             -------------------
-    begin                : |DATE|
-    copyright            : (C) |YEAR| by |AUTHOR|
-    email                : |EMAIL|
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -68,8 +60,8 @@ extern Parameter settings;
  *  name 'name' and widget flags set to 'f'.
  *
  */
-LinPSK::LinPSK ( QWidget* parent, Qt::WFlags fl )
-  : QMainWindow ( parent, fl ), Ui::LinPSK()
+LinPSK::LinPSK ( QWidget* parent)
+  : QMainWindow ( parent), Ui::LinPSK()
 {
   Sound = 0;
   Modulator = 0;

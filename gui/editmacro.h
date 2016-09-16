@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Volker Schroer, DL1KSV                          *
+ *   Copyright (C) 2012 - 2016 by Volker Schroer, DL1KSV                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ class EditMacro : public QDialog
   Q_OBJECT
 
 public:
-  EditMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  EditMacro(QVector<Macro> *macroList,QStringList tokenList,QWidget* parent = 0 );
   ~EditMacro();
 
 

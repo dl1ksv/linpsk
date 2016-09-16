@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2007 - 2016 by Volker Schroer , DL1KSV                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,8 +23,8 @@
 
 extern Parameter settings;
 
-AddRxWindow::AddRxWindow(QWidget* parent, Qt::WFlags fl)
-: QDialog( parent, fl ), Ui::AddRxWindow()
+AddRxWindow::AddRxWindow(QWidget* parent)
+: QDialog( parent ), Ui::AddRxWindow()
 {
 	setupUi(this);
 RxMode->insertItem(0,"BPSK");

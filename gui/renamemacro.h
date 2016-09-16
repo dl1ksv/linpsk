@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2007  -2016 by Volker Schroer, DL1KSV                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +35,7 @@ class RenameMacro : public QDialog
   Q_OBJECT
 
 public:
-  RenameMacro(QVector<Macro> *macroList,QWidget* parent = 0, Qt::WFlags fl = 0 );
+  RenameMacro(QVector<Macro> *macroList,QWidget* parent = 0 );
   ~RenameMacro();
   int getMacroNumber();
 

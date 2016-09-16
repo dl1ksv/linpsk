@@ -2,7 +2,9 @@ CONFIG += warn_on debug_and_release \
           qt \
          thread
 
-QT += network widgets
+QT += network
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 
 TEMPLATE = app
 TARGET = linpsk

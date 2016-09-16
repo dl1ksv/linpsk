@@ -1,12 +1,4 @@
 /***************************************************************************
-                          |FILENAME|  -  description
-                             -------------------
-    begin                : |DATE|
-    copyright            : (C) |YEAR| by |AUTHOR|
-    email                : |EMAIL|
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,7 +34,7 @@ class LinPSK : public QMainWindow, private Ui::LinPSK
     Q_OBJECT
 
 public:
-    LinPSK( QWidget* parent = 0,Qt::WFlags fl = 0);
+    LinPSK( QWidget* parent = 0);
     ~LinPSK();
 
 
