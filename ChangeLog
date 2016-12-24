@@ -1,4 +1,6 @@
 LinPsk ChangeLog
+1.2.6
+building with qt4 or qt5 depending on qmake
 1.2.5
 Now building in build directory.
 Switching to qt5.
