@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 - 2016 by Volker Schroer, DL1KSV                   *
+ *   Copyright (C) 2007 by volker, DL1KSV   *
+ *   schroer@tux64   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,9 +27,11 @@
 #include <QModelIndex>
 #include <QTextStream>
 
+#include <hamlib/rig.h>
+
 extern Parameter settings;
-GeneralSettings::GeneralSettings ( QWidget* parent)
-  : QDialog ( parent), Ui::GeneralSettings()
+GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
+  : QDialog ( parent, fl ), Ui::GeneralSettings()
 {
   setupUi ( this );
   QString DirectoryName;
@@ -58,14 +61,13 @@ GeneralSettings::GeneralSettings ( QWidget* parent)
   myLocator->setText ( LocalSettings.myLocator );
   Demomode->setChecked ( LocalSettings.DemoMode );
   connect ( Demomode, SIGNAL ( clicked ( bool ) ), this, SLOT ( selectDemomode ( bool ) ) );
-  //connect ( AvailableDevices, SIGNAL ( clicked ( const QModelIndex & ) ), this, SLOT ( setPTTDevice ( const QModelIndex & ) ) );
 
   if ( Demomode->isChecked() )
     selectDemomode(true);
   else
     selectDemomode(false);
 
-  //PTT
+  //PTT and Rig
   // First look in the /dev Directory
   DirectoryName = "/dev/";
 
@@ -77,17 +79,28 @@ GeneralSettings::GeneralSettings ( QWidget* parent)
 
   for ( int kk = 0; kk < Files.size(); kk++ )
     Files.replace ( kk, DirectoryName + Files.at ( kk ) );
-  selectedDevice->addItems(Files);
-  index=selectedDevice->findText(LocalSettings.SerialDevice);
+  // PTT
+  pttDevice->addItems(Files);
+  index=pttDevice->findText(LocalSettings.SerialDevice);
   if(index >= 0)
-    selectedDevice->setCurrentIndex(index);
+    pttDevice->setCurrentIndex(index);
   else
    {
-    index=selectedDevice->count();
-    selectedDevice->addItem(QLatin1String("None"));
-    selectedDevice->setCurrentIndex(index);
+    index=pttDevice->count();
+    pttDevice->addItem(QLatin1String("None"));
+    pttDevice->setCurrentIndex(index);
    }
-
+  // Rig
+  rigControl->addItems(Files);
+  index=rigControl->findText(LocalSettings.rigDevice);
+  if(index >= 0)
+    rigControl->setCurrentIndex(index);
+  else
+   {
+    index=rigControl->count();
+    rigControl->addItem(QLatin1String("None"));
+    rigControl->setCurrentIndex(index);
+   }
   // Sound Devices
   QStringList cards=getSoundCards();
   soundInputDeviceName->addItems(cards);
@@ -104,13 +117,20 @@ GeneralSettings::GeneralSettings ( QWidget* parent)
   Directory->setText ( LocalSettings.Directory );
   QsoFile->setText ( LocalSettings.QSOFileName );
   fileLog->setChecked ( LocalSettings.fileLog );
-  connect(fileLog,SIGNAL(clicked(bool)),this,SLOT(selectFileLogging(bool)));
   Directory->setDisabled ( !LocalSettings.fileLog );
   QsoFile->setDisabled ( !LocalSettings.fileLog );
   LinLog->setChecked ( LocalSettings.LinLog );
-  connect(LinLog,SIGNAL(clicked(bool)),this,SLOT(selectLinLogLogging(bool)));
   Port->setDisabled ( !LocalSettings.LinLog );
   Host->setDisabled ( !LocalSettings.LinLog );
+
+  // Rig number
+  modelNr->setText(QString("%1").arg(LocalSettings.rigModelNumber));
+
+
+
+  // Rig- Serial
+  handShake->setCurrentIndex(LocalSettings.handshake);
+  baudRate->setCurrentIndex(baudRate->findText(QString("%1").arg(LocalSettings.baudrate),Qt::MatchExactly));
 
 }
 
@@ -118,7 +138,6 @@ GeneralSettings::GeneralSettings ( QWidget* parent)
 GeneralSettings::~GeneralSettings()
 {}
 
-/*$SPECIALIZATION$*/
 
 
 Parameter GeneralSettings::getSettings()
@@ -142,11 +161,8 @@ Parameter GeneralSettings::getSettings()
   LocalSettings.slashed0 = SlashedZero->isChecked();
   LocalSettings.autoCrLf = autoCrLf->isChecked();
   LocalSettings.autoDate=autoDate->isChecked();
-  if(selectedDevice->currentIndex() >= 0)
-    LocalSettings.SerialDevice = selectedDevice->currentText();
-  else
-    LocalSettings.SerialDevice=QLatin1String("None");
-  return LocalSettings;
+  LocalSettings.SerialDevice = pttDevice->currentText();
+  LocalSettings.rigDevice=rigControl->currentText();
   LocalSettings.fileLog = fileLog->isChecked();
   if ( LocalSettings.fileLog )
     {
@@ -161,7 +177,11 @@ Parameter GeneralSettings::getSettings()
       LocalSettings.Port = Port->value();
     }
   LocalSettings.dateFormat=dateFormat->currentText();
-
+  // Rig parameter
+  LocalSettings.rigModelNumber=modelNr->text().toInt();
+  LocalSettings.baudrate=baudRate->currentText().toInt();
+  LocalSettings.handshake=static_cast<serial_handshake_e>(handShake->currentIndex());
+  return LocalSettings;
 }
 
 void GeneralSettings::selectDemomode ( bool mode )
@@ -177,16 +197,8 @@ void GeneralSettings::selectDemomode ( bool mode )
       SoundDeviceBox->show();
     }
 }
-/**
-void GeneralSettings::setPTTDevice ( const QModelIndex &index )
-{
-  QString s = index.data().toString();
 
-  SelectedDevice->clear();
-  SelectedDevice->setText ( s );
-  LocalSettings.SerialDevice = s;
-}
-**/
+
 void GeneralSettings::selectFileLogging ( bool b)
 {
   Directory->setDisabled ( !b);
@@ -227,4 +239,5 @@ QStringList GeneralSettings::getSoundCards()
     cardList << "None";
   cards.close();
   return cardList;
-}
+  }
+

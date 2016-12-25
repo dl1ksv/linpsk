@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by volker, DL1KSV   *
- *   schroer@tux64   *
+ *   Copyright (C) 2014 by Volker Schroer, DL1KSV                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,72 +17,29 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef QSODATA_H
-#define QSODATA_H
+#ifndef RIGCONTROL_H
+#define RIGCONTROL_H
 
-#include <QGroupBox>
-#include "ui_qsodata.h"
-#include "constants.h"
+#include <hamlib/rig.h>
 
-class QChar;
-class ProcessLogData;
-class QValidator;
-class RigControl;
-
-class QSOData : public QGroupBox, private Ui::QSOData
+class RigControl
 {
-  Q_OBJECT
-struct coordinates
-{
-        double laenge;
-        double breite;
-};
-
 public:
-  QSOData(QWidget* parent = 0);
-  ~QSOData();
-  void enableSaveData();
-  void setAutoDate();
-  void initQsoData();
-
-public slots:
-  /*$PUBLIC_SLOTS$*/
-  void Timechanged();
-  void Datechanged();
-  void MyRSTchanged();
-  void HisRSTchanged();
-  void frequencyChanged(int);
-  void Locatorchanged();
-  void QTHchanged();
-  void Namechanged();
-  void Callsignchanged();
-  void clear();
-  void refreshDateTime();
-  void save();
-  void calculateDistance(QString);
-  void dokChanged();
-
-  void setQsoData(QsoData,QString);
-  void newChannel();
-  void pwrChanged(int);
-
-signals:
-
-protected:
-  coordinates loc2coordinates ( const QChar *l );
-
-protected slots:
-  void sendRequest();
-  void stopTrial();
-  void copyAnswer();
+  RigControl();
+  int get_frequency();
+  void set_frequency(int f);
+  int get_pwr();
+  void set_pwr(int p);
+  int connectRig();
+  void disconnectRig();
 private:
-  ProcessLogData *logBookCommunication;
-  bool connectionError;
-  QValidator *validator;
 
-  int findBand();
+RIG *rig;
 
+int frequency;
+int pwr;
+
+bool connected;
 };
 
-#endif
-
+#endif // RIGCONTROL_H

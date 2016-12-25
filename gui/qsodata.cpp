@@ -24,6 +24,7 @@
 #include "crxchannel.h"
 #include "processlogdata.h"
 #include "constants.h"
+#include "rigcontrol.h"
 
 #include <QDateTime>
 #include <QFile>
@@ -38,6 +39,7 @@ extern Parameter settings;
 QSOData::QSOData ( QWidget* parent )
     : QGroupBox ( parent ), Ui::QSOData()
 {
+  int i;
   setupUi ( this );
   QRegExp rx ( "^[A-R][A-R][0-9][0-9][A-X][A-X]$" );
   validator = new QRegExpValidator ( rx, this );
@@ -51,7 +53,6 @@ QSOData::QSOData ( QWidget* parent )
     OpName->setText ( settings.QslData->OpName );
     Qth->setText ( settings.QslData->Qth );
     Loc->setText ( settings.QslData->Locator );
-    QsoFrequency->setCurrentIndex( settings.QslData->QsoFrequency );
     HisRST->setText ( settings.QslData->HisRST );
     MyRST->setText ( settings.QslData->MyRST );
     dokName->setText(settings.QslData->dokName);
@@ -61,6 +62,7 @@ QSOData::QSOData ( QWidget* parent )
   connect ( Clear, SIGNAL ( clicked() ), this, SLOT ( clear() ) );
   connect ( Qth, SIGNAL ( editingFinished () ), this, SLOT ( QTHchanged() ) );
   connect ( QsoFrequency, SIGNAL ( activated (int) ), this, SLOT ( frequencyChanged(int) ) );
+  connect ( txPwr,SIGNAL( valueChanged(int) ), this ,SLOT( pwrChanged(int) ) );
   connect ( MyRST, SIGNAL ( editingFinished () ), this, SLOT ( MyRSTchanged() ) );
   connect ( OpName, SIGNAL ( editingFinished () ), this, SLOT ( Namechanged() ) );
   connect ( Save, SIGNAL ( clicked() ), this, SLOT ( save() ) );
@@ -73,6 +75,13 @@ QSOData::QSOData ( QWidget* parent )
   connect ( RemoteCallsign, SIGNAL ( editingFinished ( ) ), this, SLOT ( sendRequest() ) );
   connect ( logBookCommunication, SIGNAL ( unabletoConnect() ), this , SLOT ( stopTrial() ) );
   connect ( logBookCommunication, SIGNAL ( answerAvailable() ), this, SLOT ( copyAnswer() ) );
+  //====== Control the rig ================================== //
+  for(i=0; i< settings.bandList.size(); i++)
+    QsoFrequency->addItem(settings.bandList.at(i).bandName);
+//  QsoFrequency->setCurrentIndex(findBand());
+
+//  txPwr->setValue(rigControl->get_pwr());
+
 }
 
 QSOData::~QSOData()
@@ -94,7 +103,9 @@ void QSOData::clear()
   settings.QslData->Qth = Qth->text();
   Loc->setText ( "" );
   settings.QslData->Locator = Loc->text();
-//QsoFrequency->setText ( "" );
+  QsoFrequency->setCurrentIndex(findBand());
+  settings.pwr=settings.rig->get_pwr();
+  txPwr->setValue(settings.pwr);
   settings.QslData->Locator = Loc->text();
   HisRST->setText ( "" );
   settings.QslData->HisRST = HisRST->text();
@@ -155,7 +166,8 @@ void QSOData::Locatorchanged()
 
 void QSOData::frequencyChanged(int index)
 {
-  settings.QslData->QsoFrequency = index;
+  settings.rig->set_frequency(settings.bandList.at(index).preferedFreq);
+  settings.QsoFrequency = index;
 }
 
 void QSOData::HisRSTchanged()
@@ -242,6 +254,11 @@ void QSOData::save()
     s = QString ( "<BAND:%1>%2\n" ).arg ( QsoFrequency->currentText().length() ).arg ( QsoFrequency->currentText() );
     saveString.append ( s );
   }
+  // TxPwr
+  int pwr=txPwr->value();
+  s.setNum(pwr);
+  s = QString ("<TX_PWR:%1>%2\n").arg(s.length()).arg(s);
+  saveString.append(s);
   if ( QsoDate->text() == "" )
   {
     s = QString ( "<QSO_DATE:8:d>%1\n" ).arg ( QDateTime::currentDateTime().toString ( "yyyyMMdd" ) );
@@ -417,8 +434,6 @@ void QSOData::newChannel()
     Qth->setText ( settings.QslData->Qth );
     Loc->setText ( settings.QslData->Locator );
     Locatorchanged(); // Check Locator and set Color
-//    QsoFrequency->setCurrentIndex ( settings.QslData->QsoFrequency );
-    settings.QslData->QsoFrequency=QsoFrequency->currentIndex();
     HisRST->setText ( settings.QslData->HisRST );
     MyRST->setText ( settings.QslData->MyRST );
     QsoDate->setDate ( settings.QslData->QsoDate );
@@ -492,4 +507,29 @@ void QSOData::setAutoDate()
       timeLabel->show();
       QsoTime->show();
     }
+}
+void QSOData::pwrChanged(int p)
+{
+  settings.rig->set_pwr(p);
+  settings.pwr=p;
+}
+int QSOData::findBand()
+{
+  int freq = settings.rig->get_frequency();
+  for(int i=0; i < settings.bandList.size();i++)
+    {
+      if( (settings.bandList.at(i).bandStart <= freq) && (settings.bandList.at(i).bandEnd >= freq))
+          return i;
+    }
+  return settings.bandList.size()-1;
+}
+void QSOData::initQsoData()
+{
+  QsoFrequency->clear();
+  for(int i=0; i< settings.bandList.size(); i++)
+    QsoFrequency->addItem(settings.bandList.at(i).bandName);
+  QsoFrequency->setCurrentIndex(findBand());
+  settings.pwr=settings.rig->get_pwr();
+  txPwr->setValue(settings.pwr);
+
 }

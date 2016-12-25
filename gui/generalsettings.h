@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 - 2016 by Volker Schroer , DL1KSV                  *
+ *   Copyright (C) 2007 by volker, DL1KSV   *
+ *   schroer@tux64   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,28 +24,30 @@
 #include <QDialog>
 #include <QStringList>
 #include "ui_generalsettings.h"
-
 class Parameter;
 class QButtonGroup;
 class QModelIndex;
+class QMenu;
+
 class GeneralSettings : public QDialog, private Ui::GeneralSettings
 {
   Q_OBJECT
 
 public:
-  GeneralSettings(QWidget* parent = 0 );
+  GeneralSettings(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
   ~GeneralSettings();
 Parameter getSettings();
 
 public slots:
-  /*$PUBLIC_SLOTS$*/
 
 protected:
 QButtonGroup *FileFormat;
-  /*$PROTECTED_FUNCTIONS$*/
 Parameter LocalSettings;
+
+QMenu * selectionMenu;
 protected slots:
 void selectDemomode(bool);
+
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);

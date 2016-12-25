@@ -96,3 +96,7 @@ QByteArray ControlPanel::spectrumSplitterState() const
 {
   return Display->spectrumSplitterState();
 }
+void ControlPanel::initQsoData()
+{
+  QSO->initQsoData();
+}
