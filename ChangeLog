@@ -1,13 +1,15 @@
 LinPsk ChangeLog
 
-1.3
-Building with qt4 or qt5 depending on qmake
+1.3.1
+Building with qt4 or qt5 depending on qmake.
+If qmake detects hamlib, LinPSK will be build with hamlib support.
 Now you can define bands and a preferred frequency to use.
 On startup the frequency and the tx-power setting is read from the tx and inserted in the qso tab.
 Changing the entry in the tab will will change the tx - settings.
 
-You have to setup the communication parameter in the general settings menu
+You have to setup the communication parameter in the general settings menu.
 
+Removing textfile input for demo mode. Only wav files are supported in the future.
 1.2.5
 Now building in build directory.
 Switching to qt5.

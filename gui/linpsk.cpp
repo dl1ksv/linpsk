@@ -41,7 +41,9 @@
 #include "renamemacro.h"
 #include "color.h"
 #include "definebandlist.h"
+#ifdef WITH_HAMLIB
 #include "rigcontrol.h"
+#endif
 #include <unistd.h>
 
 
@@ -69,7 +71,9 @@ LinPSK::LinPSK ( QWidget* parent)
   Sound = 0;
   Modulator = 0;
   inAction=false;
+#ifdef WITH_HAMLIB
   settings.rig =new RigControl();
+#endif
   /** To avoid multipe Macro clicking **/
   blockMacros=false;
   /************************************/
@@ -78,26 +82,7 @@ LinPSK::LinPSK ( QWidget* parent)
   setupUi(this);
   read_config();
   apply_settings();
-  if((settings.rigModelNumber > 0) && settings.rigDevice != "None")
-    {
-     int rc=-settings.rig->connectRig();
-     if(rc != RIG_OK)
-       {
-         switch(rc) {
-           case RIG_ETIMEOUT:
-             QMessageBox::warning(0,"Connection time out",QLatin1String("Could not connect to rig"));
-             break;
-           case RIG_EINVAL :
-             QMessageBox::warning(0,"Invalid parameter",QLatin1String("Probably unknown rig"));
-             break;
-           default:
-             QMessageBox::warning(0,"Connection time out",QLatin1String(rigerror(rc)));
-             break;
 
-        }
-       }
-    }
-  Control->initQsoData();
   /** Fixme: handle font change: fontChange() **/
 
   if ( settings.ApplicationFont == 0 )
@@ -125,7 +110,53 @@ LinPSK::LinPSK ( QWidget* parent)
   msg = new QLabel ( );
   statusbar->addPermanentWidget ( msg, 2 );
   msg->setText ( tr ( "Ready" ) );
+#ifdef WITH_HAMLIB
+  rigInfo =new QLabel();
+  statusbar->addPermanentWidget(rigInfo,1);
+  if((settings.rigModelNumber > 0) && settings.rigDevice != "None")
+    {
+     int rc=-settings.rig->connectRig();
+     if(rc != RIG_OK)
+       {
+         switch(rc) {
+           case RIG_EINVAL :
+             QMessageBox::warning(0,"Invalid parameter",QLatin1String("Probably unknown rig"));
+             rigInfo->setText("Rig: None");
+             break;
+           case RIG_ETIMEOUT:
+           default:
+             if(rc != RIG_ETIMEOUT)
+               QMessageBox::warning(0,"Connection time out",QLatin1String(rigerror(rc)));
+             if(QMessageBox::question ( 0,"Connection time out" , tr ( "Could not connect to rig\nTry again ?" ),
+                                        QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes)
+               {
+                 rc=-settings.rig->connectRig();
+                 if( rc != RIG_OK)
+                   {
+                     QMessageBox::warning(0,"Connection time out",QLatin1String(rigerror(rc)));
+                     rigInfo->setText("Rig: None");
+                   }
+                 else
+                   rigInfo->setText(QLatin1String("Rig: ")+settings.rig->getModelName());
+               }
+             else
+              rigInfo->setText("Rig: None");
+             break;
 
+        }
+
+       }
+     else
+       {
+         rigInfo->setText(QLatin1String("Rig: ")+settings.rig->getModelName());
+       }
+     if( rc == RIG_OK)
+       {
+
+       }
+    }
+#endif
+  Control->initQsoData();
 // IMD
   IMD = new QLabel ( statusbar );
   statusbar -> addPermanentWidget ( IMD, 1 );
@@ -227,7 +258,7 @@ void LinPSK::fileOpen()
 {
   QString fileName;
 
-  fileName = QFileDialog::getOpenFileName ( 0, tr ( "Open Demofile" ), "", settings.DemoModeFileType[settings.DemoTypeNumber] );
+  fileName = QFileDialog::getOpenFileName ( 0, tr ( "Open Demofile" ), "", "*.wav" );
   if ( !fileName.isEmpty() )
     settings.inputFilename = fileName;
 }
@@ -407,10 +438,7 @@ void LinPSK::startTx()
   {
     if ( settings.DemoMode )
     {
-      if ( settings.DemoTypeNumber == 0 )
-        Sound = new WaveInput ( -1 );
-      else
-        Sound = new TextInput ( -1 );
+      Sound = new WaveInput ( -1 );
       msg->setText ( tr ( "Transmitting (Demo)" ) );
     }
     else
@@ -482,7 +510,8 @@ void LinPSK::generalSettings()
     {
       int modelNr = settings.rigModelNumber;
       settings = LocalSettings->getSettings();
-      if(modelNr != settings.rigModelNumber) //Rig has changed
+#ifdef WITH_HAMLIB
+      if( (modelNr >0) && ((modelNr != settings.rigModelNumber) || !settings.rig->isConnected()) ) //Rig has changed
         {
           settings.rig->disconnectRig();
           int rc = -settings.rig->connectRig();
@@ -505,7 +534,7 @@ void LinPSK::generalSettings()
                 return;
             }
         }
-
+#endif
     }
   apply_settings();
 }
@@ -655,7 +684,6 @@ void LinPSK::save_config()
   config.endGroup();
   /** DemoMode **/
   config.setValue ( "DemoMode", settings.DemoMode );
-  config.setValue ( "DemoTypeNumber", settings.DemoTypeNumber );
 //Operating
   config.setValue ( "Callsign", settings.callsign );
   config.setValue ( "MyLocator", settings.myLocator );
@@ -981,7 +1009,6 @@ void LinPSK::read_config()
   config.endGroup();
   /** DemoMode **/
   settings.DemoMode = config.value ( "DemoMode" ).toBool();
-  settings.DemoTypeNumber = config.value ( "DemoTypeNumber" ).toInt();
 //Operating
   settings.callsign = config.value ( "Callsign" ).toString();
   settings.myLocator = config.value ( "MyLocator" ).toString();
@@ -1083,19 +1110,10 @@ void LinPSK::read_config()
 }
 void LinPSK::checkControlDevices()
 {
-
-#ifdef WITH_HAMLIB  
   int  err;
   settings.serial = -1;
   int flags = TIOCM_RTS | TIOCM_DTR;
-  if( (settings.SerialDevice != "None") && (settings.SerialDevice == settings.rigDevice))
-    {
-      QMessageBox::critical ( 0, "LinPsk", "PTT device and device to control the rig must be different\nPlease change configuration" );
-      settings.SerialDevice = "None";
-      settings.rigDevice="None";
-      return;
-    }
-#endif    
+
   if ( settings.SerialDevice != "None" )
   {
     settings.serial = open( settings.SerialDevice.toLatin1().data(), O_EXCL | O_WRONLY );
@@ -1108,7 +1126,15 @@ void LinPSK::checkControlDevices()
       settings.serial=-1;
     }
    }
-#ifdef WITH_HAMLIB   
+#ifdef WITH_HAMLIB
+
+  if( (settings.SerialDevice != "None") && (settings.SerialDevice == settings.rigDevice))
+    {
+      QMessageBox::critical ( 0, "LinPsk", "PTT device and device to control the rig must be different\nPlease change configuration" );
+      settings.SerialDevice = "None";
+      settings.rigDevice="None";
+      return;
+    }
   if ( settings.rigDevice != "None")
   {
     int fd = open( settings.rigDevice.toLatin1().data(), O_EXCL | O_WRONLY );

@@ -1,8 +1,15 @@
 Important: This versionan be build with qt4 or qt5!!!
 Which version of qt is used depends on the qmake version.
 
-To build linpsk, untar the tar archiv and switch to the linpsk directory.
-You need fftw and hamlib.
+To build LinPsk, untar the tar archiv and switch to the linpsk directory.
+You need fftw3.
+Now you can define a list of bands, which is used in the setup of the qso data.
+If you select a band and LinPSK is build with hamlib support your rig is tuned to the preferred frequency of this band.
+
+LinPSK is build with hamlib support, if qmake finds the hamlib library (by pkg-config).
+Additionaly you can control the Tx power by the qsodata settings, if your rig supports this feature.
+
+Band name and Tx power can be used to log with LinLogbook.
 
 run:
 mkdir -p build
@@ -18,4 +25,5 @@ Also using the card name can be used now. In this case LinPSK searches the cardn
 
 plughw:[cardnumber]
 
-In case of problems you can define ( more complex ) devices in your .asoundrc file
+In case of problems you can define ( more complex ) devices in your .asoundrc file. The should be named LinPSK_Record and LinPSK_Play.
+

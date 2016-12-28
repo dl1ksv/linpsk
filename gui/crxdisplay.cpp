@@ -90,12 +90,7 @@ bool CRxDisplay::start_process_loop()
   if ( Sound == 0 )
   {
     if ( settings.DemoMode )
-    {
-      if ( settings.DemoTypeNumber == 0 )
         Sound = new WaveInput ( -1 );
-      else
-        Sound = new TextInput ( -1 );
-    }
     else
       Sound = new CSound ( settings.serial );
     if ( Sound <= NULL )

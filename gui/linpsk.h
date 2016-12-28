@@ -112,7 +112,9 @@ unsigned int Txcount;
 Input *Sound;
 /** To show messages in Statusbar */
 QLabel *msg;
-
+#ifdef WITH_HAMLIB
+QLabel *rigInfo;
+#endif
 void checkControlDevices();
 
 /** To show date and time **/

@@ -32,9 +32,9 @@ FrequencySelect::FrequencySelect( QWidget* parent , AfcMode WithMode)
     setAlignment( Qt::AlignCenter );
 
     Activate = new QRadioButton(  "Activate", this );
-Activate->setAutoExclusive(false);
+    Activate->setAutoExclusive(false);
     AfcWide = new QRadioButton("Wide", this);
-AfcWide->setAutoExclusive(false);
+    AfcWide->setAutoExclusive(false);
     modus=Wide;
     switch (WithMode)
     {

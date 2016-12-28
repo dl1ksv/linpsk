@@ -20,6 +20,7 @@
 #include "rigcontrol.h"
 #include "parameter.h"
 
+#include <QLatin1String>
 extern Parameter settings;
 
 RigControl::RigControl()
@@ -33,7 +34,7 @@ int RigControl::connectRig()
 {
    int rc;
    rc = -1;
-   if( (settings.rigModelNumber == 0) || (settings.rigDevice == "none") )
+   if( (settings.rigModelNumber == 0) || (settings.rigDevice == "None") )
      return RIG_OK;
   rig=rig_init(settings.rigModelNumber);
   if(rig->caps->port_type != RIG_PORT_NONE)
@@ -104,11 +105,22 @@ void RigControl::set_pwr(int p)
 }
 void RigControl::disconnectRig()
 {
-  if (rig != NULL)
+  if ( (rig != NULL) && connected)
     {
      rig_close(rig);
      rig_cleanup(rig);
     }
   rig = NULL;
   connected=false;
+}
+bool RigControl::isConnected()
+{
+  return connected;
+}
+QLatin1String RigControl::getModelName()
+{
+  if(rig == NULL)
+    return QLatin1String("None");
+  else
+  return QLatin1String(rig->caps->model_name);
 }

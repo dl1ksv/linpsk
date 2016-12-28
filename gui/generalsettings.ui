@@ -193,7 +193,7 @@
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="commParams">
      <property name="title">
       <string>Rig Comm Parameter</string>
      </property>
@@ -430,7 +430,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLabel" name="label_11">
+         <widget class="QLabel" name="Rignumber">
           <property name="text">
            <string>Rig number</string>
           </property>
@@ -442,7 +442,7 @@
            <string>Set Rig number as defined in hamlib</string>
           </property>
           <property name="inputMask">
-           <string extracomment="Modelnumber from hamlib">0999; </string>
+           <string extracomment="Modelnumber from hamlib">0999</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -461,7 +461,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="Rigdevice">
           <property name="text">
            <string>Rig device</string>
           </property>

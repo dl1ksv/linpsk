@@ -50,8 +50,6 @@ void setupDevices();
 QString callsign;             // Callsign
 QString myLocator;
 QString inputFilename;        //Name of Demofile
-QString DemoModeFileType[2];  // File Type of DemoFile
-int DemoTypeNumber;           // Index of selected FileType
 int serial;                   // Filedescriptor for serial Device for PTT
 QString SerialDevice;         //Filename for PTT Device
 //Logging
@@ -93,7 +91,9 @@ int pwr;
 int rigModelNumber;
 int handshake;
 int baudrate;
+#ifdef WITH_HAMLIB
 RigControl *rig;
+#endif
 QString rigDevice;
 
 QList<Band> bandList;

@@ -24,7 +24,9 @@
 #include "crxchannel.h"
 #include "processlogdata.h"
 #include "constants.h"
+#ifdef WITH_HAMLIB
 #include "rigcontrol.h"
+#endif
 
 #include <QDateTime>
 #include <QFile>
@@ -104,8 +106,10 @@ void QSOData::clear()
   Loc->setText ( "" );
   settings.QslData->Locator = Loc->text();
   QsoFrequency->setCurrentIndex(findBand());
+#ifdef WITH_HAMLIB
   settings.pwr=settings.rig->get_pwr();
   txPwr->setValue(settings.pwr);
+#endif
   settings.QslData->Locator = Loc->text();
   HisRST->setText ( "" );
   settings.QslData->HisRST = HisRST->text();
@@ -166,7 +170,9 @@ void QSOData::Locatorchanged()
 
 void QSOData::frequencyChanged(int index)
 {
+#ifdef WITH_HAMLIB
   settings.rig->set_frequency(settings.bandList.at(index).preferedFreq);
+#endif
   settings.QsoFrequency = index;
 }
 
@@ -510,17 +516,21 @@ void QSOData::setAutoDate()
 }
 void QSOData::pwrChanged(int p)
 {
+#ifdef WITH_HAMLIB
   settings.rig->set_pwr(p);
+#endif
   settings.pwr=p;
 }
 int QSOData::findBand()
 {
+#ifdef WITH_HAMLIB
   int freq = settings.rig->get_frequency();
   for(int i=0; i < settings.bandList.size();i++)
     {
       if( (settings.bandList.at(i).bandStart <= freq) && (settings.bandList.at(i).bandEnd >= freq))
           return i;
     }
+#endif
   return settings.bandList.size()-1;
 }
 void QSOData::initQsoData()
@@ -529,7 +539,9 @@ void QSOData::initQsoData()
   for(int i=0; i< settings.bandList.size(); i++)
     QsoFrequency->addItem(settings.bandList.at(i).bandName);
   QsoFrequency->setCurrentIndex(findBand());
+#ifdef WITH_HAMLIB
   settings.pwr=settings.rig->get_pwr();
+#endif
   txPwr->setValue(settings.pwr);
 
 }

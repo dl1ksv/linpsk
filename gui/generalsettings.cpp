@@ -27,26 +27,27 @@
 #include <QModelIndex>
 #include <QTextStream>
 
+#ifdef WITH_HAMLIB
 #include <hamlib/rig.h>
+#endif
 
 extern Parameter settings;
 GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   : QDialog ( parent, fl ), Ui::GeneralSettings()
 {
   setupUi ( this );
+#ifndef WITH_HAMLIB
+  Rignumber->hide();
+  modelNr->hide();
+  commParams->hide();
+  Rigdevice->hide();
+  rigControl->hide();
+#endif
   QString DirectoryName;
   QDir dir;
   QString s;
   int index;
   LocalSettings = settings;
-  FileFormat = new QButtonGroup ( FileFormatLayout );
-  FileFormat->setExclusive ( true );
-  FileFormat->addButton ( Wav, 0 );
-  FileFormat->addButton ( Text, 1 );
-  if ( LocalSettings.DemoTypeNumber == 0 )
-    Wav->setChecked ( true );
-  else
-    Text->setChecked ( true );
   Callsign->setText ( LocalSettings.callsign );
   myLocator->setText ( LocalSettings.myLocator );
   UTC->setValue ( LocalSettings.timeoffset );
@@ -80,27 +81,21 @@ GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
   for ( int kk = 0; kk < Files.size(); kk++ )
     Files.replace ( kk, DirectoryName + Files.at ( kk ) );
   // PTT
+  pttDevice->addItem(QLatin1String("None"));
   pttDevice->addItems(Files);
   index=pttDevice->findText(LocalSettings.SerialDevice);
-  if(index >= 0)
+  if(index > 0)
     pttDevice->setCurrentIndex(index);
   else
-   {
-    index=pttDevice->count();
-    pttDevice->addItem(QLatin1String("None"));
-    pttDevice->setCurrentIndex(index);
-   }
+    pttDevice->setCurrentIndex(0);
   // Rig
+  rigControl->addItem(QLatin1String("None"));
   rigControl->addItems(Files);
   index=rigControl->findText(LocalSettings.rigDevice);
-  if(index >= 0)
+  if(index > 0)
     rigControl->setCurrentIndex(index);
   else
-   {
-    index=rigControl->count();
-    rigControl->addItem(QLatin1String("None"));
-    rigControl->setCurrentIndex(index);
-   }
+    rigControl->setCurrentIndex(0);
   // Sound Devices
   QStringList cards=getSoundCards();
   soundInputDeviceName->addItems(cards);
@@ -147,7 +142,6 @@ Parameter GeneralSettings::getSettings()
   if ( Demomode->isChecked() )
     {
       LocalSettings.DemoMode = true;
-      LocalSettings.DemoTypeNumber = FileFormat->checkedId();
       LocalSettings.inputFilename = "";
     }
   else
@@ -178,24 +172,22 @@ Parameter GeneralSettings::getSettings()
     }
   LocalSettings.dateFormat=dateFormat->currentText();
   // Rig parameter
+#ifdef WITH_HAMLIB
   LocalSettings.rigModelNumber=modelNr->text().toInt();
   LocalSettings.baudrate=baudRate->currentText().toInt();
   LocalSettings.handshake=static_cast<serial_handshake_e>(handShake->currentIndex());
+#else
+  LocalSettings.rigModelNumber=0;
+#endif
   return LocalSettings;
 }
 
 void GeneralSettings::selectDemomode ( bool mode )
 {
   if ( mode )
-    {
-      FileFormatLayout->show();
-      SoundDeviceBox->hide();
-    }
+    SoundDeviceBox->hide();
   else
-    {
-      FileFormatLayout->hide();
-      SoundDeviceBox->show();
-    }
+    SoundDeviceBox->show();
 }
 
 

@@ -22,6 +22,8 @@
 
 #include <hamlib/rig.h>
 
+class QLatin1String;
+
 class RigControl
 {
 public:
@@ -32,6 +34,8 @@ public:
   void set_pwr(int p);
   int connectRig();
   void disconnectRig();
+  bool isConnected();
+  QLatin1String getModelName();
 private:
 
 RIG *rig;

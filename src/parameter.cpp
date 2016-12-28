@@ -34,9 +34,6 @@ QSOFileName="QSOData.adif";
 timeoffset=-2;
 
 DemoMode=true;
-DemoModeFileType[0]="*.wav";
-DemoModeFileType[1]="*.out";
-DemoTypeNumber=0;
 
 slashed0=false;
 autoCrLf=true;
@@ -58,7 +55,9 @@ LangName[2]="G";
 
 /** Rig **/
 rigModelNumber=0; // No rig
+#ifdef WITH_HAMLIB
 rig=0;
+#endif
 rigDevice="none";
 QsoFrequency=-1;
 pwr=5;

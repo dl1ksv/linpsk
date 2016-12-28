@@ -1,7 +1,20 @@
-CONFIG += warn_on debug_and_release \
+CONFIG += warn_on \
           qt \
          thread
+CONFIG += link_pkgconfig
 
+!packagesExist(fftw3) {
+error("LinPSK requires fftw3")
+}
+
+CONFIG(debug, debug|release) {
+message(Building Qt$$QT_VERSION debug version)
+QMAKE_CFLAGS_DEBUG += '-g3 -O0'
+QMAKE_CXXFLAGS_DEBUG += '-g3 -O0'
+} else {
+message(Building Qt$$QT_VERSION release)
+DEFINES += QT_NO_DEBUG
+}
 QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,9 +33,20 @@ INSTALLS +=target
 INCLUDEPATH += . src gui
 
 LIBS += -lasound -lfftw3
-LIBS +=`pkg-config --libs hamlib`
 
+
+packagesExist( hamlib ) {
+      message(LinPSK builds with hamlib)
+      LIBS +=$$system("pkg-config --libs hamlib")
+      DEFINES += WITH_HAMLIB
+      HEADERS +=src/rigcontrol.h
+      SOURCES +=src/rigcontrol.cpp
+}
+else {
+    message(LinPSK builds without hamlib)
+}
 # Input
+
 HEADERS += gui/activatemacros.h \
            gui/addmacro.h \
            gui/addrxwindow.h \
@@ -70,13 +94,11 @@ HEADERS += gui/activatemacros.h \
            src/psktable.h \
            src/qpskdemodulator.h \
            src/qpskmodulator.h \
-	   src/rigcontrol.h \
            src/readonlystringlistmodel.h \
            src/rttydemodulator.h \
            src/rttymodulator.h \
            src/spectrumwindow.h \
            src/tabwidget.h \
-           src/textinput.h \
            src/viterbi.h \
            src/waterfallwindow.h \
            src/waveinput.h
@@ -141,14 +163,17 @@ SOURCES += gui/activatemacros.cpp \
            src/pskmodulator.cpp \
            src/qpskdemodulator.cpp \
            src/qpskmodulator.cpp \
-	   src/rigcontrol.cpp \
            src/readonlystringlistmodel.cpp \
            src/rttydemodulator.cpp \
            src/rttymodulator.cpp \
            src/spectrumwindow.cpp \
            src/tabwidget.cpp \
-           src/textinput.cpp \
            src/viterbi.cpp \
            src/waterfallwindow.cpp \
            src/waveinput.cpp
 RESOURCES += src/application.qrc
+
+DISTFILES += \
+    README \
+    ChangeLog \
+    COPYING
