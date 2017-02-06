@@ -1,110 +1,81 @@
-//////////////////////////////////////////////////////////////////////
-// PSKMod.h: interface for the CPSKMod class.
-//
-//////////////////////////////////////////////////////////////////////
-//      PSK31/CW modulator
-// Copyright 1999.    Moe Wheatley AE4JY  <ae4jy@mindspring.com>
-//
-//This program is free software; you can redistribute it and/or
-//modify it under the terms of the GNU General Public License
-//as published by the Free Software Foundation; either version 2
-//of the License, or any later version.
-//
-//This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//GNU General Public License for more details.
-//
-//You should have received a copy of the GNU General Public License
-//along with this program; if not, write to the Free Software
-//Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-//
-//////////////////////////////////////////////////////////////////////
-//
-// Modified by Volker Schroer, DL1KSV, for use in LinPsk
+/***************************************************************************
+ *   Copyright (C) 2012 -2017 by Volker Schroer, DL1KSV                    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 
-#ifndef PSKMOD_H
-#define PSKMOD_H
+#ifndef PSKMODULATOR_H
+#define PSKMODULATOR_H
 
-#include <qobject.h>
-#include <ctype.h>
-
-#include "ctxdisplay.h"
 #include "cmodulator.h"
 
-
-
-class CTxBuffer;
-
-class PSKModulator  : public CModulator
+class PskModulator : public CModulator
 {
-   Q_OBJECT
 public:
-	PSKModulator(int,double,CTxBuffer *);
-	virtual ~PSKModulator();
-// PSK31 and CW modulator
-	int CalcSignal( double* pData , int n);
-/** length = CalcSignal (double *pData, int n)
-		Reads tx  Buffer and calculates the signal values to be transmitted
-		double *pData 	pointer to array for computed signal values
-		n								length of array
-		length 					number of calculated values , normally n
-                    -length at the end of transmission   
-*/
+  PskModulator(int FS, double frequency, CTxBuffer *TxBuffer);
+  int CalcSignal(double *data,int BufferSize);
 
-private:
-	QString m_TestString;
-	unsigned int m_AmblePtr;
-	int m_Preamble[33];
-	int m_Postamble[33];
-
-// PSK31 and CW generator variables
-	double m_t;
-	int m_Ramp;
-///	double m_RMSConstant;
-
-	double m_PSKSecPerSamp;
-	double m_PSKTime;
-	double m_PSKPeriodUpdate;
-	double m_PSKPhaseInc;
-
-
-	double* m_pPSKtxI;
-	double* m_pPSKtxQ;
-	int m_PresentPhase;
-	int m_CWState;
-	int m_CWtimer;
-
-
-// PSK31 and CW modulator private functions
-
-//	char GetNextBPSKSymbol(void);
-//	char GetNextQPSKSymbol(void);
-virtual  char GetNextSymbol(void)=0;
-	char GetNextCWSymbol(void);
 protected:
-	char m_Lastsymb;
-	unsigned short int m_TxShiftReg;
-	int GetChar();
-	bool m_AddEndingZero;
-static const unsigned short int VARICODE_TABLE[];
-enum Status
-{
-TX_END_STATE,				//Xmitting should be stoped
-TX_OFF_STATE,				//TX is off, so we are receiving
-TX_SENDING_STATE,		//TX is sending text
-TX_PAUSED_STATE ,		//TX is paused
-TX_PREAMBLE_STATE,	//TX sending starting preamble
-TX_POSTAMBLE_STATE,	//TX sending ending posteamble
-TX_CWID_STATE,			//TX sending CW ID
-TX_TUNE_STATE			//TX is tuning mode
-};
-Status status; 
-public slots:
-signals: // Signals
-  /** Tx finished */
-//  void finished();
-//  void charSend(char);
+  virtual char getNextSymbolBit()=0;
+  int getChar();
+
+  double aktFrequency;
+  double txFrequencyInc;
+  unsigned short txShiftRegister;
+
+  int symbolSize;
+  int inSymbolPtr;
+  int amblePtr;
+  short int aktBit;
+  enum TxStatus
+  {
+    TX_END_STATE,	//Xmitting should be stoped
+    TX_OFF_STATE,	//TX is off, so we are receiving
+    TX_SENDING_STATE,	//TX is sending text
+    TX_PREAMBLE_STATE,	//TX sending starting preamble
+    TX_POSTAMBLE_STATE	//TX sending ending posteamble
+//  TX_TUNE_STATE	//TX is tuning mode
+  };
+  TxStatus status;
+  enum PhaseState
+  { //    old   , new
+    ZZ,  // 0    , 0
+    ZN,  // 0    , 90
+    ZP,  // 0    , 180
+    ZZ7, // 0    , 270
+    NN , // 90   , 90
+    NP , // 90   , 180
+    NZ7, // 90   , 270
+    NZ , // 90   , 0
+    PZ,  // 180  , 0
+    PN,  // 180  , 90
+    PP,  // 180  , 180
+    PZ7, // 180  , 270
+    Z7Z, // 270  , 0
+    Z7N, // 270  , 90
+    Z7P, // 270  , 180
+    Z7Z7,// 270  , 270
+  };
+  PhaseState pState;
+  PhaseState transition[4][4];
+  double periodTime;
+  double periodDelta;
+  double period;
+
+  bool addEndingZero;
 };
 
-#endif
+#endif // BPSKMODULATOR_H

@@ -18,9 +18,10 @@
 
 CDemodulator::CDemodulator()
 {
-UseAfc = Off;
-Squelch = true;
-Threshold= 50;
+  UseAfc = Off;
+  Squelch = true;
+  Threshold= 50;
+  OszFrequency = 0.0;
 }
 
 CDemodulator::~CDemodulator()
@@ -31,8 +32,11 @@ void CDemodulator::setAfcMode(AfcMode afc) { UseAfc=afc; }
 
 void CDemodulator::setRxFrequency(double freq)
 {
- if ( (freq > 200 ) && (freq < 3000 ) ) 
-  RxFrequency = freq;
+ if ( (freq > 200 ) && (freq < 3000 ) )
+  {
+    RxFrequency = freq;
+    OszFreqinc = freq*PI2/SampleRate;
+  }
 }
 
 double CDemodulator::getRxFrequency(void)

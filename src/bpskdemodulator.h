@@ -28,19 +28,20 @@
 
 class BPskDemodulator : public CPskDemodulator  {
 public: 
-	BPskDemodulator();
-	~BPskDemodulator();
+  BPskDemodulator();
+  ~BPskDemodulator();
+   void Init(double Fs ,int BlockSize);
 protected:	
 /** Decodes a BPSK Symbol */
-void DecodeSymbol( double);
 
-void CalcQuality(double);
+  void DecodeSymbol( double);
+
+  void CalcQuality(double);
+  double calcFreqError(complex<double> s);
 private:
-	bool GetBPSKSymb();
+  bool GetBPSKSymb();
   double ave1;
-	double ave2;
-
-
+  double ave2;
 };
 
 #endif

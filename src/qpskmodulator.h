@@ -24,11 +24,11 @@ class CTxBuffer;
   *@author Volker Schroer
   */
 
-class QPskModulator : public PSKModulator  {
+class QPskModulator : public PskModulator  {
 public: 
 	QPskModulator(int, double, CTxBuffer *);
 	~QPskModulator();
-char GetNextSymbol(void);
+char getNextSymbolBit(void);
 private:
 
 	unsigned short int m_TxCodeWord;

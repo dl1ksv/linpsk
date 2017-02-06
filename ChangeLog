@@ -1,4 +1,7 @@
 LinPsk ChangeLog
+1.3.5
+Adding PSK63 mode
+Fixing wrong scaling in Spectrum display
 
 1.3.1
 Building with qt4 or qt5 depending on qmake.

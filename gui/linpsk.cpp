@@ -9,19 +9,20 @@
 
 #include "linpsk.h"
 
-
+#include "addrxwindow.h"
+#include "bpskmodulator.h"
 #include "controlpanel.h"
 #include "crxdisplay.h"
 #include "ctxdisplay.h"
 
 #include "parameter.h"
-#include "addrxwindow.h"
+
 #include "spectrumdisplay.h"
 #include "frequencyselect.h"
 #include "cledbutton.h"
 #include "rttymodulator.h"
 #include "pskmodulator.h"
-#include "bpskmodulator.h"
+#include "psk63modulator.h"
 #include "qpskmodulator.h"
 #include "mfskmodulator.h"
 #include "ctxbuffer.h"
@@ -54,7 +55,7 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-#define VERSION "1.3.1"
+#define VERSION "1.3.5"
 
 
 #define ProgramName "LinPSK "
@@ -71,6 +72,8 @@ LinPSK::LinPSK ( QWidget* parent)
   Sound = 0;
   Modulator = 0;
   inAction=false;
+  // Content of modeList must correspond to enum Mode in constants.h
+  modeList << "BPSK31" << "QPSK" << "RTTY" << "MFSK16" << "BPSK63"  ;
 #ifdef WITH_HAMLIB
   settings.rig =new RigControl();
 #endif
@@ -293,7 +296,7 @@ void LinPSK::helpAboutQt()
 
 void LinPSK::addRxWindow()
 {
-  AddRxWindow *Channel = new AddRxWindow();
+  AddRxWindow *Channel = new AddRxWindow(modeList);
   if ( Channel->exec() != 0 )
   {
     AfcMode modus;
@@ -353,33 +356,9 @@ void LinPSK::startRx()
   }
   if ( RxDisplay->start_process_loop() )
   {
-    QString Info;
     TxDisplay->TxFunctions->setStatus ( OFF );
     if ( settings.ActChannel != 0 )
-      switch ( settings.ActChannel->getModulationType() )
-      {
-        case QPSK:
-          Info = "QPSK";
-          break;
-
-        case BPSK:
-          Info = "BPSK";
-          break;
-
-        case RTTY:
-          Info = "RTTY";
-          break;
-
-        case MFSK16:
-          Info = "MFSK16";
-          break;
-
-
-        default:
-          Info = "undefined";
-      }
-
-    msg->setText ( tr ( "Receiving " ) + Info );
+      msg->setText ( tr ( "Receiving " ) + modeList[settings.ActChannel->getModulationType()] );
   }
   else
     TxDisplay->TxFunctions->setStatus ( UNDEF );
@@ -393,7 +372,6 @@ void LinPSK::startTx()
 {
   Mode ModulationType;
   QString errorstring;
-  QString Info;
   double Frequency;
 
   RxDisplay->stop_process_loop();
@@ -411,28 +389,26 @@ void LinPSK::startTx()
   {
     case QPSK:
       Modulator = new QPskModulator ( 11025, Frequency, TxBuffer );
-      Info = "QPSK";
       break;
-    case BPSK:
-      Modulator = new BPSKModulator ( 11025, Frequency, TxBuffer );
-      Info = "BPSK";
+    case BPSK31:
+      Modulator = new BpskModulator ( 11025, Frequency, TxBuffer );
+      break;
+    case BPSK63:
+      Modulator = new Psk63Modulator ( 11025, Frequency, TxBuffer );
       break;
 
     case RTTY:
       Modulator = new RTTYModulator ( 11025, Frequency, TxBuffer );
       if ( settings.ActChannel->getParameter ( Extra ) != 0 )
         Modulator->setParameter ( Extra, settings.ActChannel->getParameter ( Extra ) );
-      Info = "RTTY";
       break;
     case MFSK16:
       Modulator = new MFSKModulator ( 11025, Frequency, TxBuffer );
-      Info = "MFSK16";
       break;
 
-    default:
-      Modulator = new BPSKModulator ( 11025, Frequency, TxBuffer );
-      Info = "BPSK";
-      break;
+/**    default:
+      Modulator = new BpskModulator ( 11025, Frequency, TxBuffer );
+      break; */
   }
   if ( Sound <= NULL ) // Only create Sound Device once for output
   {
@@ -462,7 +438,7 @@ void LinPSK::startTx()
 
   connect ( Modulator, SIGNAL ( charSend ( char ) ), settings.ActChannel, SLOT ( updateRx ( char ) ) );
   TxDisplay->TxFunctions->setStatus ( ON );
-  msg->setText ( tr ( "Transmitting " ) + Info );
+  msg->setText ( tr ( "Transmitting " ) + modeList[ModulationType] );
   TxDisplay->txWindow->setFocus();
   settings.Status = TxDisplay->TxFunctions->getstatus();
   Control->present(false);
@@ -508,9 +484,9 @@ void LinPSK::generalSettings()
   GeneralSettings *LocalSettings = new GeneralSettings ( this );
   if ( LocalSettings->exec() != 0 )
     {
-      int modelNr = settings.rigModelNumber;
       settings = LocalSettings->getSettings();
 #ifdef WITH_HAMLIB
+      int modelNr = settings.rigModelNumber;
       if( (modelNr >0) && ((modelNr != settings.rigModelNumber) || !settings.rig->isConnected()) ) //Rig has changed
         {
           settings.rig->disconnectRig();
@@ -577,6 +553,7 @@ void LinPSK::stopTx()
   if ( Sound != 0 )
   {
     Sound->PTT ( false );
+    Sound->wait();
     Sound->close_Device();
   }
   delete Modulator;
@@ -589,43 +566,20 @@ void LinPSK::apply_settings()
   checkControlDevices();
   Control->enableSaveData();
   Control->setAutoDate();
+  actionOpen_Demo_File->setEnabled(settings.DemoMode);
 }
 void LinPSK::setChannelParams()
 {
   Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
   Control->newChannel();
   if ( settings.ActChannel != 0 )
-  {
-    QString Info;
-    switch ( settings.ActChannel->getModulationType() )
-    {
-
-      case QPSK:
-        Info = "QPSK";
-        break;
-
-      case BPSK:
-        Info = "BPSK";
-        break;
-
-      case RTTY:
-        Info = "RTTY";
-        break;
-
-      case MFSK16:
-        Info = "MFSK16";
-        break;
-      default:
-        Info = "undefined";
-    }
+        msg->setText ( tr ( "Receiving " ) + modeList[settings.ActChannel->getModulationType()] );
     RxDisplay->setAfcProperties( settings.ActChannel->AfcProperties() );
-    msg->setText ( tr ( "Receiving " ) + Info );
-  }
 }
 void LinPSK::setRxMode()
 {
-  QString Info;
-  ModeMenu Menu ;
+
+  ModeMenu Menu(modeList) ;
   ExtraParameter *Param;
   ExtraParameter parameter;
 
@@ -637,34 +591,12 @@ void LinPSK::setRxMode()
     Mode rxmode = ( Mode ) Menu.selectedMode();
     settings.ActChannel->setMode ( rxmode );
     RxDisplay->setAfcProperties( settings.ActChannel->AfcProperties() );
-    RxDisplay->setAfc ( settings.ActChannel->getAfcMode() );
+//    RxDisplay->setAfc ( settings.ActChannel->getAfcMode() );
     Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
     parameter= Menu.getParameter();
     settings.ActChannel->setParameter ( Extra, &parameter );
+    msg->setText ( tr ( "Receiving " ) + modeList[rxmode] );
   }
-  if ( settings.ActChannel != 0 )
-    switch ( settings.ActChannel->getModulationType() )
-    {
-      case QPSK:
-        Info = "QPSK";
-        break;
-
-      case BPSK:
-        Info = "BPSK";
-        break;
-
-      case RTTY:
-        Info = "RTTY";
-        break;
-
-      case MFSK16:
-        Info = "MFSK16";
-        break;
-      default:
-        Info = "undefined";
-    }
-
-  msg->setText ( tr ( "Receiving " ) + Info );
 }
 
 void LinPSK::save_config()
@@ -1110,7 +1042,7 @@ void LinPSK::read_config()
 }
 void LinPSK::checkControlDevices()
 {
-  int  err;
+  int  err = 0;
   settings.serial = -1;
   int flags = TIOCM_RTS | TIOCM_DTR;
 

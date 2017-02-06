@@ -20,7 +20,7 @@ CModulator::CModulator(int FS,CTxBuffer *TxBuffer)
 {
 
 SampleRate=FS;
-Buffer=TxBuffer;
+transmitBuffer=TxBuffer;
 
 }
 CModulator::~CModulator()

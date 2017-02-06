@@ -1,10 +1,3 @@
-/***************************************************************************
-                          qpskdemodulator.h  -  description
-                             -------------------
-    begin                : Sat Jun 2 2001
-    copyright            : (C) 2001 by Volker Schroer
-    email                : dl1ksv@gmx.de
- ***************************************************************************/
 
 /***************************************************************************
  *                                                                         *
@@ -28,18 +21,19 @@ class Viterbi;
 
 class QPskDemodulator : public CPskDemodulator  {
 public: 
-	QPskDemodulator();
-	~QPskDemodulator();
+  QPskDemodulator();
+  ~QPskDemodulator();
+  void Init(double Fs ,int BlockSize);
 
 protected:	
-/** Decodes a QPSK Symbol */
-//void DecodeSymbol( complex<double> newsamp);
-void DecodeSymbol( double);
-
-void CalcQuality(double);	
+  /** Decodes a QPSK Symbol */
+  //void DecodeSymbol( complex<double> newsamp);
+  void DecodeSymbol( double);
+  double calcFreqError(complex<double> s);
+  void CalcQuality(double);
 private:
- double ave1,ave2;
-Viterbi *v;
+  double ave1,ave2;
+  Viterbi *v;
 
 
 };

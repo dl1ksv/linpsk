@@ -1,12 +1,4 @@
 /***************************************************************************
-                          bpskdemodulator.cpp  -  description
-                             -------------------
-    begin                : Sat Jun 2 2001
-    copyright            : (C) 2001 by Volker Schroer
-    email                : dl1ksv@gmx.de
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,23 +7,22 @@
  *    based on the work of  Moe Wheatly, AE4JY                             *
  ***************************************************************************/
 
-#include "bpskdemodulator.h"
+#include "psk63demodulator.h"
 #include "firfilter.h"
 
-BPskDemodulator::BPskDemodulator():CPskDemodulator()
+PSk63Demodulator::PSk63Demodulator():CPskDemodulator()
 {
   ave1=1.0;
   ave2=1.0;
-
 }
-BPskDemodulator::~BPskDemodulator()
+PSk63Demodulator::~PSk63Demodulator()
 {
   if( downFilter )
     delete downFilter;
   if ( syncFilter )
     delete syncFilter;
 }
-void BPskDemodulator::DecodeSymbol(double angle)
+void PSk63Demodulator::DecodeSymbol(double angle)
 
 {
 
@@ -41,8 +32,7 @@ void BPskDemodulator::DecodeSymbol(double angle)
   CalcQuality(angle);
   bit = GetBPSKSymb();
 
-//  if( (bit==0) && m_LastBitZero )	//if character delimiter
-    if( (!bit) && m_LastBitZero )	//if character delimiter
+  if( (bit==0) && m_LastBitZero )	//if character delimiter
     {
       if(m_BitAcc != 0 )
         {
@@ -63,8 +53,7 @@ void BPskDemodulator::DecodeSymbol(double angle)
     {
       m_BitAcc <<= 1;
       m_BitAcc |= bit;
-//      if(bit==0)
-      if(!bit)
+      if(bit==0)
         m_LastBitZero = true;
       else
         m_LastBitZero = false;
@@ -86,12 +75,12 @@ void BPskDemodulator::DecodeSymbol(double angle)
 
 
 }
-bool BPskDemodulator::GetBPSKSymb()
+bool PSk63Demodulator::GetBPSKSymb()
 {
   return (Phase_Vector.real()> 0.0);
 }
 
-void BPskDemodulator::CalcQuality(  double angle )
+void PSk63Demodulator::CalcQuality(  double angle )
 {
 
   double temp;
@@ -113,16 +102,17 @@ void BPskDemodulator::CalcQuality(  double angle )
   m_DevAve = 100. -m_DevAve *63.67;
 
 }
-void BPskDemodulator::Init(double Fs ,int BlockSize)
+void PSk63Demodulator::Init(double Fs ,int BlockSize)
 {
   SampleRate = Fs;        //sample rate
   NxSamples = BlockSize;  //size data input buffer
-  downFilter = new FIRFilter(PI2*31.25/Fs,79,ComplexData,10.);
-  syncFilter = new FIRFilter(PI2*31.25*18./Fs,79, ComplexData,5.);
-  downRate = 18;
-
+  downFilter = new FIRFilter(PI2*125./Fs,79,ComplexData,10.);
+  syncFilter = new FIRFilter(PI2*62.5*9./Fs,79, ComplexData);
+  downRate = 9;
+  f1=31.25;
+  f2=93.75;
 }
-double BPskDemodulator::calcFreqError(complex<double> s)
+double PSk63Demodulator::calcFreqError(complex<double> s)
 {
  double x,y;
  complex<double> z;
@@ -130,7 +120,7 @@ double BPskDemodulator::calcFreqError(complex<double> s)
   z=s/abs(s);
  else z=s;
  x= z.real()*z.imag();
- x /=5000.; // Adopt deviation to samplerate
+ x /=2500.; // Adopt deviation to samplerate
 // x /=2.8016548; //Gain
  y=x_loop_1+x +0.2861361823*y_loop_1;
  x_loop_1=x;

@@ -127,6 +127,8 @@ QList<QColor> WindowColors;
 /** Macros **/
 QVector<Macro> macroList;
 QStringList tokenList;
+/** Digital modes */
+QStringList modeList;
 
 signals:
 void StartRx();

@@ -178,12 +178,14 @@ void CRxDisplay::process_rxdata()
   for ( CRxChannel * p = RxChannel;p != 0;p = p->getNextChannel() )
   {
     modtype=p->getModulationType();
-    if ( ( modtype != RTTY ) && ( modtype != MFSK16 ) /* RIP && (modtype != RTTY2) */ )
+/**    if ( ( modtype != RTTY ) && ( modtype != MFSK16 )  && (modtype != PSK63)  )
+//    if ( ( modtype == BPSK ) || ( modtype == QPSK )  )
+//      if ( ( modtype == BPSK ) )
     {
 
       p->processInput ( outbuf, output );
     }
-    else
+    else */
       p->processInput ( inbuf, output );
   }
   /** Update RxFreq for the active Channel **/

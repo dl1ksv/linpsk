@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 #include "rttydemodulator.h"
-#include "firfilter.h"
+//#include "firfilter.h"
 #include "constants.h"
 
 
@@ -127,7 +127,7 @@ char RTTYDemodulator::baudot_code ( char data )
   return c;
 }
 
-bool RTTYDemodulator::Init ( double FS, int  )
+void RTTYDemodulator::Init( double FS, int  )
 {
   SampleRate = FS;
   Baudrate = 45.45;
@@ -142,7 +142,6 @@ bool RTTYDemodulator::Init ( double FS, int  )
   F1inc = 0.;
   F0max = 0.;
   F1max = 0.;
-  return true;
 }
 
 void RTTYDemodulator::ProcessInput ( double *input, double * )

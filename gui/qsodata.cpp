@@ -298,7 +298,7 @@ void QSOData::save()
     switch ( settings.ActChannel->getModulationType() )
     {
       case QPSK:
-      case BPSK:
+      case BPSK31:
         s.append ( "5>PSK31\n" );
         break;
 

@@ -62,7 +62,7 @@ int MFSKDemodulator::getSquelchValue()
 
 	return 0;
 }
-bool MFSKDemodulator::Init ( double FS, int NumberofSamples )
+void MFSKDemodulator::Init( double FS, int NumberofSamples )
 {
 	int i;
 	NxSamples = NumberofSamples;
@@ -79,8 +79,6 @@ bool MFSKDemodulator::Init ( double FS, int NumberofSamples )
 		delayLine[i] = complex<double> ( 0.0, 0.0 );
 	for ( i = 0; i < RESOLUTION;i++ )
 		twiddles[i] = complex<double> ( cos ( i *  M_PI / RESOLUTION ), - sin ( i  * M_PI / RESOLUTION ) );
-
-	return true;
 }
 
 

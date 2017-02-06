@@ -117,7 +117,7 @@ void SpectrumWindow::plotSpectrum(bool overload,float *fftdata,int minfreq,int m
       z=(int)(((  pRx->getRxFrequency()-minfreq)*xmax)/(maxfreq-minfreq)+0.5);
       p.drawLine(z,0,z,ymax);
 
-      if ( (z =  pRx->get2RxFrequency()) != 0 ) // RTTY demands to lines
+      if ( (z =  pRx->get2RxFrequency()) != 0 ) // RTTY demands two lines
         {
           z=(( z-minfreq)*xmax)/(maxfreq-minfreq);
           p.drawLine(z,0,z,ymax);
@@ -171,7 +171,7 @@ void SpectrumWindow::plotVector ( QPainter *p )
   xc = xc + 20;
   yc = yc + 20;
   p->setPen ( Qt::green );
-  for(int i=0; i< 11; i++)
+  for(int i=0; i< PHASE_DISPLAY_BUFFER_LENGTH; i++)
   {
     mag=abs(Phase[i]);
     if ( mag > 0.001)

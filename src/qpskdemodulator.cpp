@@ -1,12 +1,4 @@
 /***************************************************************************
-                          qpskdemodulator.cpp  -  description
-                             -------------------
-    begin                : Sat Jun 2 2001
-    copyright            : (C) 2001 by Volker Schroer
-    email                : dl1ksv@gmx.de
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,6 +7,7 @@
  *    based on the work of  Moe Wheatly, AE4JY                             *  
  ***************************************************************************/
 
+#include "firfilter.h"
 #include "qpskdemodulator.h"
 #include "viterbi.h"
 
@@ -51,6 +44,10 @@ v=new Viterbi(5,0x19,0x17,qdistance);
 }
 QPskDemodulator::~QPskDemodulator()
 {
+  if( downFilter )
+    delete downFilter;
+  if ( syncFilter )
+    delete syncFilter;
 }
 void QPskDemodulator::DecodeSymbol(double angle)
 
@@ -107,15 +104,6 @@ char ch =0;
 
 }
 
-//////////////////////////////////////////////////////////////////////
-// Calculate signal quality based on the statistics of the phase
-//	difference angle.  The more dispersion of the "0" and "180" degree
-//  phase shifts, the worse the signal quality.  This information is used
-//  to activate the squelch control.  If 20 consecutive "180" degree shifts
-//  occur, the squelch is forced on, and if 20 consecutive "0" degree
-//  shifts occur, the squelch is forced off quickly.
-//////////////////////////////////////////////////////////////////////
-
 void QPskDemodulator::CalcQuality(  double angle )
 {
 
@@ -134,7 +122,6 @@ else
  }
 if ( angle < 0.0 )
  temp = -temp;
-m_QFreqError = temp;
 temp = fabs(temp);
 
  
@@ -149,4 +136,28 @@ m_DevAve = 100. -m_DevAve *110.;
 
 }
 
+void QPskDemodulator::Init(double Fs ,int BlockSize)
+{
+  SampleRate = Fs;        //sample rate
+  NxSamples = BlockSize;  //size data input buffer
+  downFilter = new FIRFilter(PI2*31.25/Fs,79,ComplexData,10.);
+  syncFilter = new FIRFilter(PI2*31.25*18./Fs,79, ComplexData,5.);
+  downRate = 18;
 
+}
+double QPskDemodulator::calcFreqError(complex<double> s)
+{
+ double x,y;
+ complex<double> z;
+ if (abs(s) >1 )
+  z=s/abs(s);
+ else z=s;
+ x= z.real()*z.imag();
+ x /=5000.; // Adopt deviation to samplerate
+// x /=2.8016548; //Gain
+ y=x_loop_1+x +0.2861361823*y_loop_1;
+ x_loop_1=x;
+ y_loop_1=y;
+ return -y;
+
+}

@@ -15,22 +15,54 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <assert.h>
 #include "firfilter.h"
+#include <math.h>
 
-FIRFilter::FIRFilter(double *Filtercoeffs,int Filterlength,FilterMode Mode)
+FIRFilter::FIRFilter(double Fc, int Filterlength, FilterMode Mode, double gain)
 {
-NxCoeffs=Filterlength;
+  // Cutoff Fc in radians
+  double normalize = 0;
+  int fhalbe;
+  assert(Filterlength%2 == 1);
+  fhalbe=(Filterlength-1)/2;
+  NxCoeffs=Filterlength;
 
-h=new double[Filterlength];
-if (Mode == RealData)
- filterbuffer=new double[Filterlength];
-else
- cfilterbuffer=new complex<double>[Filterlength];
- 
+  h=new double[Filterlength];
+  if (Mode == RealData)
+    {
+     filterbuffer=new double[Filterlength];
+     cfilterbuffer = 0;
+    }
+  else
+    {
+     cfilterbuffer=new complex<double>[Filterlength];
+     filterbuffer =0;
+    }
+  /** Calculate coefficients of sinc lp filter */
+
+// sin(x-tau)/(x-tau)
+  for (int i = 0; i < Filterlength; i++)
+      if (i == fhalbe)
+          h[i] = Fc;
+      else
+          h[i] = sin(Fc*(i - fhalbe))/(i-fhalbe);
+// blackman window
+  for (int i = 1; i < Filterlength+1; i++)
+      h[i-1] = h[i-1] * (0.42 - 0.5 * cos(2*M_PI*i/(Filterlength+1)) + 0.08 * cos(4*M_PI*i/(Filterlength+1)));
+//  h[0]=0;
+//  h[Filterlength-1]=0;
+// normalization factor
+  for (int i = 1; i < Filterlength-1; i++)
+      normalize += h[i];
+  if(gain !=0)
+    normalize /=gain;
+// normalize the filter
+  for (int i = 1; i < Filterlength-1; i++)
+     h[i] /= normalize;
+
 for(int i=0;i <Filterlength;i++)
  {
-   if(Filtercoeffs != 0)
-    h[i] = *(Filtercoeffs+i);
    if (Mode == RealData)
     filterbuffer[i]=0.0;
    else
@@ -76,14 +108,15 @@ for(int i=0; i <NxSamples;i++)
  }  
 
 
-fbBuffer=fbPtr;          
+  fbBuffer=fbPtr;
 }
+/**
 void FIRFilter::setnewCoeffs(double *Filtercoeffs)
 {
 for(int i=0;i <NxCoeffs;i++)
    h[i] = *(Filtercoeffs+i);
  }
-
+**/
 void FIRFilter::processFilter(complex<double> *input,complex<double> *output,int NxSamples)
 {
  complex<double> *oPtr,*fbPtr;

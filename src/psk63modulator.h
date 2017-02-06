@@ -17,60 +17,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "bpskmodulator.h"
-#include "constants.h"
-#include "parameter.h"
-#include "ctxbuffer.h"
+#ifndef PSK63MODULATOR_H
+#define PSK63MODULATOR_H
 
-extern Parameter settings;
+#include "pskmodulator.h"
 
-#define SYM_NOCHANGE 0 //Stay the same phase
-#define SYM_P180 2  //Plus 180 deg
-
-
-BpskModulator::BpskModulator(int FS, double frequency, CTxBuffer *TxBuffer):PskModulator(FS,frequency,TxBuffer)
+class Psk63Modulator : public PskModulator
 {
-}
-char BpskModulator::getNextSymbolBit()
-{
-  int bit;
-  if(txShiftRegister != 0)
-    {
-      if(txShiftRegister &0x8000)
-        bit=SYM_NOCHANGE;
-      else
-        bit=SYM_P180;
-      txShiftRegister <<=1;
-      if(txShiftRegister == 0)
-        addEndingZero=true;
-    }
-  else
-    {
-      if(addEndingZero)
-      {
-        bit=SYM_P180;
-        addEndingZero=false;
-       }
-      else
-        {
-          int ch;
-          if((ch = getChar())>= 0)
-            {       // No controlcode
-              txShiftRegister = VARICODE_TABLE[ ch&0xFF ];
-              bit=SYM_P180; //Start with a zero
-             }
-          else
-            switch ( ch )
-            {
-              case TXON_CODE:
-              case TXTOG_CODE:    //Idle
-                bit = SYM_P180;
-                break;
-              case TXOFF_CODE:
-                bit = SYM_NOCHANGE;
-                break;
-            }
-        }
-    }
-  return bit;
-}
+public:
+  Psk63Modulator(int FS, double frequency, CTxBuffer *TxBuffer);
+
+protected:
+  char getNextSymbolBit();
+};
+
+#endif // BPSKMODULATOR_H

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          firfilter.h  -  description
+                          bpskdemodulator.h  -  description
                              -------------------
-    begin                : Fr Nov 7 2003
-    copyright            : (C) 2003 by Volker Schroer
+    begin                : Sat Jun 2 2001
+    copyright            : (C) 2001 by Volker Schroer
     email                : dl1ksv@gmx.de
  ***************************************************************************/
 
@@ -12,32 +12,36 @@
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
- *                                                                         *
+ *   based on the work of Moe Wheatley, AE4JY                              *
  ***************************************************************************/
 
-#ifndef FIRFILTER_H
-#define FIRFILTER_H
+#ifndef PSK63DEMODULATOR_H
+#define PSK63DEMODULATOR_H
 
 #include <complex>
-using namespace std;
-/**Implements an FIR- Filter
+#include "cpskdemodulator.h"
+
+
+/**Implementation of the BPSK Demodulator
   *@author Volker Schroer
   */
-enum FilterMode{RealData,ComplexData};
-class FIRFilter {
+
+class PSk63Demodulator : public CPskDemodulator  {
 public: 
-	FIRFilter(double Fc, int Filterlength, FilterMode, double gain =1.);
-	~FIRFilter();
-  void processFilter(double *input,double *output,int NxSamples);
-  void processFilter(complex<double> *input,complex<double> *output,int NxSamples);
-//  void setnewCoeffs(double *Filtercoeffs);
+  PSk63Demodulator();
+  ~PSk63Demodulator();
+   void Init(double Fs ,int BlockSize);
+protected:	
+/** Decodes a BPSK Symbol */
+
+  void DecodeSymbol( double);
+
+  void CalcQuality(double);
+  double calcFreqError(complex<double> s);
 private:
-int NxCoeffs;
-double *h;
-complex<double> *cfilterbuffer;
-complex<double> *cfbBuffer;
-double *filterbuffer;
-double *fbBuffer;  
+  bool GetBPSKSymb();
+  double ave1;
+  double ave2;
 };
 
 #endif

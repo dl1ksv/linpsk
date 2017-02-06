@@ -429,7 +429,7 @@ void CSound::PTT ( bool mode )
 
 bool CSound::close_Device()
 {
-  wait();
+//  wait();
   if ( handle != 0 )
     snd_pcm_close ( handle );
   handle = 0;
@@ -481,6 +481,12 @@ void CSound::record()
       if ( available >= BUF_SIZE )
         emit samplesAvailable();
     }
+    else if ( err > 0)
+      {
+        qDebug("Strange situation, only %d bytes read\nRetry",err);
+        snd_pcm_prepare ( handle );
+        snd_pcm_start ( handle );
+      }
     else
     {
       if ( err == -EPIPE )
@@ -514,7 +520,7 @@ void CSound::play()
   toBePlayed = 0;
   qDebug ( "Play thread started" );
 
-  while ( started )
+  while ( started || (!started && (toBePlayed >0))) // We should flush the buffer
   {
     LockPointers.lock();
     if ( toBePlayed <= BUF_SIZE && ( !signaled ) )
@@ -522,16 +528,9 @@ void CSound::play()
       emit samplesAvailable();
       signaled = true;
     }
-//    if ( free > ( 2* BUF_SIZE ) )
-//      qDebug ( "Out of bounds" );
     while ( toBePlayed < laenge && started )
       WakeUp.wait ( &LockPointers );
     LockPointers.unlock();
-    if ( !started )
-    {
- //     qDebug ( "Stop received" );
-      break;
-    }
     if ( toBePlayed >= BUF_SIZE )
       signaled = false;
     for ( int i = 0;i < laenge;i++ )
@@ -572,7 +571,7 @@ void CSound::play()
 
     }
   }
-  snd_pcm_drop ( handle );
+  snd_pcm_drain ( handle );
   qDebug ( "Play Thread terminated" );
 }
 int CSound::getDeviceNumber(QString device)

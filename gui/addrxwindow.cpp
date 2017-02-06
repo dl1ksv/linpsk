@@ -23,16 +23,13 @@
 
 extern Parameter settings;
 
-AddRxWindow::AddRxWindow(QWidget* parent)
+AddRxWindow::AddRxWindow(QStringList modeList, QWidget* parent)
 : QDialog( parent ), Ui::AddRxWindow()
 {
-	setupUi(this);
-RxMode->insertItem(0,"BPSK");
-RxMode->insertItem(1,"QPSK");
-RxMode->insertItem(2,"RTTY");
-RxMode->insertItem(3,"MFSK16");
-RxMode->setCurrentRow(0);
-TitleText->setText("Rx " + QString().setNum(settings.RxChannels+1));
+  setupUi(this);
+  RxMode->addItems(modeList);
+  RxMode->setCurrentRow(0);
+  TitleText->setText("Rx " + QString().setNum(settings.RxChannels+1));
 
 }
 

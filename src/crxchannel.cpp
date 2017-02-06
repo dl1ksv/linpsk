@@ -21,6 +21,7 @@
 #include "crxwindow.h"
 #include "qpskdemodulator.h"
 #include "bpskdemodulator.h"
+#include "psk63demodulator.h"
 #include "rttydemodulator.h"
 #include "mfskdemodulator.h"
 #include "parameter.h"
@@ -43,6 +44,8 @@ CRxChannel::CRxChannel ( int ID, QWidget *parent, Mode DemodulatorType, unsigned
   {
     case QPSK:
       Demodulator = new QPskDemodulator();
+      SampleRate = 11025;
+      BufferLength = BUF_SIZE;
       break;
     case RTTY:
       Demodulator = new RTTYDemodulator();
@@ -54,13 +57,22 @@ CRxChannel::CRxChannel ( int ID, QWidget *parent, Mode DemodulatorType, unsigned
       SampleRate = 11025;
       BufferLength = BUF_SIZE;
       break;
-
-    default:
-      Demodulator = new BPskDemodulator();
+    case BPSK63:
+      Demodulator = new PSk63Demodulator();
+      SampleRate = 11025;
+      BufferLength = BUF_SIZE;
       break;
+    case BPSK31:
+      Demodulator = new BPskDemodulator();
+      SampleRate = 11025;
+      BufferLength = BUF_SIZE;
+      break;
+/**    default:
+      Demodulator = new BPskDemodulator();
+      break;*/
   }
   Demodulator->Init ( SampleRate, BufferLength ); // Should changed later to
-  // adjusted Samplerate
+                                                  // adjusted Samplerate
   Demodulator->setRxFrequency ( double ( Freq ) );
   Demodulator->setAfcMode ( Demodulator->AfcProperties() );
   RxWindow = new CRxWindow ( parent );
@@ -168,7 +180,8 @@ void CRxChannel::setPrevChannel ( CRxChannel *p )
 
 complex<float>* CRxChannel::getPhasePointer()
 {
-  if ( ( RxMode == BPSK ) || ( RxMode == QPSK ) )
+//  if ( ( RxMode == BPSK ) || ( RxMode == QPSK ) || ( RxMode == PSK63))
+  if ( !(( RxMode == RTTY ) || ( RxMode == MFSK16 )))
     return Demodulator->getPhasePointer();
   else
     return 0;
@@ -243,6 +256,8 @@ void CRxChannel::setMode ( Mode DemodulatorType )
     {
       case QPSK:
         Demodulator = new QPskDemodulator();
+        SampleRate = 11025;
+        BufferLength = BUF_SIZE;
         break;
       case RTTY:
         Demodulator = new RTTYDemodulator();
@@ -256,9 +271,21 @@ void CRxChannel::setMode ( Mode DemodulatorType )
         BufferLength = BUF_SIZE;
         break;
 
-      default:
-        Demodulator = new BPskDemodulator();
+      case BPSK63:
+        Demodulator = new PSk63Demodulator();
+        SampleRate = 11025;
+        BufferLength = BUF_SIZE;
         break;
+
+      case BPSK31:
+        Demodulator = new BPskDemodulator();
+        SampleRate = 11025;
+        BufferLength = BUF_SIZE;
+        break;
+
+/**      default:
+        Demodulator = new BPskDemodulator();
+        break; */
     }
     RxMode = DemodulatorType;
     Demodulator->Init ( SampleRate, BufferLength ); // Should changed later to

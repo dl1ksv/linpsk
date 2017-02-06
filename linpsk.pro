@@ -91,7 +91,6 @@ HEADERS += gui/activatemacros.h \
            src/parameter.h \
            src/processlogdata.h \
            src/pskmodulator.h \
-           src/psktable.h \
            src/qpskdemodulator.h \
            src/qpskmodulator.h \
            src/readonlystringlistmodel.h \
@@ -101,7 +100,9 @@ HEADERS += gui/activatemacros.h \
            src/tabwidget.h \
            src/viterbi.h \
            src/waterfallwindow.h \
-           src/waveinput.h
+           src/waveinput.h \
+           src/psk63demodulator.h \
+           src/psk63modulator.h
 FORMS += gui/activatemacros.ui \
          gui/addmacro.ui \
          gui/addrxwindow.ui \
@@ -170,7 +171,9 @@ SOURCES += gui/activatemacros.cpp \
            src/tabwidget.cpp \
            src/viterbi.cpp \
            src/waterfallwindow.cpp \
-           src/waveinput.cpp
+           src/waveinput.cpp \
+           src/psk63demodulator.cpp \
+           src/psk63modulator.cpp
 RESOURCES += src/application.qrc
 
 DISTFILES += \

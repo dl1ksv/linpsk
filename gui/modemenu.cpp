@@ -23,17 +23,15 @@
 #include "parameter.h"
 #include "crxchannel.h"
 
+
 extern Parameter settings;
 
-ModeMenu::ModeMenu(QWidget* parent, Qt::WindowFlags fl)
+ModeMenu::ModeMenu(QStringList modeList, QWidget* parent, Qt::WindowFlags fl)
 : QDialog( parent, fl ), Ui::ModeMenu()
 {
-	setupUi(this);
-RxMode->insertItem(0,"BPSK");
-RxMode->insertItem(1,"QPSK");
-RxMode->insertItem(2,"RTTY");
-RxMode->insertItem(3,"MFSK16");
+  setupUi(this);
 
+RxMode->addItems(modeList);
 RxMode->setCurrentRow(settings.ActChannel->getModulationType() );
 connect(RxMode,SIGNAL(itemSelectionChanged ()),this,SLOT(changeView()));
 Stopbits=new QButtonGroup(this);

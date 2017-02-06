@@ -17,7 +17,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "bpskmodulator.h"
+#include "psk63modulator.h"
 #include "constants.h"
 #include "parameter.h"
 #include "ctxbuffer.h"
@@ -28,10 +28,13 @@ extern Parameter settings;
 #define SYM_P180 2  //Plus 180 deg
 
 
-BpskModulator::BpskModulator(int FS, double frequency, CTxBuffer *TxBuffer):PskModulator(FS,frequency,TxBuffer)
+Psk63Modulator::Psk63Modulator(int FS, double frequency, CTxBuffer *TxBuffer):PskModulator(FS,frequency,TxBuffer)
 {
+  symbolSize=(((100 * FS) / 6250) + 1);
+  periodTime=1./62.5;
+  period=periodTime;
 }
-char BpskModulator::getNextSymbolBit()
+char Psk63Modulator::getNextSymbolBit()
 {
   int bit;
   if(txShiftRegister != 0)

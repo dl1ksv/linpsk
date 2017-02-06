@@ -33,7 +33,7 @@ class CRxChannel : public QObject
  {
  Q_OBJECT
 public: 
-	CRxChannel(int ID,QWidget* parent=0,Mode DemodulatorType= BPSK,unsigned int Freq=1000);
+        CRxChannel(int ID,QWidget* parent=0,Mode DemodulatorType= BPSK31,unsigned int Freq=1000);
 virtual ~CRxChannel();
   void insertChannel(CRxChannel * );
   void setPrevChannel(CRxChannel *);

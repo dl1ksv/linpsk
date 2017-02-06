@@ -22,6 +22,7 @@
 #define ADDRXWINDOW_H
 
 #include <QDialog>
+#include <QStringList>
 #include "ui_addrxwindow.h"
 #include "constants.h"
 
@@ -30,7 +31,7 @@ class AddRxWindow : public QDialog, private Ui::AddRxWindow
   Q_OBJECT
 
 public:
-  AddRxWindow(QWidget* parent = 0);
+  AddRxWindow(QStringList modeList,QWidget* parent = 0);
   ~AddRxWindow();
 Mode selectedMode();
 QString titleText();

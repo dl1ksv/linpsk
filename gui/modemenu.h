@@ -22,6 +22,7 @@
 #define MODEMENU_H
 
 #include <QDialog>
+#include <QStringList>
 #include "ui_modemenu.h"
 #include "constants.h"
 
@@ -32,12 +33,12 @@ class ModeMenu : public QDialog, private Ui::ModeMenu
   Q_OBJECT
 
 public:
-  ModeMenu(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+  ModeMenu(QStringList modeList,QWidget* parent = 0, Qt::WindowFlags fl = 0 );
   ~ModeMenu();
-  /*$PUBLIC_FUNCTIONS$*/
-void setParameter(ExtraParameter Param);
-ExtraParameter getParameter();
-Mode selectedMode();
+  void setParameter(ExtraParameter Param);
+  ExtraParameter getParameter();
+  Mode selectedMode();
+
 public slots:
   /*$PUBLIC_SLOTS$*/
 
@@ -45,6 +46,7 @@ protected:
 
 QButtonGroup *Stopbits;
 QButtonGroup *Parity;
+QStringList modeList;
 protected slots:
 
 void changeView();

@@ -72,7 +72,6 @@ CRxWindow::CRxWindow ( QWidget* parent )
     linesLayout->addWidget(ScrollBuffer[i]);
     ScrollBuffer[i]->setContextMenuPolicy ( Qt::NoContextMenu );
   }
-  DisplayLineHeight = ScrollBuffer[0]->height()-1;
   setBackgroundRole ( ScrollBuffer[0]->backgroundRole() );
   menu = new QMenu ( tr ( "Log value" ), DisplayBox );
   QAction *A = menu->addAction ( tr ( "Callsign" ) );
@@ -266,7 +265,23 @@ void CRxWindow::contextMenu ( QPoint p )
   int selectedLine, selectedColumn;
   char c = 0xF8;
   QPoint p1 = QCursor::pos();
-  selectedLine = (p.y()-3) / DisplayLineHeight;
+//  selectedLine = (p.y()-3) / (ScrollBuffer[0]->height()-1);
+  selectedLine = p.y() / ScrollBuffer[0]->height();
+
+#ifndef QT_NO_DEBUG
+  qDebug("Line %d selected, lineheight, %d ",selectedLine,ScrollBuffer[0]->height());
+  qDebug("*****Cursor: x: %i y: %i",p.x(),p.y());
+  int start;
+  start=selectedLine-4;
+  if(start <0)
+    start=0;
+  for(int i=start;i <=selectedLine;i++)
+    {
+      qDebug("Zeile: %i, %s",i,qPrintable(ScrollBuffer[i]->text()));
+    }
+  qDebug("***Menuposition x: %i y: %i",p1.x(),p1.y());
+#endif
+
   if(selectedLine >= RXWINDOWBUFFER)
     selectedLine=RXWINDOWBUFFER-1;
   selectedColumn=0;
@@ -294,17 +309,8 @@ void CRxWindow::contextMenu ( QPoint p )
     ScrollBuffer[selectedLine]->cursorWordForward ( true );
     selectedString = ScrollBuffer[selectedLine]->selectedText();
   }
-  /**
-  qDebug("*****Cursor: x: %i y: %i",p.x(),p.y());
-  int start;
-  start=selectedLine-4;
-  if(start <0)
-    start=0;
-  for(int i=start;i <=selectedLine;i++)
-    {
-      qDebug("Zeile: %i, %s",i,qPrintable(ScrollBuffer[i]->text()));
-    }
-    **/
+
+
   menu->exec ( p1 );
   ScrollBuffer[selectedLine]->deselect();
 }

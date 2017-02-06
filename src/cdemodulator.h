@@ -39,7 +39,7 @@ public:
  virtual double getRxFrequency(void);
  virtual double get2RxFrequency(void);
  /** Initialises something */
- virtual bool Init(double,int) = 0;
+ virtual void Init(double,int) = 0;
  virtual std::complex<float> * getPhasePointer();
  virtual int getSquelchValue() = 0;
  virtual AfcMode getAfcMode();

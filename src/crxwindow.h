@@ -79,7 +79,7 @@ private:
 
   QMenu *menu;
   QString selectedString;
-  int DisplayLineHeight;
+
 signals:
   void Triggered();
   void setQsoData(QsoData,QString);

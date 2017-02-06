@@ -30,29 +30,29 @@ class CTxBuffer;
 
 class CModulator : public QObject
 {
-Q_OBJECT
+  Q_OBJECT
 public: 
-	CModulator(int FS,CTxBuffer *);
-	~CModulator();
-        virtual void setParameter(RxTxParameterType,void *);
+  CModulator(int FS,CTxBuffer *);
+  ~CModulator();
+  virtual void setParameter(RxTxParameterType,void *);
 
-/** Calculate the Signal to be fed into the soundcard */
-	virtual int CalcSignal(double *data,int BufferSize) = 0;
-/** data Pointer to the computed signal values
+  /** Calculate the Signal to be fed into the soundcard */
+  virtual int CalcSignal(double *data,int BufferSize) = 0;
+  /** data Pointer to the computed signal values
     Size of Buffer for the computed signal
-		returns Number of computed signal values  and -Number at the end of Transmission
+                returns Number of computed signal values  and -Number at the end of Transmission
   **/
 
 protected: // Protected attributes
   /** Samplerate of Soundcard */
   unsigned int SampleRate;
-	CTxBuffer *Buffer;
+  CTxBuffer *transmitBuffer;
 
 
 public slots:
 
 signals:
-void charSend(char);
+  void charSend(char);
 
 };
 

@@ -1,10 +1,3 @@
-/***************************************************************************
-                          qpskmodulator.cpp  -  description
-                             -------------------
-    begin                : Don Feb 27 2003
-    copyright            : (C) 2003 by Volker Schroer
-    email                : dl1ksv@gmx.de
- ***************************************************************************/
 
 /***************************************************************************
  *                                                                         *
@@ -17,8 +10,8 @@
 
 #include "qpskmodulator.h"
 #include "constants.h"
-#define SYM_OFF 4		//No output
-#define SYM_ON 5		//constant output
+#define SYM_OFF 0		//No change
+#define SYM_ON 2		//Change
 // For the QPSK modulator/demodulator, rate 1/2 constraint length 5
 //   convolutional FEC coding is used.
 // The generator polynomials used are:
@@ -38,66 +31,67 @@
 // Lookup table to get symbol from non-inverted data stream
 static const unsigned char ConvolutionCodeTable[32] =
 {
-	2, 1, 3, 0, 3, 0, 2, 1,
-	0, 3, 1, 2, 1, 2, 0, 3,
-	1, 2, 0, 3, 0, 3, 1, 2,
-	3, 0, 2, 1, 2, 1, 3, 0
+  2, 1, 3, 0, 3, 0, 2, 1,
+  0, 3, 1, 2, 1, 2, 0, 3,
+  1, 2, 0, 3, 0, 3, 1, 2,
+  3, 0, 2, 1, 2, 1, 3, 0
 };
 
-QPskModulator::QPskModulator(int FS,double freq,CTxBuffer *TxBuffer):PSKModulator(FS,freq,TxBuffer)
+QPskModulator::QPskModulator(int FS,double freq,CTxBuffer *TxBuffer):PskModulator(FS,freq,TxBuffer)
 {
-m_TxCodeWord = 0;
+  m_TxCodeWord = 0;
 }
 QPskModulator::~QPskModulator()
 {
 }
-char QPskModulator::GetNextSymbol(void)
+char QPskModulator::getNextSymbolBit(void)
 {
-char symb;
-int ch;
-	symb = ConvolutionCodeTable[m_TxShiftReg&0x1F];	//get next convolution code
-	m_TxShiftReg = m_TxShiftReg<<1;
-	if( m_TxCodeWord == 0 )			//need to get next codeword
-	{
-		if( m_AddEndingZero )		//if need to add a zero
-		{
-			m_AddEndingZero = false;	//end with a zero
-		}
-		else
-		{
-			ch = GetChar();			//get next character to xmit
-			if( ch >=0 )			//if not a control code
-			{						//get next VARICODE codeword to send
-				m_TxCodeWord = VARICODE_TABLE[ ch&0xFF ];
-			}
-			else					//is a control code
-			{
-				switch( ch )
-				{
-				case TXON_CODE:
-					symb = SYM_ON;
-					break;
-				case TXTOG_CODE:
-					m_TxCodeWord = 0;
-					break;
-				case TXOFF_CODE:
-					symb = SYM_OFF;
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		if(m_TxCodeWord&0x8000 )
-		{
-			m_TxShiftReg |= 1;
-		}
-		m_TxCodeWord = m_TxCodeWord<<1;
-		if(m_TxCodeWord == 0)
-			m_AddEndingZero = true;	//need to add another zero
-	}
-	return symb;
+  char symb;
+  int ch;
+  symb = ConvolutionCodeTable[txShiftRegister&0x1F];	//get next convolution code
+//  symb=(4-symb)%4;
+  txShiftRegister = txShiftRegister<<1;
+  if( m_TxCodeWord == 0 )			//need to get next codeword
+    {
+      if( addEndingZero )		//if need to add a zero
+        {
+          addEndingZero = false;	//end with a zero
+        }
+      else
+        {
+          ch = getChar();			//get next character to xmit
+          if( ch >=0 )			//if not a control code
+            {						//get next VARICODE codeword to send
+              m_TxCodeWord = VARICODE_TABLE[ ch&0xFF ];
+            }
+          else					//is a control code
+            {
+              switch( ch )
+                {
+                case TXON_CODE:
+                  symb = SYM_ON;
+                  break;
+                case TXTOG_CODE:
+                  m_TxCodeWord = 0;
+                  break;
+                case TXOFF_CODE:
+                  symb = SYM_OFF;
+                  break;
+                }
+            }
+        }
+    }
+  else
+    {
+      if(m_TxCodeWord&0x8000 )
+        {
+          txShiftRegister |= 1;
+        }
+      m_TxCodeWord = m_TxCodeWord<<1;
+      if(m_TxCodeWord == 0)
+        addEndingZero = true;	//need to add another zero
+    }
+  return symb;
 }
 
 

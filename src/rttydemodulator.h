@@ -45,7 +45,7 @@ public:
 /** Prozess the input */
  void ProcessInput(double * input, double *);
  int getSquelchValue();
- bool Init(double,int);
+ void Init(double,int);
  virtual double get2RxFrequency();
  virtual void setParameter(RxTxParameterType,void * );
  virtual void *getParameter(RxTxParameterType);
