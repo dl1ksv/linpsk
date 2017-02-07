@@ -29,6 +29,7 @@ extern Parameter settings;
 SpectrumDisplay::SpectrumDisplay ( QWidget* parent ) : QFrame ( parent ), Ui::SpectrumDisplay()
 {
   setupUi(this);
+  spectrumWindow->setDisplayRange(MinFreq->value(),MaxFreq->value());
   inputdata = 0;
   for(int i=0; i< fftsize;i++)
     smoothedfft[i]=0.;
@@ -101,7 +102,7 @@ void SpectrumDisplay::translate ( void )
   int i, to, minfreq, maxfreq,tmp;
   minfreq = MinFreq->value();
   maxfreq = MaxFreq->value();
-  to = int ( maxfreq * fftsize *4/ settings.sampleRate );
+  to = int ( maxfreq * fftsize *2/ settings.sampleRate );
   for ( i = 0;i < displayWidth;i++ )
     {
       tmp= ( ( ( maxfreq - minfreq ) * i * to / displayWidth ) + minfreq * to ) / maxfreq;

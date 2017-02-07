@@ -17,10 +17,11 @@
 #ifndef CDEMODULATOR_H
 #define CDEMODULATOR_H
 
+using namespace std;
+#include "constants.h"
 #include <complex>
 #include <qobject.h>
-//#include <cstdio>
-#include "constants.h"
+
 /**Base class for all possible types of demodulators
   *@author Volker Schroer
   */
@@ -40,7 +41,7 @@ public:
  virtual double get2RxFrequency(void);
  /** Initialises something */
  virtual void Init(double,int) = 0;
- virtual std::complex<float> * getPhasePointer();
+ virtual complex<float> *getPhasePointer();
  virtual int getSquelchValue() = 0;
  virtual AfcMode getAfcMode();
  virtual AfcMode AfcProperties() = 0;

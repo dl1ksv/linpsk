@@ -298,10 +298,14 @@ void QSOData::save()
     switch ( settings.ActChannel->getModulationType() )
     {
       case QPSK:
+        s.append( "6>QPSK31");
+        break;
       case BPSK31:
         s.append ( "5>PSK31\n" );
         break;
-
+      case BPSK63:
+        s.append ( "5>PSK63\n" );
+        break;
       case RTTY:
         s.append ( "4>RTTY\n" );
         break;

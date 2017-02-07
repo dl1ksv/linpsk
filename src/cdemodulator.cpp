@@ -38,6 +38,10 @@ void CDemodulator::setRxFrequency(double freq)
     OszFreqinc = freq*PI2/SampleRate;
   }
 }
+complex<float> *CDemodulator::getPhasePointer()
+{
+  return NULL;
+}
 
 double CDemodulator::getRxFrequency(void)
 {
@@ -61,10 +65,6 @@ return UseAfc;
 bool CDemodulator::getSquelchState()
 {
 return Squelch;
-}
-std::complex<float> * CDemodulator::getPhasePointer()
-{
-return 0;
 }
 int CDemodulator::getThreshold()
 {

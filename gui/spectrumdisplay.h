@@ -30,7 +30,8 @@ class QWidget;
 /**
   *@author Volker Schroer
   */
-const int fftsize=1024; // Check size to protect arrays
+//const int fftsize=1024; // Check size to protect arrays
+const int fftsize=2048; // Check size to protect arrays
 
 class SpectrumDisplay : public QFrame , private Ui::SpectrumDisplay
 {

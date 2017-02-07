@@ -64,11 +64,12 @@ private:
   double inbuf[BUF_SIZE];
   CRxChannel *RxChannel;
   /** Decimation Filter to reduce samplerate */
-  void ProcDec2Fir ( double *pIn, double *pOut, int BlockSize );
-  double *dec2fir; // queue for decimation by 2 filter
+//  void ProcDec2Fir ( double *pIn, double *pOut, int BlockSize );
+//  double *dec2fir; // queue for decimation by 2 filter
   double outbuf[BUF_SIZE];
-  double *m_pDec2InPtr;
-  double output[BUF_SIZE/2];
+//  double *m_pDec2InPtr;
+//  double output[BUF_SIZE/2];
+  double output[BUF_SIZE];
   fftw_plan plan;
 
 signals:

@@ -30,6 +30,7 @@ class SpectrumWindow : public QFrame
 public:
   explicit SpectrumWindow(QWidget *parent = 0);
   void plotSpectrum(bool overload, float *fftdata, int minfreq, int maxfreq);
+  void setDisplayRange(int minfreq, int maxfreq);
   void setColorList(QList<QColor> *c);
   void mousePressEvent ( QMouseEvent *e );
   void setPhasePointer(std::complex<float> *);
@@ -40,6 +41,8 @@ private:
   QPixmap *pdisplay;   // Display for double buffering
   int baseline; // Y Position of X- Axis in window
   std::complex<float> *Phase;
+  int minDisplayfrequency;
+  int maxDisplayfrequency;
 
 protected:
     void resizeEvent( QResizeEvent * );

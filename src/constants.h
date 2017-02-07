@@ -60,7 +60,7 @@ struct Band {
   int preferedFreq;
 };
 
-enum Mode {BPSK31=0,QPSK,RTTY,MFSK16,BPSK63};
+enum Mode {BPSK31=0,BPSK63,QPSK,RTTY,MFSK16};
 
 
 enum AfcMode {Off,Narrow,Wide};

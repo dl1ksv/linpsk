@@ -1,12 +1,4 @@
 /***************************************************************************
-                          crxwindow.cpp  -  description
-                             -------------------
-    begin                : Mon Mar 6 2000
-    copyright            : (C) 2000 by Volker Schroer
-    email                : DL1KSV@gmx.de
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

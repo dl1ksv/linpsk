@@ -73,7 +73,7 @@ LinPSK::LinPSK ( QWidget* parent)
   Modulator = 0;
   inAction=false;
   // Content of modeList must correspond to enum Mode in constants.h
-  modeList << "BPSK31" << "QPSK" << "RTTY" << "MFSK16" << "BPSK63"  ;
+  modeList << "BPSK31" << "BPSK63" << "QPSK" << "RTTY" << "MFSK16"   ;
 #ifdef WITH_HAMLIB
   settings.rig =new RigControl();
 #endif

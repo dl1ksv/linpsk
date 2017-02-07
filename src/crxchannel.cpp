@@ -1,12 +1,4 @@
 /***************************************************************************
-                          crxchannel.cpp  -  description
-                             -------------------
-    begin                : Sam Jan 4 2003
-    copyright            : (C) 2003 by Volker Schroer
-    email                : dl1ksv@gmx.de
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -180,11 +172,7 @@ void CRxChannel::setPrevChannel ( CRxChannel *p )
 
 complex<float>* CRxChannel::getPhasePointer()
 {
-//  if ( ( RxMode == BPSK ) || ( RxMode == QPSK ) || ( RxMode == PSK63))
-  if ( !(( RxMode == RTTY ) || ( RxMode == MFSK16 )))
-    return Demodulator->getPhasePointer();
-  else
-    return 0;
+  return Demodulator->getPhasePointer();
 }
 
 int CRxChannel::getID()

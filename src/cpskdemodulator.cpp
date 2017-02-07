@@ -203,7 +203,6 @@ bool CPskDemodulator::symbSync(complex<double> sample)
     }
   sum = (ampsum == 0 ? 0 : sum / ampsum);
   m_BitPhasePos -= sum/5.0;
-//  m_BitPhasePos +=0.98;
   m_BitPhasePos +=1.01;
   if( m_BitPhasePos >=SYNCBUFFERLENGTH)
     {

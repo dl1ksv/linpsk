@@ -33,6 +33,11 @@ SpectrumWindow::SpectrumWindow(QWidget *parent) :
   pdisplay->fill();
   Farbe=0;
 }
+void SpectrumWindow::setDisplayRange(int minfreq, int maxfreq)
+{
+  minDisplayfrequency=minfreq;
+  maxDisplayfrequency=maxfreq;
+}
 void SpectrumWindow::resizeEvent(QResizeEvent *)
 {
   int x=2*frameWidth();
@@ -41,7 +46,7 @@ void SpectrumWindow::resizeEvent(QResizeEvent *)
   pdisplay =new QPixmap (this->width()-x,this->height()-x);
   pdisplay->fill();
   QPainter p(pdisplay);
-  paintLineal(&p,pdisplay->width(),pdisplay->height(),100,2500);
+  paintLineal(&p,pdisplay->width(),pdisplay->height(),minDisplayfrequency,maxDisplayfrequency);
   p.end();
 }
 

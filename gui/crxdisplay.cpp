@@ -1,12 +1,4 @@
 /***************************************************************************
-                          |FILENAME|  -  description
-                             -------------------
-    begin                : |DATE|
-    copyright            : (C) |YEAR| by |AUTHOR|
-    email                : |EMAIL|
- ***************************************************************************/
-
-/***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,11 +23,6 @@
 #include "parameter.h"
 
 extern Parameter settings;
-/*
- *  Constructs a CRxDisplay which is a child of 'parent', with the
- *  name 'name'.'
- */
-
 
 
 CRxDisplay::CRxDisplay ( QWidget* parent )
@@ -44,8 +31,6 @@ CRxDisplay::CRxDisplay ( QWidget* parent )
   setupUi(this);
 
   Sound = 0;
-
-  dec2fir = new double[DEC2_LPFIR_LENGTH];
 
   RxChannel = new CRxChannel ( 0, this );
   RxHeader->insertTab ( 0, RxChannel->getWindow(),QString("Rx 1") );
@@ -64,7 +49,7 @@ CRxDisplay::CRxDisplay ( QWidget* parent )
   Squelch->setSquelchState ( RxChannel->getSquelchState() );
 
 // Creating Variables for the fft
-  plan = fftw_plan_r2r_1d ( BUF_SIZE / 2, outbuf, output, FFTW_R2HC , FFTW_PATIENT );
+    plan = fftw_plan_r2r_1d ( BUF_SIZE , outbuf, output, FFTW_R2HC , FFTW_PATIENT );
 }
 
 /*
@@ -98,10 +83,6 @@ bool CRxDisplay::start_process_loop()
 
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_rxdata() ) );
   }
-  m_pDec2InPtr = dec2fir;
-
-  for ( int i = 0; i < DEC2_LPFIR_LENGTH;i++ )
-    dec2fir[i] = 0.0; // fill delay buffer with zero
 
   if ( ! Sound->open_Device_read ( &errorstring ) )  //Something went wrong in Opening Input File
   {
@@ -118,46 +99,6 @@ bool CRxDisplay::start_process_loop()
   return true;
 }
 
-void CRxDisplay::ProcDec2Fir ( double *pIn, double *pOut, int BlockSize )
-{
-  /**
-  Decimate by 2 FIR filter on 'BlockSize' samples.
-  pIn == pointer to input array of double's (can be same buffer as pOut )
-  pOut == pointer to output array of double's
-  Blocksize == number of samples to process
-  This Procdeure is taken from WinPSK by Moe Wheatley
-  **/
-  int i, j;
-  double acc;
-  const double* Kptr;
-  double* Firptr;
-  double* Qptr;
-  double* Inptr;
-  Inptr = m_pDec2InPtr; //use automatic copies of member variables
-  Qptr =  dec2fir;   // for better speed.
-  j = 0;
-  for ( i = 0; i < BlockSize; i++ ) // put new samples into Queue
-  {
-    if ( --Inptr < Qptr ) //deal with wraparound
-      Inptr = Qptr + DEC2_LPFIR_LENGTH - 1;
-    *Inptr = pIn[i];
-    if ( i&1 ) //calculate MAC's every other time for decimation by 2
-    {
-      acc = 0.0;
-      Firptr = Inptr;
-      Kptr = Dec2LPCoef;
-      while ( Kptr < ( Dec2LPCoef + DEC2_LPFIR_LENGTH ) ) //do the MAC's
-      {
-        acc += ( ( *Firptr++ ) * ( *Kptr++ ) );
-        if ( Firptr >= Qptr + DEC2_LPFIR_LENGTH ) //deal with wraparound
-          Firptr = Qptr;
-      }
-      pOut[j++] = acc;  //save output sample
-    }
-  }
-  m_pDec2InPtr = Inptr;  // save position in circular delay line
-}
-
 void CRxDisplay::process_rxdata()
 
 {
@@ -166,50 +107,37 @@ void CRxDisplay::process_rxdata()
   if ( Sound->getSamples ( inbuf, BUF_SIZE ) == 0 )
     return; // No sample available, try later
   overload = false;
-  ProcDec2Fir ( inbuf, outbuf , BUF_SIZE ); // 2uS per sample
-
-
   RxFreq->setFrequency ( settings.ActChannel->getRxFrequency() );
   Squelch->setSquelchLevel ( settings.ActChannel->getSquelchValue() );
   settings.ActChannel->setThreshold ( Squelch->getThreshold() );
   settings.ActChannel->setSquelch ( Squelch->getSquelchState() );
   settings.ActChannel->setAfcMode ( RxFreq->getAfcMode() );
 
-  for ( CRxChannel * p = RxChannel;p != 0;p = p->getNextChannel() )
-  {
-    modtype=p->getModulationType();
-/**    if ( ( modtype != RTTY ) && ( modtype != MFSK16 )  && (modtype != PSK63)  )
-//    if ( ( modtype == BPSK ) || ( modtype == QPSK )  )
-//      if ( ( modtype == BPSK ) )
-    {
-
-      p->processInput ( outbuf, output );
-    }
-    else */
-      p->processInput ( inbuf, output );
-  }
-  /** Update RxFreq for the active Channel **/
-  emit new_IMD ( settings.ActChannel->getIMD() );
-
-
 // Calculate FFT and start Ploting
 
-// First  look for overload
-  int N = BUF_SIZE / 2;
-  for ( int i = 0; i < N;i++ )
+    for ( int i = 0; i < BUF_SIZE;i++ )
   {
+// First  look for overload
     if ( inbuf[i] > 0.9 )
         overload = true;
 // Apply Hamming to Data
-    outbuf[i] *= ( 0.54 - 0.46 * cos ( ( i * PI2 ) / N ) );
+    outbuf[i] = inbuf[i]*( 0.54 - 0.46 * cos ( ( i * PI2 ) / BUF_SIZE ) );
   }
   fftw_execute ( plan );
 
 //Calculate power spectrum
-  for ( int i = 1;i < BUF_SIZE / 4;i++ )
-    output[i] = output[i] * output[i] + output[BUF_SIZE/2-i] * output[BUF_SIZE/2-i];
+  for ( int i = 1;i < BUF_SIZE / 2;i++ )
+//    output[i] = output[i] * output[i] + output[BUF_SIZE-i] * output[BUF_SIZE-i];
+  outbuf[i] = output[i] * output[i] + output[BUF_SIZE-i] * output[BUF_SIZE-i];
 
-  emit startPlotting ( output, overload );
+  emit startPlotting ( outbuf, overload );
+  for ( CRxChannel * p = RxChannel;p != 0;p = p->getNextChannel() )
+  {
+      p->processInput ( inbuf, outbuf );
+  }
+  /** Update IMD for the active Channel **/
+  emit new_IMD ( settings.ActChannel->getIMD() );
+
 
 
 }

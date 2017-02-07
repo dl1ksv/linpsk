@@ -20,14 +20,23 @@
    <enum>QFrame::Raised</enum>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>1</number>
+   </property>
+   <property name="topMargin">
+    <number>1</number>
+   </property>
+   <property name="rightMargin">
+    <number>1</number>
+   </property>
+   <property name="bottomMargin">
+    <number>1</number>
+   </property>
    <property name="horizontalSpacing">
     <number>1</number>
    </property>
    <property name="verticalSpacing">
     <number>2</number>
-   </property>
-   <property name="margin">
-    <number>1</number>
    </property>
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -89,13 +98,13 @@
         <number>1400</number>
        </property>
        <property name="maximum">
-        <number>2500</number>
+        <number>3100</number>
        </property>
        <property name="singleStep">
         <number>100</number>
        </property>
        <property name="value">
-        <number>2500</number>
+        <number>2900</number>
        </property>
       </widget>
      </item>
