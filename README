@@ -1,6 +1,10 @@
 Important: This versionan be build with qt4 or qt5!!!
 Which version of qt is used depends on the qmake version.
 
+For those who use LinPSK on a PI in a headless environment:
+   Due to a bug in tightvnc build LinPSK against qt4, otherwise you'll get garbeld text in LinPSK transmit box or
+   in the qso fields !!!!
+
 To build LinPsk, untar the tar archiv and switch to the linpsk directory.
 You need fftw3.
 Now you can define a list of bands, which is used in the setup of the qso data.
