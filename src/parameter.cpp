@@ -27,16 +27,10 @@ Status = UNDEF;
 callsign="";
 QslData=0;
 
-serial=-1; // Serial none
-SerialDevice="none";
 QSOFileName="QSOData.adif";
 
 timeoffset=-2;
 
-DemoMode=true;
-DemoModeFileType[0]="*.wav";
-DemoModeFileType[1]="*.out";
-DemoTypeNumber=0;
 
 slashed0=false;
 autoCrLf=true;
@@ -48,8 +42,8 @@ ChannelChain = 0; // Pointer to the Start of the Rx - ChannelChain
 ApplicationFont =0;
 dateFormat="dd.MM.yyyy";
 
-InputDeviceName="LinPSK_Record";
-OutputDeviceName="LinPSK_Play";
+//InputDeviceName="LinPSK_Record";
+//OutputDeviceName="LinPSK_Play";
 sampleRate=11025;
 complexFormat=false;
 LangName[0]="B";
@@ -57,14 +51,18 @@ LangName[1]="E";
 LangName[2]="G";
 
 /** Rig **/
-rigModelNumber=0; // No rig
+
 rig=0;
-rigDevice="none";
+config.rigModelNumber=0; // No rig
+config.baudrate=9600;
+config.handshake=RIG_HANDSHAKE_NONE;
+config.port_type=RIG_PORT_NONE;
+config.ptt = RIG_PTT_RIG;
+config.rigPort="None";
+config.pttDevice="None";
+
 QsoFrequency=-1;
 pwr=5;
-handshake=1; // hardware
-baudrate=9600;
-
 }
 Parameter::~Parameter()
 {

@@ -49,11 +49,7 @@ void setupDevices();
 
 QString callsign;             // Callsign
 QString myLocator;
-QString inputFilename;        //Name of Demofile
-QString DemoModeFileType[2];  // File Type of DemoFile
-int DemoTypeNumber;           // Index of selected FileType
-int serial;                   // Filedescriptor for serial Device for PTT
-QString SerialDevice;         //Filename for PTT Device
+
 //Logging
 QString QSOFileName;          // Name of the file,where qsodata will be stored
 QString Directory;
@@ -61,7 +57,6 @@ bool fileLog;
 bool LinLog;
 QString Host;
 int Port;
-bool DemoMode;                // DemoMode ?
 
 QString LangName[3];	      //Contains the used language names for button labeling
 
@@ -88,13 +83,12 @@ QFont *ApplicationFont;
 QString dateFormat;
 
 /** Rig **/
-int QsoFrequency; // Number of item in QCombobox
+int QsoFrequency; // Number of items in QCombobox
 int pwr;
-int rigModelNumber;
-int handshake;
-int baudrate;
+
+
 RigControl *rig;
-QString rigDevice;
+RigCommParameter config;
 
 QList<Band> bandList;
 

@@ -23,9 +23,6 @@
 #include "crxwindow.h"
 #include "csquelch.h"
 #include "frequencyselect.h"
-#include "input.h"
-#include "textinput.h"
-#include "waveinput.h"
 #include "csound.h"
 #include "fircoeffs.h"
 #include "parameter.h"
@@ -89,18 +86,9 @@ bool CRxDisplay::start_process_loop()
   QString errorstring;
   if ( Sound == 0 )
   {
-    if ( settings.DemoMode )
-    {
-      if ( settings.DemoTypeNumber == 0 )
-        Sound = new WaveInput ( -1 );
-      else
-        Sound = new TextInput ( -1 );
-    }
-    else
-      Sound = new CSound ( settings.serial );
+    Sound = new CSound ( );
     if ( Sound <= NULL )
       return false;
-
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_rxdata() ) );
   }
   m_pDec2InPtr = dec2fir;
@@ -110,10 +98,7 @@ bool CRxDisplay::start_process_loop()
 
   if ( ! Sound->open_Device_read ( &errorstring ) )  //Something went wrong in Opening Input File
   {
-    if ( settings.DemoMode )
-      QMessageBox::information ( 0, "LinPsk", errorstring );
-    else
-      QMessageBox::critical ( 0, "LinPsk", errorstring );
+    QMessageBox::critical ( 0, "LinPsk", errorstring );
     if ( Sound != 0 )
       delete Sound;
     Sound = 0;

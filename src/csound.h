@@ -24,8 +24,9 @@
 #include <sys/stat.h>
 
 #include <QMutex>
+#include <QThread>
 #include <QWaitCondition>
-#include "input.h"
+
 #include "constants.h"
 #include <alsa/asoundlib.h>
 #define ALSA_PCM_NEW_HW_PARAMS_API
@@ -34,17 +35,19 @@
 /**Class for operating on SoundCard
   *@author Volker Schroer
   */
-class CSound : public Input
+class CSound : public QThread
 {
+  Q_OBJECT
   public:
-    CSound ( int ptt );
+    CSound ( );
     ~CSound();
     virtual bool open_Device_write ( QString * );
     virtual bool open_Device_read ( QString * );
     virtual bool close_Device();
     int getSamples ( double *, int );    // Reading Samples from Soundcard
     int putSamples ( double *, int );  // Writing Samples to Soundcard
-    void PTT ( bool );
+    /** Stopping the Thread **/
+    void stop();
 
   private: // Private attributes
     snd_pcm_t *handle;
@@ -59,8 +62,12 @@ class CSound : public Input
     void dump_hw_params(snd_pcm_t *h,snd_pcm_hw_params_t* hw_p);
 #endif
   protected:
-    void run();
     int free, freePointer, available, readPointer,toBePlayed;
+    void run(); //Running the thread
+    bool started;
+
+signals:
+  void samplesAvailable();
 
 };
 

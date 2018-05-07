@@ -69,7 +69,7 @@ static unsigned int test_rates[] = {
 
 #define NELEMS(x) (sizeof(x)/sizeof(x[0]))
 #endif
-CSound::CSound ( int ptt = -1 ) : Input ( ptt )
+CSound::CSound () : QThread ( )
 {
   started = false;
   output = false;
@@ -381,7 +381,7 @@ int CSound::putSamples ( double *sample, int anzahl )
   }
   return anzahl;
 }
-
+/**
 void CSound::PTT ( bool mode )
 {
   int flags;
@@ -426,7 +426,7 @@ void CSound::PTT ( bool mode )
     qDebug("Error using serial port");
   return;
 }
-
+*/
 bool CSound::close_Device()
 {
   wait();
@@ -592,6 +592,12 @@ int CSound::getDeviceNumber(QString device)
   }
   return id;
 }
+
+void CSound::stop()
+{
+  started=false;
+}
+
 #ifdef SOUND_DEBUG
 void CSound::dump_hw_params(snd_pcm_t *h,snd_pcm_hw_params_t* hw_p)
 {

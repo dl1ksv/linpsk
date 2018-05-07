@@ -25,7 +25,7 @@
 #include "constants.h"
 #include "ui_crxdisplay.h"
 
-class Input;
+class CSound;
 class QTimer;
 class QPushButton;
 class CRxChannel;
@@ -67,7 +67,7 @@ class CRxDisplay : public QFrame , private Ui::CRxDisplay
 		Sound is a pointer to the Input Source, may be a File with
         Demo Samples (text or wav), or the soundcard
 		**/
-        Input *Sound;
+	CSound *Sound;
 	/** Pointer to input Buffer **/
 	double inbuf[BUF_SIZE];
 	CRxChannel *RxChannel;

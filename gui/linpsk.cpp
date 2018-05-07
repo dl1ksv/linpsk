@@ -34,9 +34,6 @@
 #include "mfskmodulator.h"
 #include "ctxbuffer.h"
 #include "crxchannel.h"
-#include "input.h"
-#include "textinput.h"
-#include "waveinput.h"
 #include "csound.h"
 #include "generalsettings.h"
 #include "modemenu.h"
@@ -86,7 +83,7 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
   setupUi(this);
   read_config();
   apply_settings();
-  if((settings.rigModelNumber > 0) && settings.rigDevice != "None")
+  if(settings.config.rigModelNumber > 0)
     {
      int rc=-settings.rig->connectRig();
      if(rc != RIG_OK)
@@ -103,6 +100,8 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
              break;
 
         }
+         settings.rig->disconnectRig();
+         settings.config.rigModelNumber=0;
        }
     }
   Control->initQsoData();
@@ -131,8 +130,14 @@ LinPSK::LinPSK ( QWidget* parent, Qt::WindowFlags fl )
 
 //Messages
   msg = new QLabel ( );
-  statusbar->addPermanentWidget ( msg, 2 );
+  statusbar->addPermanentWidget ( msg, 1 );
   msg->setText ( tr ( "Ready" ) );
+
+
+// Rig
+  usedrig = new QLabel( statusbar );
+  statusbar->addPermanentWidget( usedrig, 1 );
+  usedrig->setText(QString("Rig: ")+settings.rig->rigName());
 
 // IMD
   IMD = new QLabel ( statusbar );
@@ -231,15 +236,6 @@ void LinPSK::languageChange()
   **/
 }
 
-void LinPSK::fileOpen()
-{
-  QString fileName;
-
-  fileName = QFileDialog::getOpenFileName ( 0, tr ( "Open Demofile" ), "", settings.DemoModeFileType[settings.DemoTypeNumber] );
-  if ( !fileName.isEmpty() )
-    settings.inputFilename = fileName;
-}
-
 void LinPSK::Exit()
 {
   if ( settings.Status == ON ) // We arejust transmitting
@@ -317,7 +313,7 @@ void LinPSK::startRx()
   if(inAction)
     return;
   inAction=true;
-  if ( Modulator != 0 && !settings.DemoMode)
+  if ( Modulator != 0 )
   {
     TxBuffer->insert ( TXOFF_CODE );
     if ( Sound != NULL )  // Switch Trx to rx
@@ -413,16 +409,7 @@ void LinPSK::startTx()
   }
   if ( Sound <= NULL ) // Only create Sound Device once for output
   {
-    if ( settings.DemoMode )
-    {
-      if ( settings.DemoTypeNumber == 0 )
-        Sound = new WaveInput ( -1 );
-      else
-        Sound = new TextInput ( -1 );
-      msg->setText ( tr ( "Transmitting (Demo)" ) );
-    }
-    else
-      Sound = new CSound ( settings.serial );
+    Sound = new CSound (  );
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_txdata() ) );
   }
   if ( Sound <= NULL )
@@ -449,7 +436,7 @@ void LinPSK::startTx()
 
   Txcount = BUF_SIZE;
 //  process_txdata(); // Generate first Sample
-  Sound->PTT ( true );
+  settings.rig->ptt ( true );
   Sound->start();
 }
 
@@ -488,33 +475,45 @@ void LinPSK::generalSettings()
   GeneralSettings *LocalSettings = new GeneralSettings ( this );
   if ( LocalSettings->exec() != 0 )
     {
-      int modelNr = settings.rigModelNumber;
-      settings = LocalSettings->getSettings();
-      if(modelNr != settings.rigModelNumber) //Rig has changed
-        {
+      Parameter saveSettings = settings;
+
+/**      if(settings.config.rigModelNumber !=
+         LocalSettings->getSettings().config.rigModelNumber) //Rig has changed
+        {*/
           settings.rig->disconnectRig();
+
+          settings=LocalSettings->getSettings();
           int rc = -settings.rig->connectRig();
           if(rc != RIG_OK)
             {
               switch(rc) {
                 case RIG_ETIMEOUT:
-                  QMessageBox::warning(0,"Connection time out",QLatin1String("Could not connect to rig"));
+                  QMessageBox::warning(0,"Connection timed out",QString("Could not connect to rig %1!\nTrying to keep previous one!").arg(settings.rig->rigName()));
                   break;
                 case RIG_EINVAL :
-                  QMessageBox::warning(0,"Invalid parameter",QLatin1String("Probably unknown rig.\nTrying to keep previous one"));
+                  QMessageBox::warning(0,"Invalid parameter",QString("Probably unknown rig%1 .\nTrying to keep previous one").arg(settings.rig->rigName()));
                   break;
                 default:
-                  QMessageBox::warning(0,"Connection time out",QLatin1String("Unknown reason"));
+                  if (settings.rig->getPortType() == RIG_PORT_NETWORK )
+                    QMessageBox::warning(0,"Connection timed out",QLatin1String("Possible network error.\nIs server running ?"));
+                  else
+                   QMessageBox::warning(0,"Connection timed out",QLatin1String(rigerror(rc)));
                   break;
-
              }
-              settings.rigModelNumber=modelNr; // Reconnect here ?
-              if(settings.rig->connectRig() != RIG_OK)
-                return;
-            }
+              settings.rig->disconnectRig();
+              settings = saveSettings; // Reconnect here ?
+              if(settings.rig->connectRig() == RIG_OK)
+                QMessageBox::warning(0,"Connection error",QLatin1String("Reconnected to previous rig!"));
+              else
+                {
+                  settings.rig->disconnectRig();
+                  QMessageBox::warning(0,"Connection error",QLatin1String("Rig disconnected!"));
+                }
+ //           }
         }
-
+    usedrig->setText(QString("Rig: ")+settings.rig->rigName());
     }
+  delete LocalSettings;
   apply_settings();
 }
 void LinPSK::chooseColor()
@@ -555,7 +554,8 @@ void LinPSK::stopTx()
   Modulator->disconnect();
   if ( Sound != 0 )
   {
-    Sound->PTT ( false );
+    Sound->stop ();
+    settings.rig->ptt(false);
     Sound->close_Device();
   }
   delete Modulator;
@@ -661,9 +661,6 @@ void LinPSK::save_config()
   config.setValue ("ControlSplitter",Control->controlSplitterState());
   config.setValue ("SpectrumSplitter",Control->spectrumSplitterState());
   config.endGroup();
-  /** DemoMode **/
-  config.setValue ( "DemoMode", settings.DemoMode );
-  config.setValue ( "DemoTypeNumber", settings.DemoTypeNumber );
 //Operating
   config.setValue ( "Callsign", settings.callsign );
   config.setValue ( "MyLocator", settings.myLocator );
@@ -729,11 +726,12 @@ void LinPSK::save_config()
      }
    // Rig parameter for use with hamlib
      config.beginGroup ( "Rigparameter" );
-     config.setValue ( "PTTDevice", settings.SerialDevice );
-     config.setValue( "RIGDevice", settings.rigDevice);
-     config.setValue("Modelnr",settings.rigModelNumber);
-     config.setValue("BaudRate",settings.baudrate);
-     config.setValue("Handshake",settings.handshake);
+     config.setValue ( "PTTDevice", settings.config.pttDevice );
+     config.setValue("PTTtype",settings.config.ptt);
+     config.setValue( "RIGDevice", settings.config.rigPort);
+     config.setValue("Modelnr",settings.config.rigModelNumber);
+     config.setValue("BaudRate",settings.config.baudrate);
+     config.setValue("Handshake",settings.config.handshake);
      config.endGroup();
 
   // SoundDevices
@@ -987,9 +985,6 @@ void LinPSK::read_config()
     Control->restoreSplitterStates(config.value("ControlSplitter").toByteArray(),config.value("SpectrumSplitter").toByteArray());
   }
   config.endGroup();
-  /** DemoMode **/
-  settings.DemoMode = config.value ( "DemoMode" ).toBool();
-  settings.DemoTypeNumber = config.value ( "DemoTypeNumber" ).toInt();
 //Operating
   settings.callsign = config.value ( "Callsign" ).toString();
   settings.myLocator = config.value ( "MyLocator" ).toString();
@@ -1072,16 +1067,18 @@ void LinPSK::read_config()
     resize ( WidthtoSet, HeighttoSet );
  if ( ( X >= 0 ) && ( Y >= 0 ) )
     move ( X, Y );
- // SoundDevices
+
  // Rig parameter for use with hamlib
    config.beginGroup ( "Rigparameter" );
-   settings.SerialDevice = config.value ( "PTTDevice" ).toString();
-   settings.rigDevice = config.value( "RIGDevice").toString();
-   settings.rigModelNumber = config.value("Modelnr",0).toInt();
-   settings.baudrate = config.value("BaudRate",9600).toInt();
-   settings.handshake= config.value("Handshake",1).toInt();
+   settings.config.pttDevice = config.value ( "PTTDevice" ).toString();
+   settings.config.ptt = (ptt_type_t) config.value("PTTtype",0).toInt();
+   settings.config.rigPort = config.value( "RIGDevice").toString();
+   settings.config.rigModelNumber = config.value("Modelnr",0).toInt();
+   settings.config.baudrate = config.value("BaudRate",9600).toInt();
+   settings.config.handshake= (serial_handshake_e) config.value("Handshake",1).toInt();
    config.endGroup();
 
+ // SoundDevices
   config .beginGroup("SoundDevices");
   settings.InputDeviceName=config.value("InputDeviceName","LinPSK_Record").toString();
   settings.sampleRate=config.value("sampleRate",11025).toInt();
@@ -1091,7 +1088,7 @@ void LinPSK::read_config()
 }
 void LinPSK::checkControlDevices()
 {
-
+/**
   int  err;
   settings.serial = -1;
   int flags = TIOCM_RTS | TIOCM_DTR;
@@ -1127,6 +1124,7 @@ void LinPSK::checkControlDevices()
     if(fd >0)
       ::close(fd);
    }
+   */
 }
 
 

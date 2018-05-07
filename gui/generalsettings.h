@@ -21,9 +21,12 @@
 #ifndef GENERALSETTINGS_H
 #define GENERALSETTINGS_H
 
+#include <hamlib/rig.h>
+
 #include <QDialog>
 #include <QStringList>
 #include "ui_generalsettings.h"
+
 class Parameter;
 class QButtonGroup;
 class QModelIndex;
@@ -37,7 +40,13 @@ public:
   GeneralSettings(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
   ~GeneralSettings();
 Parameter getSettings();
-
+struct RigParameter
+{
+  int model;
+  rig_port_t port_type;
+};
+typedef QMap<QString,RigParameter> Riglist;
+Riglist riglist;
 public slots:
 
 protected:
@@ -46,12 +55,14 @@ Parameter LocalSettings;
 
 QMenu * selectionMenu;
 protected slots:
-void selectDemomode(bool);
+virtual void  accept();
 
 void selectFileLogging(bool);
 void selectLinLogLogging(bool);
 void setSampleRate(QString s);
 void setComplexFormat(bool);
+void rigChanged(QString r);
+
 QStringList getSoundCards();
 
 };

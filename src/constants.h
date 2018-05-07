@@ -18,6 +18,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <hamlib/rig.h>
 #include <math.h>                        // for some constants like PI
 #include <QString>
 #include <QDate>
@@ -71,6 +72,17 @@ enum StateOfReception { WaitingForMark,WaitingForSpace, CheckingStartBit,SkipRes
                         CheckingParity, WaitingForStopBits,ThrowHalfBit};
 enum QsoData{CallSign,QTH,Name,Locator,RST,DOK};
 
+typedef struct
+{
+  int rigModelNumber;
+  rig_port_t port_type; // Serial, Network, USB
+  QString  rigPort;     // Device name, ( serial only ? )
+  serial_handshake_e handshake;
+  int baudrate;
+  ptt_type_t ptt;       // Cat , DTR, RTS, VOX (?)
+  QString pttDevice;
+
+} RigCommParameter;
 
 typedef struct
 {

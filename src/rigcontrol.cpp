@@ -28,31 +28,37 @@ RigControl::RigControl()
   pwr=0;
   connected=false;
   rig= NULL;
+  settings.config.rigModelNumber = 0;
 }
 int RigControl::connectRig()
 {
    int rc;
    rc = -1;
-   if( (settings.rigModelNumber == 0) || (settings.rigDevice == "none") )
+   if( settings.config.rigModelNumber == 0)
      return RIG_OK;
-  rig=rig_init(settings.rigModelNumber);
-  if(rig->caps->port_type != RIG_PORT_NONE)
-  {
+  rig=rig_init(settings.config.rigModelNumber);
+//  if(rig->caps->port_type != RIG_PORT_NONE)
+//  {
     if(rig->caps->port_type == RIG_PORT_SERIAL)
       {
-        strcpy(rig->state.rigport.pathname,settings.rigDevice.toLatin1());
-        rig->state.rigport.parm.serial.rate=settings.baudrate;
-        rig->state.rigport.parm.serial.handshake = (serial_handshake_e) settings.handshake;
+        strcpy(rig->state.rigport.pathname,settings.config.rigPort.toLatin1());
+        rig->state.rigport.parm.serial.rate=settings.config.baudrate;
+        rig->state.rigport.parm.serial.handshake =  settings.config.handshake;
         rig->state.rigport.retry=3;
 
       }
-    if (rig)
+    if(settings.config.ptt != RIG_PTT_NONE)
       {
+        strcpy(rig->state.pttport.pathname,settings.config.pttDevice.toLatin1());
+        rig->state.pttport.type.ptt = settings.config.ptt ;
+      }
+//    if (rig)
+//      {
         rc=rig_open(rig);
         if(rc == RIG_OK )
           connected=true;
-      }
-  }
+ //     }
+ // }
   return rc;
 }
 int RigControl::get_frequency()
@@ -111,4 +117,38 @@ void RigControl::disconnectRig()
     }
   rig = NULL;
   connected=false;
+}
+QString RigControl::rigName()
+{
+  if(rig == 0)
+    return QString("None");
+  else
+    return QString(rig->caps->model_name);
+}
+QString RigControl::rigKey()
+{
+  if(rig == 0)
+    return QString("None");
+  else
+    return QString::fromLatin1 (rig->caps->mfg_name).trimmed ()
+        + ' '+ QString::fromLatin1 (rig->caps->model_name).trimmed ();
+}
+
+rig_port_t RigControl::getPortType()
+{
+  if ( rig == 0)
+    return RIG_PORT_NONE;
+  else
+   return rig->caps->port_type;
+}
+void RigControl::ptt(bool mode)
+{
+  if(mode)  {
+    qDebug("PTT on");
+    rig_set_ptt(rig,RIG_VFO_CURR,RIG_PTT_ON_DATA);
+  }
+  else {
+    qDebug("PTT off");
+    rig_set_ptt(rig,RIG_VFO_CURR,RIG_PTT_OFF);
+  }
 }

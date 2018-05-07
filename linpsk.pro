@@ -57,7 +57,6 @@ HEADERS += gui/activatemacros.h \
            src/firfilter.h \
            src/frequencyselect.h \
            src/fskmodulator.h \
-           src/input.h \
            src/interleaver.h \
            src/mfskdemodulator.h \
            src/mfskmodulator.h \
@@ -74,10 +73,8 @@ HEADERS += gui/activatemacros.h \
            src/rttymodulator.h \
            src/spectrumwindow.h \
            src/tabwidget.h \
-           src/textinput.h \
            src/viterbi.h \
-           src/waterfallwindow.h \
-           src/waveinput.h
+           src/waterfallwindow.h
 FORMS += gui/activatemacros.ui \
          gui/addmacro.ui \
          gui/addrxwindow.ui \
@@ -128,7 +125,6 @@ SOURCES += gui/activatemacros.cpp \
            src/firfilter.cpp \
            src/frequencyselect.cpp \
            src/fskmodulator.cpp \
-           src/input.cpp \
            src/interleaver.cpp \
            src/main.cpp \
            src/mfskdemodulator.cpp \
@@ -145,8 +141,7 @@ SOURCES += gui/activatemacros.cpp \
            src/rttymodulator.cpp \
            src/spectrumwindow.cpp \
            src/tabwidget.cpp \
-           src/textinput.cpp \
            src/viterbi.cpp \
-           src/waterfallwindow.cpp \
-           src/waveinput.cpp
+           src/waterfallwindow.cpp
+
 RESOURCES += src/application.qrc

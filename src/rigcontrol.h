@@ -22,16 +22,25 @@
 
 #include <hamlib/rig.h>
 
+class QString;
+
 class RigControl
 {
 public:
-  RigControl();
-  int get_frequency();
-  void set_frequency(int f);
-  int get_pwr();
-  void set_pwr(int p);
-  int connectRig();
-  void disconnectRig();
+
+RigControl();
+int get_frequency();
+void set_frequency(int f);
+int get_pwr();
+void set_pwr(int p);
+int connectRig();
+void disconnectRig();
+QString rigName();
+QString rigKey();
+rig_port_t getPortType();
+void ptt(bool mode);
+
+
 private:
 
 RIG *rig;

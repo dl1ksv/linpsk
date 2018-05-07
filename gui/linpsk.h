@@ -32,7 +32,7 @@ class QCloseEvent;
 class QLabel;
 class CModulator;
 class CTxBuffer;
-class Input;
+class CSound;
 class Macros;
 class Parameter;
 
@@ -53,7 +53,6 @@ protected:
 
 protected slots:
   virtual void languageChange();
-  void fileOpen();
   void helpAboutQt();
   void addRxWindow();
   void generalSettings();
@@ -117,9 +116,12 @@ double Output[BUF_SIZE];
 /** Numbers of Char to transmit **/
 unsigned int Txcount;
 /** Sound Device **/
-Input *Sound;
+CSound *Sound;
 /** To show messages in Statusbar */
 QLabel *msg;
+
+/** Rig */
+QLabel *usedrig;
 
 void checkControlDevices();
 

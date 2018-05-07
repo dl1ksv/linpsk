@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>787</width>
-    <height>428</height>
+    <width>817</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -192,351 +192,415 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QGroupBox" name="groupBox">
+   <item row="3" column="0" colspan="3">
+    <widget class="QGroupBox" name="groupBox_7">
      <property name="title">
-      <string>Rig Comm Parameter</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_5">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Baudrate</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="baudRate">
-        <property name="toolTip">
-         <string>Select Baudrate</string>
-        </property>
-        <property name="currentIndex">
-         <number>3</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>1200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2400</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>4800</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>9600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>19200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>38400</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>57600</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_15">
-        <property name="text">
-         <string>Handshake</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="handShake">
-        <property name="toolTip">
-         <string>Select Handshake</string>
-        </property>
-        <property name="currentIndex">
-         <number>1</number>
-        </property>
-        <property name="maxVisibleItems">
-         <number>3</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>None</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Hardware</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>XonXoff</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QFrame" name="frame">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QRadioButton" name="Demomode">
-        <property name="text">
-         <string>Demomode</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="FileFormatLayout">
-        <property name="title">
-         <string>Fileformat</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QRadioButton" name="Wav">
-           <property name="text">
-            <string>Wav</string>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="Text">
-           <property name="text">
-            <string>Text</string>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="3" rowspan="2" colspan="2">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Logging</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QGroupBox" name="groupBox_4">
-        <property name="title">
-         <string>File logging</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QRadioButton" name="fileLog">
-           <property name="text">
-            <string>Log to File</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Working Directory</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="Directory"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Filename</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="QsoFile">
-           <property name="text">
-            <string>QSO.adif</string>
-           </property>
-           <property name="cursorPosition">
-            <number>8</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QGroupBox" name="groupBox_5">
-        <property name="title">
-         <string>LinLog logging</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QRadioButton" name="LinLog">
-           <property name="text">
-            <string>Log to LinLog</string>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>LinLog Host Name</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="Host">
-           <property name="text">
-            <string>localhost</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Port</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="Port">
-           <property name="minimum">
-            <number>1024</number>
-           </property>
-           <property name="maximum">
-            <number>64000</number>
-           </property>
-           <property name="value">
-            <number>8080</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="4" column="0" rowspan="2" colspan="2">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Rig Devices</string>
+      <string>Rig</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label_11">
+       <widget class="QComboBox" name="modelNr">
+        <property name="maxVisibleItems">
+         <number>15</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="catControl">
+        <property name="title">
+         <string>Cat control</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,6">
+           <item>
+            <widget class="QLabel" name="portText">
+             <property name="text">
+              <string>Serial port</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="rigPort">
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="portParameter">
+           <property name="title">
+            <string>Port parameter</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,6">
+              <item>
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Baudrate</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="baudRate">
+                <property name="toolTip">
+                 <string>Select Baudrate</string>
+                </property>
+                <property name="currentIndex">
+                 <number>3</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>1200</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>2400</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>4800</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>9600</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>19200</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>38400</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>57600</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="title">
+               <string>Data bits</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QRadioButton" name="data7">
+                 <property name="text">
+                  <string>Seven</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="data8">
+                 <property name="text">
+                  <string>Eight</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="title">
+               <string>Stop bits</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <widget class="QRadioButton" name="stop1">
+                 <property name="text">
+                  <string>One</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="stop2">
+                 <property name="text">
+                  <string>Two</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="handshake">
+              <property name="title">
+               <string>Handshake</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QRadioButton" name="handshakeNone">
+                 <property name="text">
+                  <string>None</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="handshakeSoft">
+                 <property name="text">
+                  <string>Xon / Xoff</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="handshakeHard">
+                 <property name="text">
+                  <string>Hardware</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="3" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout_6">
+     <item>
+      <widget class="QGroupBox" name="groupBox_8">
+       <property name="title">
+        <string>PTT Method</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0" colspan="2">
+         <widget class="QRadioButton" name="voxPTT">
           <property name="text">
-           <string>Rig number</string>
+           <string>Vox</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLineEdit" name="modelNr">
-          <property name="toolTip">
-           <string>Set Rig number as defined in hamlib</string>
+        <item row="0" column="2" rowspan="2">
+         <widget class="QRadioButton" name="dtr">
+          <property name="text">
+           <string>DTR</string>
           </property>
-          <property name="inputMask">
-           <string extracomment="Modelnumber from hamlib">0999</string>
+         </widget>
+        </item>
+        <item row="1" column="0" rowspan="3" colspan="2">
+         <widget class="QRadioButton" name="catPTT">
+          <property name="text">
+           <string>Cat</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </widget>
+        </item>
+        <item row="2" column="2" rowspan="2">
+         <widget class="QRadioButton" name="rts">
+          <property name="text">
+           <string>RTS</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" rowspan="2">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Port</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QComboBox" name="pttDevice">
+          <property name="editable">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_2">
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Logging</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_9">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>File logging</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QRadioButton" name="fileLog">
+             <property name="text">
+              <string>Log to File</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Working Directory</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="Directory"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Filename</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="QsoFile">
+             <property name="text">
+              <string>QSO.adif</string>
+             </property>
+             <property name="cursorPosition">
+              <number>8</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>LinLog logging</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QRadioButton" name="LinLog">
+             <property name="text">
+              <string>Log to LinLog</string>
+             </property>
+             <property name="autoExclusive">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>LinLog Host Name</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="Host">
+             <property name="text">
+              <string>localhost</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Port</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="Port">
+             <property name="minimum">
+              <number>1024</number>
+             </property>
+             <property name="maximum">
+              <number>64000</number>
+             </property>
+             <property name="value">
+              <number>8080</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="SoundDeviceBox">
+       <property name="title">
+        <string>Sound Device</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_7">
           <property name="text">
-           <string>PTT device</string>
+           <string>Input card or device</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>Rig device</string>
+           <string>Output card or device</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="pttDevice"/>
+         <widget class="QComboBox" name="soundInputDeviceName">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="rigControl"/>
+         <widget class="QComboBox" name="soundOutputDeviceName">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="5" column="3" colspan="2">
-    <widget class="QGroupBox" name="SoundDeviceBox">
-     <property name="title">
-      <string>Sound Device</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Input card or device</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Output card or device</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="soundInputDeviceName"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="soundOutputDeviceName"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="2">
+   <item row="4" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QPushButton" name="buttonOk">
@@ -599,7 +663,7 @@
      </item>
     </layout>
    </item>
-   <item row="6" column="2">
+   <item row="4" column="2">
     <spacer name="horizontalSpacer_8">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -612,7 +676,7 @@
      </property>
     </spacer>
    </item>
-   <item row="6" column="3" colspan="2">
+   <item row="4" column="3" colspan="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -632,9 +696,6 @@
  <tabstops>
   <tabstop>Callsign</tabstop>
   <tabstop>UTC</tabstop>
-  <tabstop>Demomode</tabstop>
-  <tabstop>Wav</tabstop>
-  <tabstop>Text</tabstop>
   <tabstop>fileLog</tabstop>
   <tabstop>Directory</tabstop>
   <tabstop>QsoFile</tabstop>
@@ -680,22 +741,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>Demomode</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>GeneralSettings</receiver>
-   <slot>selectDemomode(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>324</x>
-     <y>115</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>393</x>
-     <y>213</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>LinLog</sender>
    <signal>clicked(bool)</signal>
    <receiver>GeneralSettings</receiver>
@@ -727,6 +772,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>modelNr</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>GeneralSettings</receiver>
+   <slot>rigChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>408</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectDemomode(bool)</slot>
@@ -734,5 +795,6 @@
   <slot>selectLinLogLogging(bool)</slot>
   <slot>selectFileLogging(bool)</slot>
   <slot>setRigNumber()</slot>
+  <slot>rigChanged(QString)</slot>
  </slots>
 </ui>
