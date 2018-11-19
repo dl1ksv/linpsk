@@ -22,6 +22,7 @@
 #include "modemenu.h"
 #include "parameter.h"
 #include "crxchannel.h"
+#include <QButtonGroup>
 
 
 extern Parameter settings;
