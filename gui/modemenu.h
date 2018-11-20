@@ -23,10 +23,10 @@
 
 #include <QDialog>
 #include <QStringList>
+#include < QButtonGroup>
 #include "ui_modemenu.h"
 #include "constants.h"
 
-class QButtonGroup;
 
 class ModeMenu : public QDialog, private Ui::ModeMenu
 {
