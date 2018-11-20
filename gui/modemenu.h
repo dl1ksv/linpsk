@@ -23,7 +23,7 @@
 
 #include <QDialog>
 #include <QStringList>
-#include < QButtonGroup>
+#include <QButtonGroup>
 #include "ui_modemenu.h"
 #include "constants.h"
 
