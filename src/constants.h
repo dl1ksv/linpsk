@@ -46,7 +46,6 @@ SW            // Switching to RX
 // define some constants
 #define PI2 ( M_PI + M_PI )		// 2 Pi
 
-#define Ts (.032+.000000)			// Ts == symbol period(correct for +/- .23%error)
 #define M_PI_3_2	(M_PI_2+M_PI)		// 3Pi/2
 #define M_PI_3_4        (M_PI_2+M_PI_4) // 3Pi/4
 #define M_PI_5_4	(M_PI + M_PI_4) // 5Pi/4

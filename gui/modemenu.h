@@ -23,17 +23,17 @@
 
 #include <QDialog>
 #include <QStringList>
-#include <QButtonGroup>
 #include "ui_modemenu.h"
 #include "constants.h"
 
+class QButtonGroup;
 
 class ModeMenu : public QDialog, private Ui::ModeMenu
 {
   Q_OBJECT
 
 public:
-  ModeMenu(QStringList modeList,QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+  ModeMenu(QStringList modeList,QWidget* parent = nullptr);
   ~ModeMenu();
   void setParameter(ExtraParameter Param);
   ExtraParameter getParameter();

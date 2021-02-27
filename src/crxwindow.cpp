@@ -26,7 +26,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
 
   QFontMetrics fm ( font() );
   rowHeight = fm.height()+3;
-  int pixelwidth=82*fm.width("A");
+  int pixelwidth=82*fm.horizontalAdvance("A");
   DisplayBox = new QWidget ();
   DisplayBox-> setFocusPolicy( Qt::NoFocus);
   DisplayBox->setGeometry( 0,0 ,pixelwidth, RXWINDOWBUFFER*rowHeight );

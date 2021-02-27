@@ -9,8 +9,8 @@ error("LinPSK requires fftw3")
 
 CONFIG(debug, debug|release) {
 message(Building Qt$$QT_VERSION debug version)
-QMAKE_CFLAGS_DEBUG += '-g3 -O0'
-QMAKE_CXXFLAGS_DEBUG += '-g3 -O0'
+QMAKE_CFLAGS_DEBUG += '-g3 -O0 -std=c++0x'
+QMAKE_CXXFLAGS_DEBUG += '-g3 -O0 -std=c++0x'
 } else {
 message(Building Qt$$QT_VERSION release)
 DEFINES += QT_NO_DEBUG
@@ -18,6 +18,8 @@ DEFINES += QT_NO_DEBUG
 QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CFLAGS += -std=c++0x
 
 TEMPLATE = app
 TARGET = linpsk

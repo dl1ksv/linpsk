@@ -442,7 +442,16 @@
            <string>Set Rig number as defined in hamlib</string>
           </property>
           <property name="inputMask">
-           <string extracomment="Modelnumber from hamlib">0999</string>
+           <string extracomment="Modelnumber from hamlib">00999</string>
+          </property>
+          <property name="text">
+           <string extracomment="Hamlibs rig model number"/>
+          </property>
+          <property name="maxLength">
+           <number>5</number>
+          </property>
+          <property name="cursorPosition">
+           <number>0</number>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -599,7 +608,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <tabstops>
   <tabstop>Callsign</tabstop>
   <tabstop>UTC</tabstop>

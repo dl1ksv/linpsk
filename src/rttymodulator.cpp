@@ -80,7 +80,7 @@ int RTTYModulator::CalcSignal(double *data,int BUFSIZE)
 
 int RTTYModulator::getNextBit()
 {
-  int bit;
+  int bit = 0;
 
   NxSamples =0;
   switch(status)

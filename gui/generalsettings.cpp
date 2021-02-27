@@ -32,8 +32,8 @@
 #endif
 
 extern Parameter settings;
-GeneralSettings::GeneralSettings ( QWidget* parent, Qt::WindowFlags fl )
-  : QDialog ( parent, fl ), Ui::GeneralSettings()
+GeneralSettings::GeneralSettings ( QWidget* parent)
+  : QDialog ( parent), Ui::GeneralSettings()
 {
   setupUi ( this );
 #ifndef WITH_HAMLIB

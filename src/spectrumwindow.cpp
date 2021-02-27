@@ -82,7 +82,7 @@ void SpectrumWindow::paintLineal ( QPainter* p, int xmax, int ymax,int minfreq,i
         ix = ( int ) ( i * stepwidth + 0.5 );
         p->drawLine ( ix, y, ix, y + 3 );
         frequency.setNum ( minfreq + stepfrequency*i );
-        ix = ix - fm.width ( frequency ) / 2;
+        ix = ix - fm.horizontalAdvance(  frequency ) / 2;
         p->drawText ( ix, y+diff+diff/2, frequency );
 
     }
@@ -191,7 +191,7 @@ void SpectrumWindow::mousePressEvent ( QMouseEvent *e )
 void SpectrumWindow::wheelEvent ( QWheelEvent * e )
 {
   double freq=settings.ActChannel->getRxFrequency();
-  if(e->delta() >0 )
+  if(e->angleDelta().y() >0 )
     freq =freq+1;
   else
     freq = freq -1;

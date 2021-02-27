@@ -23,11 +23,11 @@
 #include "parameter.h"
 #include "crxchannel.h"
 
-
+#include <QButtonGroup>
 extern Parameter settings;
 
-ModeMenu::ModeMenu(QStringList modeList, QWidget* parent, Qt::WindowFlags fl)
-: QDialog( parent, fl ), Ui::ModeMenu()
+ModeMenu::ModeMenu(QStringList modeList, QWidget* parent)
+: QDialog( parent), Ui::ModeMenu()
 {
   setupUi(this);
 

@@ -205,7 +205,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="7"/>
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <includes>
   <include location="local">constants.h</include>
  </includes>

@@ -30,7 +30,7 @@ CRxDisplay::CRxDisplay ( QWidget* parent )
 {
   setupUi(this);
 
-  Sound = 0;
+  Sound = nullptr;
 
   RxChannel = new CRxChannel ( 0, this );
   RxHeader->insertTab ( 0, RxChannel->getWindow(),QString("Rx 1") );
@@ -78,7 +78,7 @@ bool CRxDisplay::start_process_loop()
         Sound = new WaveInput ( -1 );
     else
       Sound = new CSound ( settings.serial );
-    if ( Sound <= NULL )
+    if ( Sound == nullptr )
       return false;
 
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_rxdata() ) );
@@ -103,7 +103,6 @@ void CRxDisplay::process_rxdata()
 
 {
   bool overload;
-  Mode modtype;
   if ( Sound->getSamples ( inbuf, BUF_SIZE ) == 0 )
     return; // No sample available, try later
   overload = false;

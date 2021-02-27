@@ -69,13 +69,13 @@ extern Parameter settings;
 LinPSK::LinPSK ( QWidget* parent)
   : QMainWindow ( parent), Ui::LinPSK()
 {
-  Sound = 0;
-  Modulator = 0;
+  Sound = nullptr;
+  Modulator = nullptr;
   inAction=false;
   // Content of modeList must correspond to enum Mode in constants.h
   modeList << "BPSK31" << "BPSK63" << "QPSK" << "RTTY" << "MFSK16"   ;
 #ifdef WITH_HAMLIB
-  settings.rig =new RigControl();
+  settings.rigctl =new RigControl();
 #endif
   /** To avoid multipe Macro clicking **/
   blockMacros=false;
@@ -118,7 +118,7 @@ LinPSK::LinPSK ( QWidget* parent)
   statusbar->addPermanentWidget(rigInfo,1);
   if((settings.rigModelNumber > 0) && settings.rigDevice != "None")
     {
-     int rc=-settings.rig->connectRig();
+     int rc=-settings.rigctl->connectRig();
      if(rc != RIG_OK)
        {
          switch(rc) {
@@ -133,14 +133,14 @@ LinPSK::LinPSK ( QWidget* parent)
              if(QMessageBox::question ( 0,"Connection time out" , tr ( "Could not connect to rig\nTry again ?" ),
                                         QMessageBox::Yes | QMessageBox::No ) == QMessageBox::Yes)
                {
-                 rc=-settings.rig->connectRig();
+                 rc=-settings.rigctl->connectRig();
                  if( rc != RIG_OK)
                    {
                      QMessageBox::warning(0,"Connection time out",QLatin1String(rigerror(rc)));
                      rigInfo->setText("Rig: None");
                    }
                  else
-                   rigInfo->setText(QLatin1String("Rig: ")+settings.rig->getModelName());
+                   rigInfo->setText(QLatin1String("Rig: ")+settings.rigctl->getModelName());
                }
              else
               rigInfo->setText("Rig: None");
@@ -151,7 +151,7 @@ LinPSK::LinPSK ( QWidget* parent)
        }
      else
        {
-         rigInfo->setText(QLatin1String("Rig: ")+settings.rig->getModelName());
+         rigInfo->setText(QLatin1String("Rig: ")+settings.rigctl->getModelName());
        }
      if( rc == RIG_OK)
        {
@@ -321,7 +321,7 @@ void LinPSK::setclock()
   QDateTime t;
   t = QDateTime::currentDateTime();
   t = t.addSecs ( settings.timeoffset * 3600 );
-  s.sprintf ( " %2d:%2d UTC", t.time().hour(), t.time().minute() );
+  s.asprintf ( " %2d:%2d UTC", t.time().hour(), t.time().minute() );
   s.replace ( QRegExp ( ": " ), ":0" );
   zeit->setText ( s );
   zeit->update();
@@ -333,9 +333,9 @@ void LinPSK::setIMD ( float IMDvalue )
 {
   QString s;
   if ( IMDvalue != 0.0 )
-    s.sprintf ( " IMD = %6.2f dB", IMDvalue );
+    s.asprintf ( " IMD = %6.2f dB", IMDvalue );
   else
-    s.sprintf ( " IMD " );
+    s.asprintf ( " IMD " );
   IMD->setText ( s );
 }
 void LinPSK::startRx()
@@ -346,7 +346,7 @@ void LinPSK::startRx()
   if ( Modulator != 0 && !settings.DemoMode)
   {
     TxBuffer->insert ( TXOFF_CODE );
-    if ( Sound != NULL )  // Switch Trx to rx
+    if ( Sound != nullptr )  // Switch Trx to rx
       {
         TxDisplay->switch2Rx();
         msg->setText ( tr ( "Switching to receive" ) );
@@ -410,7 +410,7 @@ void LinPSK::startTx()
       Modulator = new BpskModulator ( 11025, Frequency, TxBuffer );
       break; */
   }
-  if ( Sound <= NULL ) // Only create Sound Device once for output
+  if ( Sound == nullptr ) // Only create Sound Device once for output
   {
     if ( settings.DemoMode )
     {
@@ -421,7 +421,7 @@ void LinPSK::startTx()
       Sound = new CSound ( settings.serial );
     connect ( Sound, SIGNAL ( samplesAvailable() ), this, SLOT ( process_txdata() ) );
   }
-  if ( Sound <= NULL )
+  if ( Sound == nullptr )
   {
     QMessageBox::critical ( 0, " Programm Error! LinPsk", "Could not create Sound Device for Output" );
     TxDisplay->TxFunctions->setStatus ( ON );
@@ -487,10 +487,10 @@ void LinPSK::generalSettings()
       settings = LocalSettings->getSettings();
 #ifdef WITH_HAMLIB
       int modelNr = settings.rigModelNumber;
-      if( (modelNr >0) && ((modelNr != settings.rigModelNumber) || !settings.rig->isConnected()) ) //Rig has changed
+      if( (modelNr >0) && ((modelNr != settings.rigModelNumber) || !settings.rigctl->isConnected()) ) //Rig has changed
         {
-          settings.rig->disconnectRig();
-          int rc = -settings.rig->connectRig();
+          settings.rigctl->disconnectRig();
+          int rc = -settings.rigctl->connectRig();
           if(rc != RIG_OK)
             {
               switch(rc) {
@@ -506,7 +506,7 @@ void LinPSK::generalSettings()
 
              }
               settings.rigModelNumber=modelNr; // Reconnect here ?
-              if(settings.rig->connectRig() != RIG_OK)
+              if(settings.rigctl->connectRig() != RIG_OK)
                 return;
             }
         }

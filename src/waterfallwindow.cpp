@@ -79,7 +79,7 @@ void WaterfallWindow::mousePressEvent ( QMouseEvent *e )
 void WaterfallWindow::wheelEvent ( QWheelEvent * e )
 {
   double freq=settings.ActChannel->getRxFrequency();
-  if(e->delta() >0 )
+  if(e->angleDelta().y() >0 )
     freq =freq+1;
   else
     freq = freq -1;

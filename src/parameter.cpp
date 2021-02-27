@@ -56,7 +56,7 @@ LangName[2]="G";
 /** Rig **/
 rigModelNumber=0; // No rig
 #ifdef WITH_HAMLIB
-rig=0;
+rigctl= nullptr;
 #endif
 rigDevice="none";
 QsoFrequency=-1;

@@ -34,7 +34,7 @@ class GeneralSettings : public QDialog, private Ui::GeneralSettings
   Q_OBJECT
 
 public:
-  GeneralSettings(QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+  GeneralSettings(QWidget* parent = 0);
   ~GeneralSettings();
 Parameter getSettings();
 

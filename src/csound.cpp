@@ -18,7 +18,9 @@
 #include "parameter.h"
 #include <sstream>
 #include <fstream>
-
+#ifdef WITH_HAMLIB
+#include "rigcontrol.h"
+#endif
 using namespace std;
 extern Parameter settings;
 #ifdef SOUND_DEBUG
@@ -69,7 +71,7 @@ static unsigned int test_rates[] = {
 
 #define NELEMS(x) (sizeof(x)/sizeof(x[0]))
 #endif
-CSound::CSound ( int ptt = -1 ) : Input ( ptt )
+CSound::CSound ( int ptt ) : Input ( ptt )
 {
   started = false;
   output = false;
@@ -365,8 +367,6 @@ int CSound::putSamples ( double *sample, int anzahl )
     LockPointers.lock();
     toBePlayed += anzahl;
     free -= anzahl;
- //   if ( toBePlayed > 2*BUF_SIZE )
- //     qDebug ( "putSamples: Bufferoverrun" );
     WakeUp.wakeAll();
     LockPointers.unlock();
 
@@ -377,7 +377,6 @@ int CSound::putSamples ( double *sample, int anzahl )
   else
   {
     anzahl=0;
-//    qDebug ( "++++++free too low %d", free );
   }
   return anzahl;
 }
@@ -392,6 +391,10 @@ void CSound::PTT ( bool mode )
 // No PTT, only start stream
     if ( mode )
     {
+#ifdef WITH_HAMLIB
+     if( settings.rigctl != nullptr ) // Can we control the rig via hamlib ?
+        rig_set_ptt(settings.rigctl->rig,RIG_VFO_CURR,RIG_PTT_ON);
+#endif
       if ( !started )
       {
         started = true;
@@ -399,6 +402,10 @@ void CSound::PTT ( bool mode )
     }
     else
     {
+#ifdef WITH_HAMLIB
+    if( settings.rigctl != nullptr ) // Can we control the rig via hamlib ?
+        rig_set_ptt(settings.rigctl->rig,RIG_VFO_CURR,RIG_PTT_OFF);
+#endif
       if ( started )
       {
         started = false;

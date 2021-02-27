@@ -32,7 +32,7 @@ TxWindow::TxWindow(QWidget *parent) :
   ui(new Ui::TxWindow)
 {
   QFontMetrics fm ( font() );
-  int pixelwidth=82*fm.width("A");
+  int pixelwidth=82*fm.horizontalAdvance("A");
   int height=fm.height();
   ui->setupUi(this);
   zeile=0;

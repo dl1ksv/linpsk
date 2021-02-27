@@ -92,7 +92,7 @@ int rigModelNumber;
 int handshake;
 int baudrate;
 #ifdef WITH_HAMLIB
-RigControl *rig;
+RigControl *rigctl;
 #endif
 QString rigDevice;
 

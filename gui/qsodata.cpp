@@ -107,7 +107,7 @@ void QSOData::clear()
   settings.QslData->Locator = Loc->text();
   QsoFrequency->setCurrentIndex(findBand());
 #ifdef WITH_HAMLIB
-  settings.pwr=settings.rig->get_pwr();
+  settings.pwr=settings.rigctl->get_pwr();
   txPwr->setValue(settings.pwr);
 #endif
   settings.QslData->Locator = Loc->text();
@@ -171,7 +171,7 @@ void QSOData::Locatorchanged()
 void QSOData::frequencyChanged(int index)
 {
 #ifdef WITH_HAMLIB
-  settings.rig->set_frequency(settings.bandList.at(index).preferedFreq);
+  settings.rigctl->set_frequency(settings.bandList.at(index).preferedFreq);
 #endif
   settings.QsoFrequency = index;
 }
@@ -521,14 +521,14 @@ void QSOData::setAutoDate()
 void QSOData::pwrChanged(int p)
 {
 #ifdef WITH_HAMLIB
-  settings.rig->set_pwr(p);
+  settings.rigctl->set_pwr(p);
 #endif
   settings.pwr=p;
 }
 int QSOData::findBand()
 {
 #ifdef WITH_HAMLIB
-  int freq = settings.rig->get_frequency();
+  int freq = settings.rigctl->get_frequency();
   for(int i=0; i < settings.bandList.size();i++)
     {
       if( (settings.bandList.at(i).bandStart <= freq) && (settings.bandList.at(i).bandEnd >= freq))
@@ -544,7 +544,7 @@ void QSOData::initQsoData()
     QsoFrequency->addItem(settings.bandList.at(i).bandName);
   QsoFrequency->setCurrentIndex(findBand());
 #ifdef WITH_HAMLIB
-  settings.pwr=settings.rig->get_pwr();
+  settings.pwr=settings.rigctl->get_pwr();
 #endif
   txPwr->setValue(settings.pwr);
 

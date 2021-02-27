@@ -28,7 +28,7 @@ RigControl::RigControl()
   frequency=0;
   pwr=0;
   connected=false;
-  rig= NULL;
+  rig= nullptr;
 }
 int RigControl::connectRig()
 {

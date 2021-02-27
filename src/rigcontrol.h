@@ -36,14 +36,11 @@ public:
   void disconnectRig();
   bool isConnected();
   QLatin1String getModelName();
+  RIG *rig;
 private:
-
-RIG *rig;
-
-int frequency;
-int pwr;
-
-bool connected;
+  int frequency;
+  int pwr;
+  bool connected;
 };
 
 #endif // RIGCONTROL_H
