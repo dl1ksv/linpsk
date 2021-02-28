@@ -55,7 +55,7 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-#define VERSION "1.3.5"
+#define VERSION "1.3.6"
 
 
 #define ProgramName "LinPSK "

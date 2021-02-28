@@ -40,6 +40,7 @@ LIBS += -lasound -lfftw3
 packagesExist( hamlib ) {
       message(LinPSK builds with hamlib)
       LIBS +=$$system("pkg-config --libs hamlib")
+      QMAKE_CXXFLAGS +=$$system("pkg-config --libs hamlib")
       DEFINES += WITH_HAMLIB
       HEADERS +=src/rigcontrol.h
       SOURCES +=src/rigcontrol.cpp
