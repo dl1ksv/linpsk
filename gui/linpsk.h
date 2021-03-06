@@ -20,8 +20,8 @@ class QActionGroup;
 class QToolBar;
 class QMenu;
 class QCloseEvent;
-
 class QLabel;
+
 class CModulator;
 class CTxBuffer;
 class Input;
@@ -94,11 +94,13 @@ private slots:
   void on_RxDisplay_newActiveChannel();
   void unblockMacros();
 private:
+ /** Read the configuration */
+ void read_config();
+ /** Safe the configuration */
+ void save_config();
 
-    void read_config();
-    void save_config();
-    bool inAction;
-    bool blockMacros;
+ bool inAction;
+ bool blockMacros;
 Parameter *SaveParameters;    
 /** Modulator **/
 CModulator *Modulator;

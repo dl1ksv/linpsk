@@ -105,7 +105,7 @@ LinPSK::LinPSK ( QWidget* parent)
   setWindowTitle ( QString ( ProgramName ) + QString ( VERSION ) );
   setWindowIcon ( QIcon ( ":/images/linpsk.png" ) );
 // Create Statusbar
-  statusBar()->setFixedHeight(18);
+  statusbar->setFixedHeight(18);
   statusbar->setSizeGripEnabled ( true );
 
 
@@ -184,8 +184,8 @@ LinPSK::LinPSK ( QWidget* parent)
 
   settings.QslData = settings.ActChannel->getQsoData();
   Control->setPhasePointer ( settings.ActChannel->getPhasePointer() );
-
   Control->setColorList ( &WindowColors );
+  Control->initDateTime();
   languageChange();
 // signals and slots connections
 //========== Macro Processing ======================================
@@ -321,11 +321,12 @@ void LinPSK::setclock()
   QDateTime t;
   t = QDateTime::currentDateTime();
   t = t.addSecs ( settings.timeoffset * 3600 );
-  s.asprintf ( " %2d:%2d UTC", t.time().hour(), t.time().minute() );
+  s=QString(" %1:%2 UTC").arg(t.time().hour()).arg(t.time().minute());
   s.replace ( QRegExp ( ": " ), ":0" );
   zeit->setText ( s );
   zeit->update();
-  s = t.toString ( "dd.MM.yyyy" );
+  //s = t.toString ( "dd.MM.yyyy" );
+  s = t.toString ( settings.dateFormat );
   datum->setText ( s );
 }
 
@@ -333,9 +334,11 @@ void LinPSK::setIMD ( float IMDvalue )
 {
   QString s;
   if ( IMDvalue != 0.0 )
-    s.asprintf ( " IMD = %6.2f dB", IMDvalue );
+//    s.asprintf ( " IMD = %6.2f dB", IMDvalue );
+    s= QString( " IMD = %1 dB").arg( IMDvalue,0,'f',2 );
   else
-    s.asprintf ( " IMD " );
+//    s.asprintf ( " IMD " );
+    s=QString( " IMD " );
   IMD->setText ( s );
 }
 void LinPSK::startRx()
@@ -511,6 +514,7 @@ void LinPSK::generalSettings()
             }
         }
 #endif
+    setclock();
     }
   apply_settings();
 }

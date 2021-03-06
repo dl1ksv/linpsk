@@ -100,3 +100,7 @@ void ControlPanel::initQsoData()
 {
   QSO->initQsoData();
 }
+void ControlPanel::initDateTime()
+{
+  QSO->refreshDateTime();
+}

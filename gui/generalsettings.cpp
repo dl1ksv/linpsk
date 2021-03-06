@@ -56,6 +56,7 @@ GeneralSettings::GeneralSettings ( QWidget* parent)
   autoCrLf->setAutoExclusive(false);
   autoCrLf->setChecked(LocalSettings.autoCrLf);
   autoDate->setChecked(LocalSettings.autoDate);
+  dateFormat->setCurrentText(LocalSettings.dateFormat);
   QRegExp rx ( "^[A-R][A-R][0-9][0-9][A-X][A-X]$" );
   QValidator *validator = new QRegExpValidator ( rx, this );
   myLocator->setValidator ( validator );

@@ -28,6 +28,7 @@ public:
     void enableSaveData();
     void setAutoDate();
     void initQsoData();
+    void initDateTime();
     void restoreSplitterStates(const QByteArray & controlState,const QByteArray & spectrumState);
     QByteArray controlSplitterState() const;
     QByteArray spectrumSplitterState() const;

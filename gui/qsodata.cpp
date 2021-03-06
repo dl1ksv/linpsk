@@ -48,7 +48,6 @@ QSOData::QSOData ( QWidget* parent )
   Loc->setValidator ( validator );
   Loc->setStyleSheet ( "QLineEdit{color: black ; }" );
   QsoDate->setDisplayFormat ( settings.dateFormat );
-  refreshDateTime();
   if ( settings.QslData )
   {
     RemoteCallsign->setText ( settings.QslData->RemoteCallsign );
@@ -128,11 +127,10 @@ void QSOData::clear()
   settings.QslData->worked = worked->text();
   mainPrefix->setText ( "" );
   settings.QslData->mainPrefix = mainPrefix->text();
-  refreshDateTime();
   dokName->clear();
   eQsl->setChecked(false);
   bureau->setChecked(false);
-
+  refreshDateTime();
 }
 
 void QSOData::Callsignchanged()
@@ -206,7 +204,7 @@ void QSOData::refreshDateTime()
   t = QDateTime::currentDateTime();
 
   t1 = t.addSecs ( settings.timeoffset * 3600 );
-
+  QsoDate->setDisplayFormat(settings.dateFormat);
   QsoDate->setDate ( t.date() );
   QsoTime->setTime ( t1.time() );
   if ( settings.QslData )
