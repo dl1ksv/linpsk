@@ -48,6 +48,7 @@ QSOData::QSOData ( QWidget* parent )
   Loc->setValidator ( validator );
   Loc->setStyleSheet ( "QLineEdit{color: black ; }" );
   QsoDate->setDisplayFormat ( settings.dateFormat );
+  QsoTime->setDisplayFormat(QString("HH:MM"));
   if ( settings.QslData )
   {
     RemoteCallsign->setText ( settings.QslData->RemoteCallsign );

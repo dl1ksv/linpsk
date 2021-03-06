@@ -321,8 +321,7 @@ void LinPSK::setclock()
   QDateTime t;
   t = QDateTime::currentDateTime();
   t = t.addSecs ( settings.timeoffset * 3600 );
-  s=QString(" %1:%2 UTC").arg(t.time().hour()).arg(t.time().minute());
-  s.replace ( QRegExp ( ": " ), ":0" );
+  s=QString(" %1:%2 UTC").arg(t.time().hour()).arg(t.time().minute(),2,10,QChar('0'));
   zeit->setText ( s );
   zeit->update();
   //s = t.toString ( "dd.MM.yyyy" );
