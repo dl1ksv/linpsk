@@ -58,7 +58,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
 
     ScrollBuffer[i] = new QLineEdit ( DisplayBox );
     ScrollBuffer[i]->setFixedWidth(pixelwidth);
-    ScrollBuffer[i]->setMaximumHeight(18);
+    ScrollBuffer[i]->setMaximumHeight(rowHeight);
     ScrollBuffer[i]->setFrame ( false );
     ScrollBuffer[i]->setReadOnly ( true );
     linesLayout->addWidget(ScrollBuffer[i]);
