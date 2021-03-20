@@ -104,8 +104,10 @@ void CRxWindow::updateRx ( char c )
   switch ( c )
   {
     case '\n':
-    case '\r':
       NeueZeile();
+      break;
+    case '\r':
+      Column = 0;
       break;
 
     case '\b':
