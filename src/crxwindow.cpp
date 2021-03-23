@@ -52,6 +52,7 @@ CRxWindow::CRxWindow ( QWidget* parent )
   Row = 0;
   Column = 0;
   AutoScroll = true;
+  crFound = false;
 
   for ( int i = 0;i < RXWINDOWBUFFER;i++ )
   {
@@ -104,13 +105,18 @@ void CRxWindow::updateRx ( char c )
   switch ( c )
   {
     case '\n':
-      NeueZeile();
+      if( ! crFound )
+        NeueZeile();
+      else
+        crFound = false;
       break;
     case '\r':
-      Column = 0;
+      crFound = true;
+      NeueZeile();
       break;
 
     case '\b':
+      crFound =false;
       if ( Column > 0 )
       {
         Column--;
@@ -129,6 +135,7 @@ void CRxWindow::updateRx ( char c )
       if ( settings.slashed0 )
         c = 0xF8;
     default:
+      crFound = false;
       if ( trigger && ( settings.Status == OFF ) )
       {
         TriggerText.append ( c );

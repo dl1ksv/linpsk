@@ -66,6 +66,7 @@ private:
   QString TriggerText;
   QString TexttoTrigger;
   bool save;
+  bool crFound;
   QFile File;
   QTextStream *stream;
 

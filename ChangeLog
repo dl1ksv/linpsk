@@ -1,4 +1,10 @@
 LinPsk ChangeLog
+1.3.7
+
+If cr/lf is received only print one newline.
+Each single cr or lf just prints one newline.
+Now qt5 is required.
+
 1.3.5
 Adding PSK63 mode
 Fixing wrong scaling in Spectrum display
