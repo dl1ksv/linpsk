@@ -88,18 +88,6 @@ void CTxBuffer::insert(int c)
 }
 void CTxBuffer::clear()
 {
-/**
-  if(filled > 0)
-    {
-      if(txbuffer[(outpos+filled-1) %  TXBUFFER_LENGTH] == TXOFF_CODE) // We have to keep switching to rx
-        {
-          outpos = (outpos+filled-1) %  TXBUFFER_LENGTH;
-          inpos = (inpos+filled-1) %  TXBUFFER_LENGTH;
-          filled=1;
-          return;
-        }
-    }
-**/
   filled=0;
   inpos=0;
   outpos=0;

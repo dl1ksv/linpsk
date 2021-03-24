@@ -153,7 +153,7 @@ void CRxWindow::updateRx ( char c )
       ScrollBuffer[Row]->setText ( s );
       Column++;
 
-      if ( Column >= 80 )
+      if ( Column > 80 )
         NeueZeile();
   }
 
