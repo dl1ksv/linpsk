@@ -22,7 +22,7 @@
 #include <QDate>
 #include <QString>
 #include <QTime>
-
+#define VERSION "1.3.8"
 enum BUTTONSTATUS // Status of RX/TX Button
 {
 UNDEF,				// undefined

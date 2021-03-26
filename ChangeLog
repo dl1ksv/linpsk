@@ -1,4 +1,8 @@
 LinPsk ChangeLog
+1.3.8
+Add <eor> to each qso record and add the prefered frquency to the record.
+Give a short message on successfully saving the record
+
 1.3.7
 
 Force a newline in the rx window only after 80 characters this avoids an additional newline when copying text from tx to rx display

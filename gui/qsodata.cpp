@@ -216,6 +216,7 @@ void QSOData::refreshDateTime()
 }
 void QSOData::save()
 {
+  QMessageBox msgBox;
   if ( ( ( settings.QSOFileName == "" ) && ( !settings.LinLog ) ) || connectionError )
     return ; // No Filename specified, and no LinLog logging required
 // Get the most recent values
@@ -258,10 +259,15 @@ void QSOData::save()
   {
     s = QString ( "<BAND:%1>%2\n" ).arg ( QsoFrequency->currentText().length() ).arg ( QsoFrequency->currentText() );
     saveString.append ( s );
+    float freq = settings.bandList[QsoFrequency->currentIndex()].preferedFreq/1000000.;
+    if( freq > 0 )
+    {
+        s=QString("%1").arg(freq,0,'f',3);
+        saveString.append (QString("<FREQ:%1>%2\n").arg(s.length()).arg(s));
+    }
   }
   // TxPwr
-  int pwr=txPwr->value();
-  s.setNum(pwr);
+  s.setNum(txPwr->value());
   s = QString ("<TX_PWR:%1>%2\n").arg(s.length()).arg(s);
   saveString.append(s);
   if ( QsoDate->text() == "" )
@@ -320,6 +326,7 @@ void QSOData::save()
   }
   if(dokName->text() !="")
    saveString.append(QString("<APP_LinLog_DOK:%1>%2\n").arg(dokName->text().length()).arg(dokName->text()));
+  saveString.append(QString("<EOR>"));
   if ( settings.fileLog )
   {
     QDir d;
@@ -328,13 +335,24 @@ void QSOData::save()
     QFile f ( settings.Directory + "/" + settings.QSOFileName );
     if ( !f.open ( QIODevice::WriteOnly | QIODevice::Append ) )
     {
-      QMessageBox::information ( 0, "Saving to adif File", "Could not open file " + settings.QSOFileName );
+      msgBox.setText("Could not open file " + settings.QSOFileName );
+      msgBox.exec();
       return;
     }
-
     QTextStream stream ( &f );
-    stream << saveString ;
+    if( f.size() == 0) //Empty file, write preamble
+      {
+        stream << "ADIF export from  " << settings.callsign << Qt::endl;
+        stream << "Generated on " << QDateTime::currentDateTime().toUTC().toString() << " UTC" << Qt::endl;
+        stream << "<ADIF_Ver:5>3.1.1" << Qt::endl;
+        stream << "<PROGRAMID:6>LinPSK" << Qt::endl;
+        stream  << "<eoh>" << Qt::endl;
+      }
+    stream << saveString  << Qt::endl;
     f.close();
+
+    msgBox.setText("Saved qso with " +  RemoteCallsign->text());
+    msgBox.exec();
   }
   if ( settings.LinLog )
   {
