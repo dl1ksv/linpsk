@@ -342,13 +342,13 @@ void QSOData::save()
     QTextStream stream ( &f );
     if( f.size() == 0) //Empty file, write preamble
       {
-        stream << "ADIF export from  " << settings.callsign << Qt::endl;
-        stream << "Generated on " << QDateTime::currentDateTime().toUTC().toString() << " UTC" << Qt::endl;
-        stream << "<ADIF_Ver:5>3.1.1" << Qt::endl;
-        stream << "<PROGRAMID:6>LinPSK" << Qt::endl;
-        stream  << "<eoh>" << Qt::endl;
+        stream << "ADIF export from  " << settings.callsign << '\n';
+        stream << "Generated on " << QDateTime::currentDateTime().toUTC().toString() << " UTC" << '\n';
+        stream << "<ADIF_Ver:5>3.1.1" << '\n';
+        stream << "<PROGRAMID:6>LinPSK" << '\n';
+        stream  << "<EOH>" << '\n';
       }
-    stream << saveString  << Qt::endl;
+    stream << saveString  << '\n';
     f.close();
 
     msgBox.setText("Saved qso with " +  RemoteCallsign->text());
