@@ -1,14 +1,8 @@
 Important: This version requires >=qt5.10!!!
-
-To build LinPsk, untar the tar archiv and switch to the linpsk directory.
 You need fftw3.
-Now you can define a list of bands, which is used in the setup of the qso data.
-If you select a band and LinPSK is build with hamlib support your rig is tuned to the preferred frequency of this band.
 
-LinPSK is build with hamlib support, if qmake finds the hamlib library (by pkg-config).
-Additionaly you can control the Tx power by the qsodata settings, if your rig supports this feature.
-
-Band name and Tx power can be used to log with LinLogbook.
+To build LinPsk, untar the tar archiv or clone the repository
+and switch to the linpsk directory.
 
 run:
 mkdir -p build
@@ -17,7 +11,19 @@ qmake -o Makefile ../linpsk.pro
 make
 sudo make install
 
-This will install the binary into usr/local/bin and the desktop file into /usr/share/pixmaps/ and the icon file into /usr/share/pixmaps/ .
+This will install the binary into usr/local/bin, the desktop file into /usr/share/applications and the icon file into /usr/share/pixmaps/ .
+
+LinPSK is build with hamlib support, if qmake finds the hamlib library (by pkg-config).
+In this case you can control the Tx power by the qsodata settings, if your rig supports this feature.
+
+Now you can define a list of bands, which is used in the setup of the qso data.
+If you select a band and LinPSK was build with hamlib support your rig is tuned to the preferred frequency of this band.
+
+For LinLogbook users:
+Band name and Tx power can be used to log with LinLogbook.
+
+For those who prefer to log to a ( adif) file: 
+Band name, prefered Frequency and Tx power are written to the file.
 
 As LinPSK uses the alsa sound system, you can use valid alsa devices like plughw:1 in the settings dialog
 Also using the card name can be used now. In this case LinPSK searches the cardnumber and opens
